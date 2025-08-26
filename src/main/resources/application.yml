@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: pblb
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pblb
+    username: postgres
+    password: toor
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update  # Genera/actualiza las tablas automáticamente
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  liquibase:
+    enabled: false  # Deshabilitamos liquibase por ahora ya que usaremos hibernate para generar la estructura
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.softwells.pblb: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+cors:
+  allowed-origins: "http://localhost:4200"
+  allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Configuraciones específicas de la aplicación
+app:
+  security:
+    jwt:
+      secret: realbetiscampeon
+      expiration: 86400000  # 24 horas en milisegundos

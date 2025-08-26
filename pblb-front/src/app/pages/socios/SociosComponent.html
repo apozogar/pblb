@@ -1,0 +1,226 @@
+<div class="grid grid-cols-12 gap-8">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+        <div class="card mb-0">
+            <div class="flex justify-between mb-4">
+                <div>
+                    <span class="block text-muted-color font-medium mb-4">Socios</span>
+                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">
+                        180
+                    </div>
+                </div>
+                <div
+                    class="flex items-center justify-center bg-cyan-100 dark:bg-cyan-400/10 rounded-border"
+                    style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-users text-cyan-500 text-xl!"></i>
+                </div>
+            </div>
+            <span class="text-primary font-medium">80 nuevos </span>
+            <span class="text-muted-color">en el ultimo mes</span>
+        </div>
+    </div>
+
+</div>
+
+<br/>
+
+<p-toolbar class="mb-6">
+    <ng-template #start>
+        <button pButton pRipple label="Nuevo Socio" icon="pi pi-plus"
+                class="p-button-success mr-2" (click)="abrirNuevo()"></button>
+
+    </ng-template>
+
+    <ng-template #end>
+        <p-button label="Import" icon="pi pi-download" severity="secondary"/>
+    </ng-template>
+</p-toolbar>
+
+<div class="card">
+    <p-toast/>
+
+    <p-table [value]="socios" [rows]="10" [paginator]="true" [loading]="loading"
+             [rowHover]="true" dataKey="uid"
+             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} socios"
+             [showCurrentPageReport]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th scope="col">Número Socio</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Email</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-socio>
+            <tr>
+                <td>{{ socio.numeroSocio }}</td>
+                <td>{{ socio.nombre }}</td>
+                <td>{{ socio.telefono }}</td>
+                <td>{{ socio.email }}</td>
+                <td>
+                    <p-tag [severity]="socio.activo ? 'success' : 'danger'"
+                           [value]="socio.activo ? 'Activo' : 'Inactivo'"/>
+                </td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" [rounded]="true" [outlined]="true"
+                            class="p-button-rounded p-button-success mr-2"
+                            (click)="editarSocio(socio)"></button>
+                    <button pButton pRipple icon="pi pi-trash" [rounded]="true" [outlined]="true"
+                            class="p-button-rounded p-button-danger"
+                            (click)="eliminarSocio(socio)"></button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog [(visible)]="socioDialog" [style]="{ width: '650px' }" header="Detalles del Socio"
+          [modal]="true">
+    <ng-template #content>
+        <div class="flex flex-col gap-6 w-full">
+            <!-- Información Básica -->
+            <div class="flex flex-col gap-6">
+                <span class="font-semibold text-lg">Información Básica</span>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div class="flex-auto">
+                        <label for="numeroSocio" class="block font-semibold mb-2">Número de
+                            Socio*</label>
+                        <input type="text" pInputText id="numeroSocio"
+                               [(ngModel)]="socio.numeroSocio"
+                               class="w-full" required/>
+                        <small class="text-red-500" *ngIf="submitted && !socio.numeroSocio">Número
+                            de socio es
+                            requerido.</small>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="nombre" class="block font-semibold mb-2">Nombre*</label>
+                        <input type="text" pInputText id="nombre" [(ngModel)]="socio.nombre"
+                               class="w-full"
+                               required/>
+                        <small class="text-red-500" *ngIf="submitted && !socio.nombre">Nombre es
+                            requerido.</small>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div class="flex-auto">
+                        <label for="dni" class="block font-semibold mb-2">DNI*</label>
+                        <input type="text" pInputText id="dni" [(ngModel)]="socio.dni"
+                               class="w-full" required/>
+                        <small class="text-red-500" *ngIf="submitted && !socio.dni">DNI es
+                            requerido.</small>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="fechaNacimiento" class="block font-semibold mb-2">Fecha
+                            Nacimiento*</label>
+                        <p-datepicker id="fechaNacimiento" [(ngModel)]="socio.fechaNacimiento"
+                                      class="w-full"
+                                      required></p-datepicker>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de Contacto -->
+            <div class="flex flex-col gap-6">
+                <span class="font-semibold text-lg">Información de Contacto</span>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div class="flex-auto">
+                        <label for="email" class="block font-semibold mb-2">Email</label>
+                        <input type="email" pInputText id="email" [(ngModel)]="socio.email"
+                               class="w-full"/>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="telefono" class="block font-semibold mb-2">Teléfono</label>
+                        <input type="tel" pInputText id="telefono" [(ngModel)]="socio.telefono"
+                               class="w-full"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dirección -->
+            <div class="flex flex-col gap-6">
+                <span class="font-semibold text-lg">Dirección</span>
+                <div class="flex-auto">
+                    <label for="direccion" class="block font-semibold mb-2">Dirección</label>
+                    <input type="text" pInputText id="direccion" [(ngModel)]="socio.direccion"
+                           class="w-full"/>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-6">
+                    <div class="flex-auto">
+                        <label for="poblacion" class="block font-semibold mb-2">Población</label>
+                        <input type="text" pInputText id="poblacion" [(ngModel)]="socio.poblacion"
+                               class="w-full"/>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="provincia" class="block font-semibold mb-2">Provincia</label>
+                        <input type="text" pInputText id="provincia" [(ngModel)]="socio.provincia"
+                               class="w-full"/>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="codigoPostal" class="block font-semibold mb-2">Código
+                            Postal</label>
+                        <input type="text" pInputText id="codigoPostal"
+                               [(ngModel)]="socio.codigoPostal"
+                               class="w-full"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estado y Características -->
+            <div class="flex flex-col gap-6">
+                <span class="font-semibold text-lg">Estado y Características</span>
+                <div class="flex flex-col sm:flex-row gap-6">
+                    <div class="flex-auto">
+                        <div class="flex flex-col gap-3">
+                            <div class="flex items-center gap-2">
+                                <p-checkbox [(ngModel)]="socio.activo" [binary]="true"
+                                            inputId="activo"></p-checkbox>
+                                <label for="activo" class="font-semibold">Activo</label>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <p-checkbox [(ngModel)]="socio.abonadoBetis" [binary]="true"
+                                            inputId="abonadoBetis"></p-checkbox>
+                                <label for="abonadoBetis" class="font-semibold">Abonado
+                                    Betis</label>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <p-checkbox [(ngModel)]="socio.accionistaBetis" [binary]="true"
+                                            inputId="accionistaBetis"></p-checkbox>
+                                <label for="accionistaBetis" class="font-semibold">Accionista
+                                    Betis</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="numeroCuenta" class="block font-semibold mb-2">Número de
+                            Cuenta</label>
+                        <input type="text" pInputText id="numeroCuenta"
+                               [(ngModel)]="socio.numeroCuenta"
+                               class="w-full"/>
+                    </div>
+                    <div class="flex-auto">
+                        <label for="fechaAlta" class="block font-semibold mb-2">Fecha Alta*</label>
+                        <p-datepicker [(ngModel)]="socio.fechaAlta" class="w-full"
+                                      required></p-datepicker>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Observaciones -->
+            <div class="flex-auto">
+                <label for="observaciones" class="block font-semibold mb-2">Observaciones</label>
+                <textarea pTextarea id="observaciones" [(ngModel)]="socio.observaciones" rows="4"
+                          class="w-full"></textarea>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button label="Cancelar" icon="pi pi-times" (onClick)="socioDialog = false"
+                  [text]="true"></p-button>
+        <p-button label="Guardar" icon="pi pi-check" (onClick)="guardarSocio()"></p-button>
+    </ng-template>
+</p-dialog>
+
+
+<p-confirmDialog [style]="{width: '450px'}"/>
