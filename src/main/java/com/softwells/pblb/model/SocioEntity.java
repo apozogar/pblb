@@ -22,19 +22,13 @@ public class SocioEntity {
   @Column(nullable = false)
   private String nombre;
 
-  @Column(nullable = false)
   private LocalDate fechaNacimiento;
-
-  @Column(unique = true, nullable = false)
   private String dni;
-
   private String direccion;
   private String poblacion;
   private String provincia;
   private String codigoPostal;
   private String telefono;
-
-  @Column(unique = true)
   private String email;
 
   @Column(nullable = false)
@@ -54,10 +48,15 @@ public class SocioEntity {
   @Column(length = 1000)
   private String observaciones;
 
+  private String mandateId;
+
+  private LocalDate mandateSignatureDate;
+
   @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL)
   private Set<CuotaEntity> cuotas = new HashSet<>();
 
   @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL)
   private Set<ParticipacionEventoEntity> participaciones = new HashSet<>();
+
 
 }

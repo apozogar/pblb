@@ -1,4 +1,4 @@
-package com.softwells.pblb.dto;
+package com.softwells.pblb.controller.dto;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;

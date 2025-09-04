@@ -1,5 +1,7 @@
 package com.softwells.pblb.model;
 
+import com.softwells.pblb.enums.EstadoCuota;
+import com.softwells.pblb.enums.PeriodoCuota;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.math.BigDecimal;
@@ -34,13 +36,5 @@ public class CuotaEntity {
   @ManyToOne
   @JoinColumn(name = "socio_uid", nullable = false)
   private SocioEntity socio;
-
-  public enum EstadoCuota {
-    PAGADA, PENDIENTE, VENCIDA
-  }
-
-  public enum PeriodoCuota {
-    ANUAL, MENSUAL, PRIMER_TRIMESTRE, SEGUNDO_TRIMESTRE, TERCER_TRIMESTRE, CUARTO_TRIMESTRE
-  }
 
 }

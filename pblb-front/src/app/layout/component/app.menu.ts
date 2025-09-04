@@ -31,16 +31,12 @@ export class AppMenu {
                         icon: 'pi pi-users',
                         routerLink: ['/socios']
                     },
-                    {
-                        label: 'Cuotas',
-                        icon: 'pi pi-money-bill',
-                        routerLink: ['/cuotas']
-                    },
-                    {
-                        label: 'Ejemplo crud',
-                        icon: 'pi pi-home',
-                        routerLink: ['/pages/crud']
-                    }]
+                    // {
+                    //     label: 'Cuotas',
+                    //     icon: 'pi pi-money-bill',
+                    //     routerLink: ['/cuotas']
+                    // }
+                    ]
             },
             {
                 label: 'Gestion eventos',
@@ -50,29 +46,6 @@ export class AppMenu {
                         icon: 'pi pi-calendar',
                         routerLink: ['/eventos']
                     }]
-            },
-            {
-                label: 'Contabilidad',
-                items: [
-                    {
-                        label: 'Gastos',
-                        icon: 'pi pi-money-bill',
-                        routerLink: ['/gastos']
-                    }]
-            },
-            {
-                label: 'Informes',
-                icon: 'pi pi-chart-bar',
-                items: [
-                    {
-                        label: 'Balance',
-                        icon: 'pi pi-dollar'
-                    },
-                    {
-                        label: 'Estadísticas',
-                        icon: 'pi pi-chart-line'
-                    }
-                ]
             }
         ]
     };

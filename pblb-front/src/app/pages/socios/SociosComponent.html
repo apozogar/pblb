@@ -5,7 +5,7 @@
                 <div>
                     <span class="block text-muted-color font-medium mb-4">Socios</span>
                     <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">
-                        180
+                        {{ estadistica?.totalSocios }}
                     </div>
                 </div>
                 <div
@@ -14,7 +14,7 @@
                     <i class="pi pi-users text-cyan-500 text-xl!"></i>
                 </div>
             </div>
-            <span class="text-primary font-medium">80 nuevos </span>
+            <span class="text-primary font-medium">{{ estadistica?.nuevosSocios }} nuevos </span>
             <span class="text-muted-color">en el ultimo mes</span>
         </div>
     </div>
@@ -31,7 +31,15 @@
     </ng-template>
 
     <ng-template #end>
-        <p-button label="Import" icon="pi pi-download" severity="secondary"/>
+        <div class="flex gap-2">
+            <p-button label="Cobrar cuota" icon="pi pi-money" severity="info"
+                      (click)="cobrarCuota()"></p-button>
+
+            <!-- El input de fichero está oculto y se activa con el botón -->
+            <input type="file" #fileUpload style="display: none" (change)="onFileSelect($event)"
+                   accept=".xlsx, .xls"/>
+            <p-button label="Importar" icon="pi pi-upload" severity="secondary" (click)="fileUpload.click()"></p-button>
+        </div>
     </ng-template>
 </p-toolbar>
 

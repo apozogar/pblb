@@ -1,6 +1,6 @@
 package com.softwells.pblb.exception;
 
-import com.softwells.pblb.dto.ApiResponse;
+import com.softwells.pblb.controller.dto.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

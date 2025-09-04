@@ -1,6 +1,6 @@
 package com.softwells.pblb.controller;
 
-import com.softwells.pblb.dto.ApiResponse;
+import com.softwells.pblb.controller.dto.ApiResponse;
 import com.softwells.pblb.model.EventoEntity;
 import com.softwells.pblb.service.EventoService;
 import org.springframework.beans.factory.annotation.Autowired;
