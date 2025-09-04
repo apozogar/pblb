@@ -16,6 +16,8 @@ import {CheckboxModule} from 'primeng/checkbox';
 import {DatePickerModule} from 'primeng/datepicker';
 import {Textarea} from 'primeng/textarea';
 import {EstadisticasSocio} from "@/interfaces/socio.interface";
+import {IconField} from "primeng/iconfield";
+import {InputIcon} from "primeng/inputicon";
 
 @Component({
     selector: 'app-socios',
@@ -34,7 +36,7 @@ import {EstadisticasSocio} from "@/interfaces/socio.interface";
         Ripple,
         CheckboxModule,
         DatePickerModule,
-        Textarea
+        Textarea, IconField, InputIcon
 
     ],
     templateUrl: './SociosComponent.html'
@@ -185,7 +187,9 @@ export class SociosComponent implements OnInit {
             error: (err) => {
                 this.loading = false;
                 this.messageService.add({
-                    severity: 'error', summary: 'Error', detail: 'Hubo un error al importar el fichero.'
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Hubo un error al importar el fichero.'
                 });
             }
         });
