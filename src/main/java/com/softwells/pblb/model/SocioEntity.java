@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 @Table(name = "socios")
@@ -65,9 +66,17 @@ public class SocioEntity implements UserDetails {
   @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL)
   private Set<ParticipacionEventoEntity> participaciones = new HashSet<>();
 
+  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JoinTable(name = "socio_roles",
+      joinColumns = @JoinColumn(name = "socio_uid"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<RoleEntity> roles = new HashSet<>();
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of();
+    return roles.stream()
+        .map(role -> new SimpleGrantedAuthority(role.getName()))
+        .collect(Collectors.toList());
   }
 
   @Override

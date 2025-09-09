@@ -1,3 +1,5 @@
+import {Cuota} from "@/interfaces/cuota.interface";
+
 export interface Socio {
     uid?: string;
     numeroSocio: string;
@@ -17,9 +19,11 @@ export interface Socio {
     abonadoBetis: boolean;
     accionistaBetis: boolean;
     observaciones?: string;
+    cuotas: Cuota[];
 }
 
 export interface EstadisticasSocio {
     totalSocios: number;
     nuevosSocios: number;
 }
+

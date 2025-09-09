@@ -19,6 +19,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,8 +60,26 @@ public class SocioService {
   }
 
   public SocioEntity obtenerPorId(UUID id) {
-    return socioRepository.findById(id)
+    SocioEntity socio = socioRepository.findById(id)
         .orElseThrow(() -> new EntityNotFoundException("Socio no encontrado"));
+
+    // Lógica de autorización
+    var authentication = SecurityContextHolder.getContext().getAuthentication();
+    String currentUsername = authentication.getName();
+    boolean isAdmin = authentication.getAuthorities().stream()
+        .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+    if (!isAdmin && !socio.getEmail().equals(currentUsername)) {
+      throw new AccessDeniedException("No tienes permiso para ver la información de este socio.");
+    }
+    return socio;
+  }
+
+  public SocioEntity obtenerSocioAutenticado() {
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    return socioRepository.findByEmail(userEmail)
+        .orElseThrow(() -> new EntityNotFoundException(
+            "No se encontró un socio asociado al usuario autenticado."));
   }
 
   public List<SocioEntity> obtenerTodos() {
