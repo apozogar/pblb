@@ -38,15 +38,15 @@ export class AppMenu {
                     // }
                     ]
             },
-            {
-                label: 'Gestion eventos',
-                items: [
-                    {
-                        label: 'Eventos',
-                        icon: 'pi pi-calendar',
-                        routerLink: ['/eventos']
-                    }]
-            }
+            // {
+            //     label: 'Gestion eventos',
+            //     items: [
+            //         {
+            //             label: 'Eventos',
+            //             icon: 'pi pi-calendar',
+            //             routerLink: ['/eventos']
+            //         }]
+            // }
         ]
     };
 }

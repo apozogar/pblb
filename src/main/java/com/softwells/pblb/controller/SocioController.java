@@ -3,6 +3,7 @@ package com.softwells.pblb.controller;
 import com.softwells.pblb.controller.dto.ApiResponse;
 import com.softwells.pblb.controller.dto.SocioStatsDto;
 import com.softwells.pblb.model.SocioEntity;
+import com.softwells.pblb.model.CuotaEntity;
 import com.softwells.pblb.service.SepaService;
 import com.softwells.pblb.service.SocioService;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
@@ -71,6 +73,12 @@ public class SocioController {
   public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerSociosActivos() {
     return ResponseEntity.ok(new ApiResponse<>(true, "Lista de socios activos",
         socioService.obtenerSociosActivos()));
+  }
+
+  @GetMapping("/{id}/cuotas")
+  public ResponseEntity<ApiResponse<List<CuotaEntity>>> obtenerCuotasDeSocio(@PathVariable UUID id) {
+    return ResponseEntity.ok(new ApiResponse<>(true, "Cuotas del socio",
+        socioService.obtenerCuotasDeSocio(id)));
   }
 
   @GetMapping("/estadisticas")

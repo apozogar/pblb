@@ -48,6 +48,9 @@ export class SociosComponent implements OnInit {
     loading: boolean = false;
     submitted: boolean = false;
 
+    cuotasDialog: boolean = false;
+    cuotasSocio: any[] = [];
+
     estadistica?: EstadisticasSocio;
 
     constructor(
@@ -155,6 +158,22 @@ export class SociosComponent implements OnInit {
             // Limpieza
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
+        });
+    }
+
+    mostrarCuotas(socio: any): void {
+        this.socioService.getCuotasSocio(socio.uid).subscribe({
+            next: (response) => {
+                this.cuotasSocio = response.data;
+                this.cuotasDialog = true;
+            },
+            error: () => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudieron cargar las cuotas del socio.'
+                });
+            }
         });
     }
 

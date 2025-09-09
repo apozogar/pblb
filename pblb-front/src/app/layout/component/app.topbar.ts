@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import {StyleClassModule} from 'primeng/styleclass';
 import {AppConfigurator} from './app.configurator';
 import {LayoutService} from '../service/layout.service';
+import {AuthService} from "../../pages/auth/auth.service";
 
 @Component({
     selector: 'app-topbar',
@@ -40,17 +41,17 @@ import {LayoutService} from '../service/layout.service';
                         <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                     </button>
                     <div class="relative">
-                        <button
-                            class="layout-topbar-action layout-topbar-action-highlight"
-                            pStyleClass="@next"
-                            enterFromClass="hidden"
-                            enterActiveClass="animate-scalein"
-                            leaveToClass="hidden"
-                            leaveActiveClass="animate-fadeout"
-                            [hideOnOutsideClick]="true"
-                        >
-                            <i class="pi pi-palette"></i>
-                        </button>
+<!--                        <button-->
+<!--                            class="layout-topbar-action layout-topbar-action-highlight"-->
+<!--                            pStyleClass="@next"-->
+<!--                            enterFromClass="hidden"-->
+<!--                            enterActiveClass="animate-scalein"-->
+<!--                            leaveToClass="hidden"-->
+<!--                            leaveActiveClass="animate-fadeout"-->
+<!--                            [hideOnOutsideClick]="true"-->
+<!--                        >-->
+<!--                            <i class="pi pi-palette"></i>-->
+<!--                        </button>-->
                         <app-configurator/>
                     </div>
                 </div>
@@ -64,18 +65,23 @@ import {LayoutService} from '../service/layout.service';
 
                 <div class="layout-topbar-menu hidden lg:block">
                     <div class="layout-topbar-menu-content">
-                        <button type="button" class="layout-topbar-action">
-                            <i class="pi pi-calendar"></i>
-                            <span>Calendar</span>
-                        </button>
-                        <button type="button" class="layout-topbar-action">
-                            <i class="pi pi-inbox"></i>
-                            <span>Messages</span>
-                        </button>
+                        <!--                        <button type="button" class="layout-topbar-action">-->
+                        <!--                            <i class="pi pi-calendar"></i>-->
+                        <!--                            <span>Calendar</span>-->
+                        <!--                        </button>-->
+                        <!--                        <button type="button" class="layout-topbar-action">-->
+                        <!--                            <i class="pi pi-inbox"></i>-->
+                        <!--                            <span>Messages</span>-->
+                        <!--                        </button>-->
                         <button type="button" class="layout-topbar-action"
                                 (click)="irCarnetSocio()">
                             <i class="pi pi-user"></i>
-                            <span>Profile</span>
+                            <span>Perfil</span>
+                        </button>
+                        <button type="button" class="layout-topbar-action"
+                                (click)="logout()">
+                            <i class="pi pi-sign-out"></i>
+                            <span>Cerrar Sesión</span>
                         </button>
                     </div>
                 </div>
@@ -85,7 +91,11 @@ import {LayoutService} from '../service/layout.service';
 export class AppTopbar {
     items!: MenuItem[];
 
-    constructor(public layoutService: LayoutService, private router: Router) {
+    constructor(
+        public layoutService: LayoutService,
+        private authService: AuthService,
+        private router: Router
+    ) {
     }
 
     toggleDarkMode() {
@@ -97,5 +107,10 @@ export class AppTopbar {
 
     irCarnetSocio(): void {
         this.router.navigate(['/carnet-socio']);
+    }
+
+    logout(): void {
+        this.authService.logout();
+        this.router.navigate(['/auth/login']);
     }
 }

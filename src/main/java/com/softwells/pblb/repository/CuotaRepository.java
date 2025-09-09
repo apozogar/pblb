@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface CuotaRepository extends JpaRepository<CuotaEntity, UUID> {
-    List<CuotaEntity> findBySocio(SocioEntity socio);
+    List<CuotaEntity> findBySocioUid(UUID uid);
     List<CuotaEntity> findByEstado(EstadoCuota estado);
     List<CuotaEntity> findByFechaVencimientoBefore(LocalDate fecha);
     List<CuotaEntity> findByPeriodo(PeriodoCuota periodo);

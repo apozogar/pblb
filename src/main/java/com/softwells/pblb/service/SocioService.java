@@ -1,7 +1,9 @@
 package com.softwells.pblb.service;
 
 import com.softwells.pblb.controller.dto.SocioStatsDto;
+import com.softwells.pblb.model.CuotaEntity;
 import com.softwells.pblb.model.SocioEntity;
+import com.softwells.pblb.repository.CuotaRepository;
 import com.softwells.pblb.repository.SocioRepository;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -21,20 +24,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class SocioService {
 
   private final SocioRepository socioRepository;
-
-  @Autowired
-  public SocioService(SocioRepository socioRepository) {
-    this.socioRepository = socioRepository;
-  }
+  private final CuotaRepository cuotaRepository;
 
   public SocioEntity crear(SocioEntity socio) {
     if (socioRepository.existsByDni(socio.getDni())) {
@@ -67,6 +68,11 @@ public class SocioService {
 
   public List<SocioEntity> obtenerSociosActivos() {
     return socioRepository.findByActivo(true);
+  }
+
+  @Transactional(readOnly = true)
+  public List<CuotaEntity> obtenerCuotasDeSocio(UUID socioId) {
+    return cuotaRepository.findBySocioUid(socioId);
   }
 
   // En tu clase SocioService

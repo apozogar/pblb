@@ -39,6 +39,10 @@ export class SocioService {
         return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${uid}`);
     }
 
+    getCuotasSocio(uid: string): Observable<ApiResponse<any[]>> {
+        return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/${uid}/cuotas`);
+    }
+
     // Métodos adicionales para validación
     verificarDniExistente(dni: string): Observable<boolean> {
         return this.http.get<boolean>(`${this.apiUrl}/verificar/dni/${dni}`);
