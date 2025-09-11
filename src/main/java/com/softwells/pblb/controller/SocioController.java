@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,14 +41,14 @@ public class SocioController {
   private final SepaService sepaService;
 
   @PostMapping
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<SocioEntity>> crear(@RequestBody SocioEntity socio) {
     return ResponseEntity.ok(new ApiResponse<>(true, "Socio creado exitosamente",
         socioService.crear(socio)));
   }
 
   @PutMapping("/{id}")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<SocioEntity>> actualizar(@PathVariable UUID id,
       @RequestBody SocioEntity socio) {
     return ResponseEntity.ok(new ApiResponse<>(true, "Socio actualizado exitosamente",
@@ -55,28 +56,22 @@ public class SocioController {
   }
 
   @DeleteMapping("/{id}")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable UUID id) {
     socioService.eliminar(id);
     return ResponseEntity.ok(new ApiResponse<>(true, "Socio eliminado exitosamente", null));
   }
 
   @GetMapping
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+  @Transactional(readOnly = true)
   public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerTodos() {
     return ResponseEntity.ok(new ApiResponse<>(true, "Lista de socios",
         socioService.obtenerTodos()));
   }
 
-  @GetMapping("/activos")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
-  public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerSociosActivos() {
-    return ResponseEntity.ok(new ApiResponse<>(true, "Lista de socios activos",
-        socioService.obtenerSociosActivos()));
-  }
-
   @GetMapping("/{id}/cuotas")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<List<CuotaEntity>>> obtenerCuotasDeSocio(
       @PathVariable UUID id) {
     return ResponseEntity.ok(new ApiResponse<>(true, "Cuotas del socio",
@@ -84,7 +79,7 @@ public class SocioController {
   }
 
   @GetMapping("/estadisticas")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<SocioStatsDto>> obtenerEstadisticas() {
     LocalDate fechaDesde = LocalDate.now().minusMonths(1);
     SocioStatsDto estadisticas = socioService.obtenerEstadisticas(fechaDesde);
@@ -94,7 +89,7 @@ public class SocioController {
 
 
   @PostMapping("/importar")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<ApiResponse<String>> importarSociosDesdeExcel(
       @RequestParam("file") MultipartFile file) {
     if (file.isEmpty()) {
@@ -108,7 +103,7 @@ public class SocioController {
   }
 
   @GetMapping(value = "/generar-sepa", produces = MediaType.APPLICATION_XML_VALUE)
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')") // Solo usuarios con rol ADMIN pueden acceder
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<byte[]> generarFicheroSepa() {
     LocalDateTime fechaDesde = LocalDateTime.now().minusMonths(1);
     String sepaFile = sepaService.generarFicheroSepa(fechaDesde);
@@ -126,16 +121,9 @@ public class SocioController {
 
 
   @GetMapping("/{id}")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN') or @socioService.obtenerPorId(#id).email == authentication.name")
+  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   public ResponseEntity<SocioEntity> obtenerSocioPorId(@PathVariable UUID id) {
     return ResponseEntity.ok(socioService.obtenerPorId(id));
-  }
-
-  @GetMapping("/me")
-  @PreAuthorize("isAuthenticated()") // Solo necesita estar autenticado
-  public ResponseEntity<ApiResponse<SocioEntity>> obtenerMiInformacion() {
-    SocioEntity socio = socioService.obtenerSocioAutenticado();
-    return ResponseEntity.ok(new ApiResponse<>(true, "Información del socio recuperada", socio));
   }
 
 }

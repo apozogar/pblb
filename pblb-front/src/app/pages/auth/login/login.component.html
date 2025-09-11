@@ -1,0 +1,52 @@
+<app-floating-configurator/>
+<div
+    class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-col items-center justify-center">
+        <div
+            style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+            <div class="w-full bg-surface-0 dark:bg-surface-<>900 py-20 </>px-8 sm:px-20"
+                 style="border-radius: 53px">
+                <div class="text-center mb-8">
+                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
+                        ¡Bienvenido!
+                    </div>
+                    <span class="text-muted-color font-medium">Inicia sesión para continuar</span>
+                </div>
+
+                <div>
+                    <label for="email1"
+                           class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
+                    <input pInputText id="email1" type="text" placeholder="Dirección de email"
+                           class="w-full md:w-120 mb-8"
+                           [(ngModel)]="email" (keyup.enter)="login()"/>
+
+                    <label for="password"
+                           class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Contraseña</label>
+                    <p-password id="password" [(ngModel)]="password" placeholder="Contraseña"
+                                [toggleMask]="true"
+                                styleClass="mb-4" [fluid]="true" [feedback]="false"
+                                [ngClass]="{'ng-invalid ng-dirty' : error}"
+                                (keyup.enter)="login()"></p-password>
+                    @if (error) {
+                        <p-message severity="error" size="small" variant="simple">{{ error }}
+                        </p-message>
+                    }
+
+                    <div class="flex items-center justify-between mt-2 mb-8 gap-8">
+                        <div class="flex items-center"></div>
+                        <div class="flex flex-col items-end justify-end">
+                            <a [routerLink]="['/auth/forgot-password']"
+                               class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">¿Olvidaste
+                                tu contraseña?</a>
+                            <a [routerLink]="['/auth/register']"
+                               class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">¿Quieres
+                                registrarte?</a>
+                        </div>
+                    </div>
+                    <p-button label="Iniciar Sesión" styleClass="w-full"
+                              (click)="login()"></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,16 +1,21 @@
 package com.softwells.pblb.controller;
 
-import com.softwells.pblb.dto.AuthRequest;
-import com.softwells.pblb.dto.AuthResponse;
-import com.softwells.pblb.dto.ForgotPasswordRequest;
-import com.softwells.pblb.dto.ResetPasswordRequest;
+import com.softwells.pblb.controller.dto.ApiResponse;
+import com.softwells.pblb.controller.dto.AuthRequest;
+import com.softwells.pblb.controller.dto.AuthResponse;
+import com.softwells.pblb.controller.dto.ForgotPasswordRequest;
+import com.softwells.pblb.controller.dto.RegisterRequest;
+import com.softwells.pblb.controller.dto.ResetPasswordRequest;
+import com.softwells.pblb.exception.EmailAlreadyExistsException;
 import com.softwells.pblb.model.SocioEntity;
-import com.softwells.pblb.repository.SocioRepository;
+import com.softwells.pblb.model.UsuarioEntity;
+import com.softwells.pblb.repository.UsuarioRepository;
 import com.softwells.pblb.security.JwtService;
+import com.softwells.pblb.service.SocioService;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,72 +32,83 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+  private final SocioService socioService;
+  private final AuthenticationManager authenticationManager;
+  private final UserDetailsService userDetailsService;
+  private final JwtService jwtService;
+  private final UsuarioRepository usuarioRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JavaMailSender mailSender;
 
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
-    private final JwtService jwtService;
-    private final SocioRepository socioRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
+  @Value("${mail.from.address}")
+  private String fromAddress;
 
-    @Value("${mail.from.address}")
-    private String fromAddress;
+  @PostMapping("/login")
+  public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+    final String jwt = jwtService.generateToken(userDetails);
+    return ResponseEntity.ok(new AuthResponse(jwt));
+  }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        final String jwt = jwtService.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(jwt));
+  @PostMapping("/register")
+  public ResponseEntity<ApiResponse<SocioEntity>> register(
+      @RequestBody RegisterRequest registerRequest) {
+    try {
+      SocioEntity nuevoSocio = socioService.registrarSocio(registerRequest);
+      return ResponseEntity.status(HttpStatus.CREATED)
+          .body(new ApiResponse<>(true, "Usuario y socio registrados exitosamente", nuevoSocio));
+    } catch (EmailAlreadyExistsException e) {
+      // Captura el error si el email ya existe
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body(new ApiResponse<>(false, e.getMessage(), null));
     }
+  }
 
-    @PostMapping("/forgot-password")
-    public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        socioRepository.findByEmail(request.getEmail()).ifPresent(socio -> {
-            String token = jwtService.generateToken(socio);
-            String resetLink = "http://localhost:4200/auth/reset-password?token=" + token;
+  @PostMapping("/forgot-password")
+  public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+    usuarioRepository.findByEmail(request.getEmail()).ifPresent(usuario -> {
+      String token = jwtService.generateToken(usuario);
+      // TODO: Actualizar la URL del frontend si es necesario
+      String resetLink = "http://localhost:4200/auth/reset-password?token=" + token;
 
-            try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom(fromAddress);
-                message.setTo(socio.getEmail());
-                message.setSubject("Solicitud de restablecimiento de contraseña");
-                message.setText("Para restablecer tu contraseña, haz clic en el siguiente enlace: " + resetLink);
-                mailSender.send(message);
-            } catch (Exception e) {
-                logger.error("Error al enviar el correo de restablecimiento de contraseña a {}", socio.getEmail(), e);
-            }
-        });
+      try {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromAddress);
+        message.setTo(usuario.getEmail());
+        message.setSubject("Solicitud de restablecimiento de contraseña");
+        message.setText("Para restablecer tu contraseña, haz clic en el siguiente enlace: " + resetLink);
+        mailSender.send(message);
+      } catch (Exception e) {
+        log.error("Error al enviar el correo de restablecimiento de contraseña a {}", usuario.getEmail(), e);
+      }
+    });
 
-        // Always return OK to prevent email enumeration.
-        return ResponseEntity.ok().build();
-    }
+    // Siempre se devuelve OK para no revelar si un email existe en el sistema (prevención de enumeración de emails)
+    return ResponseEntity.ok().build();
+  }
 
-    @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
-        try {
-            String userEmail = jwtService.extractUsername(request.getToken());
-            if (userEmail != null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                if (jwtService.isTokenValid(request.getToken(), userDetails)) {
-                    SocioEntity socio = socioRepository.findByEmail(userEmail)
-                            .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
-                    socio.setPassword(passwordEncoder.encode(request.getPassword()));
-                    socioRepository.save(socio);
-                    return ResponseEntity.ok().build();
-                }
-            }
-        } catch (Exception e) {
-            logger.error("Error resetting password", e);
+  @PostMapping("/reset-password")
+  public ResponseEntity<Void> resetPassword(@RequestBody ResetPasswordRequest request) {
+    try {
+      String userEmail = jwtService.extractUsername(request.getToken());
+      if (userEmail != null) {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+        if (jwtService.isTokenValid(request.getToken(), userDetails)) {
+          UsuarioEntity usuario = usuarioRepository.findByEmail(userEmail)
+              .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+          usuario.setPassword(passwordEncoder.encode(request.getPassword()));
+          usuarioRepository.save(usuario);
+          return ResponseEntity.ok().build();
         }
-        return ResponseEntity.badRequest().build();
+      }
+    } catch (Exception e) {
+      log.error("Error al restablecer la contraseña", e);
     }
+    return ResponseEntity.badRequest().build();
+  }
 }

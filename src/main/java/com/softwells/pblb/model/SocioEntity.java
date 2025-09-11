@@ -1,21 +1,17 @@
 package com.softwells.pblb.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Entity
 @Table(name = "socios")
 @Data
-public class SocioEntity implements UserDetails {
+public class SocioEntity {
 
   @Id
   @GeneratedValue
@@ -28,16 +24,15 @@ public class SocioEntity implements UserDetails {
   private String nombre;
 
   private LocalDate fechaNacimiento;
+
+  // Eliminamos la restricción 'unique' del DNI y email
   private String dni;
   private String direccion;
   private String poblacion;
   private String provincia;
   private String codigoPostal;
   private String telefono;
-  @Column(unique = true, nullable = false)
   private String email;
-
-  private String password;
 
   @Column(nullable = false)
   private LocalDate fechaAlta;
@@ -50,6 +45,9 @@ public class SocioEntity implements UserDetails {
 
   @Column(nullable = false)
   private boolean accionistaBetis;
+
+  @Column(nullable = false)
+  private boolean exentoPago = false;
 
   private String numeroCuenta;
 
@@ -66,41 +64,8 @@ public class SocioEntity implements UserDetails {
   @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL)
   private Set<ParticipacionEventoEntity> participaciones = new HashSet<>();
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-  @JoinTable(name = "socio_roles",
-      joinColumns = @JoinColumn(name = "socio_uid"),
-      inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private Set<RoleEntity> roles = new HashSet<>();
-
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return roles.stream()
-        .map(role -> new SimpleGrantedAuthority(role.getName()))
-        .collect(Collectors.toList());
-  }
-
-  @Override
-  public String getUsername() {
-    return email;
-  }
-
-  @Override
-  public boolean isAccountNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isAccountNonLocked() {
-    return true;
-  }
-
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return activo;
-  }
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "usuario_uid")
+  private UsuarioEntity usuario;
 }

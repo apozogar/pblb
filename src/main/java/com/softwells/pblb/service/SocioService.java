@@ -2,8 +2,14 @@ package com.softwells.pblb.service;
 
 import com.softwells.pblb.controller.dto.SocioStatsDto;
 import com.softwells.pblb.model.CuotaEntity;
+import com.softwells.pblb.model.RoleEntity;
 import com.softwells.pblb.model.SocioEntity;
+import com.softwells.pblb.model.UsuarioEntity;
+import com.softwells.pblb.exception.EmailAlreadyExistsException;
 import com.softwells.pblb.repository.CuotaRepository;
+import com.softwells.pblb.controller.dto.RegisterRequest;
+import com.softwells.pblb.repository.RoleRepository;
+import com.softwells.pblb.repository.UsuarioRepository;
 import com.softwells.pblb.repository.SocioRepository;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,11 +27,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,12 +46,48 @@ public class SocioService {
 
   private final SocioRepository socioRepository;
   private final CuotaRepository cuotaRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final UsuarioRepository usuarioRepository;
+  private final RoleRepository roleRepository;
 
   public SocioEntity crear(SocioEntity socio) {
     if (socioRepository.existsByDni(socio.getDni())) {
       throw new IllegalArgumentException("Ya existe un socio con ese DNI");
     }
     return socioRepository.save(socio);
+  }
+
+  public SocioEntity registrarSocio(RegisterRequest request) {
+    // 1. Verifica que el email no esté ya en uso para un Usuario.
+    if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+      throw new EmailAlreadyExistsException("El email ya está registrado.");
+    }
+
+    // 2. Crea el nuevo UsuarioEntity
+    UsuarioEntity nuevoUsuario = new UsuarioEntity();
+    nuevoUsuario.setEmail(request.getEmail());
+    nuevoUsuario.setPassword(passwordEncoder.encode(request.getPassword()));
+    nuevoUsuario.setActivo(true);
+
+    // Asignamos el rol directamente al Usuario
+    RoleEntity userRole = roleRepository.findByName("ROLE_USER")
+        .orElseThrow(() -> new RuntimeException("Error: Rol ROLE_USER no encontrado."));
+    nuevoUsuario.setRoles(Set.of(userRole));
+
+    UsuarioEntity usuario = usuarioRepository.save(nuevoUsuario);
+
+    // 3. Crea la nueva ficha de SocioEntity.
+    SocioEntity nuevoSocio = new SocioEntity();
+    nuevoSocio.setNombre(request.getNombre());
+    nuevoSocio.setEmail(request.getEmail());
+    nuevoSocio.setFechaAlta(LocalDate.now());
+    nuevoSocio.setActivo(true);
+    nuevoSocio.setAbonadoBetis(false);
+    nuevoSocio.setAccionistaBetis(false);
+    nuevoSocio.setExentoPago(false);
+    nuevoSocio.setNumeroSocio(generarNumeroSocio());
+    nuevoSocio.setUsuario(usuario);
+    return socioRepository.save(nuevoSocio);
   }
 
   public SocioEntity actualizar(UUID id, SocioEntity socio) {
@@ -75,13 +119,6 @@ public class SocioService {
     return socio;
   }
 
-  public SocioEntity obtenerSocioAutenticado() {
-    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-    return socioRepository.findByEmail(userEmail)
-        .orElseThrow(() -> new EntityNotFoundException(
-            "No se encontró un socio asociado al usuario autenticado."));
-  }
-
   public List<SocioEntity> obtenerTodos() {
     return socioRepository.findAll();
   }
@@ -103,6 +140,11 @@ public class SocioService {
     return new SocioStatsDto(totalSocios, nuevosSocios);
   }
 
+  private String generarNumeroSocio() {
+    // Lógica para generar un número de socio único.
+    // Puede ser un correlativo o un UUID.
+    return "SOC-" + UUID.randomUUID().toString().substring(0, 8);
+  }
 
   public void importarSocios(MultipartFile file) {
     try (InputStream inputStream = file.getInputStream()) {
@@ -182,4 +224,5 @@ public class SocioService {
       default -> "";
     };
   }
+
 }

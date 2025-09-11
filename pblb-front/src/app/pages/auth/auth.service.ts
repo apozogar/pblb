@@ -1,6 +1,7 @@
 import {Injectable, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
+import { RegisterRequest } from '../../models/register-request.model';
 import {Router} from "@angular/router";
 import {environment} from "../../../enviroments/environment";
 
@@ -22,6 +23,10 @@ export class AuthService {
                 }
             })
         );
+    }
+
+    register(registerData: RegisterRequest): Observable<any> {
+        return this.http.post(`${this.baseUrl}/register`, registerData);
     }
 
     forgotPassword(email: string): Observable<any> {

@@ -1,6 +1,6 @@
 package com.softwells.pblb.security;
 
-import com.softwells.pblb.repository.SocioRepository;
+import com.softwells.pblb.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +17,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-  private final SocioRepository socioRepository;
+  private final UsuarioRepository usuarioRepository;
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> socioRepository.findByEmail(username)
-        .orElseThrow(
-            () -> new UsernameNotFoundException("Socio no encontrado con email: " + username));
+    return username -> usuarioRepository.findByEmail(username)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
   }
 
   @Bean
@@ -34,13 +33,14 @@ public class ApplicationConfig {
   }
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-
-  @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
       throws Exception {
     return config.getAuthenticationManager();
   }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
 }

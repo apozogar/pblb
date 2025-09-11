@@ -54,10 +54,13 @@ cors:
 app:
   security:
     jwt:
-      secret: realbetiscampeon
-      expiration: 86400000  # 24 horas en milisegundos
+      secret: eW91ci1zdXBlci1zZWNyZXQta2V5LXRoYXQtaXMtbG9uZy1hbmQtc2VjdXJlLWFuZC1hdC1sZWFzdC0yNTYtYml0cw==
+      expiration: 1209600000  # 14 dias en milisegundos
+
+
 
 # Dirección de correo para el remitente
 mail:
   from:
     address: ${spring.mail.username}
+
