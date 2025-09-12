@@ -2,23 +2,20 @@ package com.softwells.pblb.controller;
 
 import com.softwells.pblb.controller.dto.ApiResponse;
 import com.softwells.pblb.controller.dto.SocioStatsDto;
-import com.softwells.pblb.model.SocioEntity;
 import com.softwells.pblb.model.CuotaEntity;
+import com.softwells.pblb.model.SocioEntity;
 import com.softwells.pblb.service.SepaService;
 import com.softwells.pblb.service.SocioService;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -53,6 +50,16 @@ public class SocioController {
       @RequestBody SocioEntity socio) {
     return ResponseEntity.ok(new ApiResponse<>(true, "Socio actualizado exitosamente",
         socioService.actualizar(id, socio)));
+  }
+
+  @PutMapping("/me/{id}")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<ApiResponse<SocioEntity>> actualizarMiSocio(@PathVariable UUID id,
+      @RequestBody SocioEntity socioData) {
+    // El servicio debe verificar que el socio 'id' pertenece al usuario autenticado
+    SocioEntity socioActualizado = socioService.actualizarMiSocio(id, socioData);
+    return ResponseEntity.ok(
+        new ApiResponse<>(true, "Tu perfil ha sido actualizado.", socioActualizado));
   }
 
   @DeleteMapping("/{id}")
@@ -119,11 +126,14 @@ public class SocioController {
         .body(fileContent);
   }
 
-
-  @GetMapping("/{id}")
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-  public ResponseEntity<SocioEntity> obtenerSocioPorId(@PathVariable UUID id) {
-    return ResponseEntity.ok(socioService.obtenerPorId(id));
+  /**
+   * Endpoint para que un usuario autenticado obtenga su propia ficha de socio principal. La
+   * información del usuario se extrae del token de seguridad.
+   */
+  @GetMapping("/me")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerMiInformacion() {
+    List<SocioEntity> socio = socioService.obtenerSocioAutenticado();
+    return ResponseEntity.ok(new ApiResponse<>(true, "Información del socio recuperada", socio));
   }
-
 }

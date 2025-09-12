@@ -1,0 +1,123 @@
+<div
+    class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden p-4">
+    <div class="w-full max-w-4xl">
+        <div
+            style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+            <div class="w-full bg-surface-0 dark:bg-surface-900 py-12 px-8 sm:px-20"
+                 style="border-radius: 53px">
+                <div class="text-center mb-8">
+                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
+                        ¡Un último paso!
+                    </div>
+                    <span class="text-muted-color font-medium">Completa tu ficha de socio para finalizar el proceso.</span>
+                </div>
+
+                @if (socio) {
+                    <form #profileForm="ngForm" (ngSubmit)="saveProfile()">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
+
+                            <!-- DNI -->
+                            <div>
+                                <label for="dni"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">DNI</label>
+                                <input pInputText id="dni" type="text" placeholder="Tu DNI"
+                                       class="w-full"
+                                       [(ngModel)]="socio.dni" name="dni" required/>
+                            </div>
+
+                            <!-- Fecha de Nacimiento -->
+                            <div>
+                                <label for="fechaNacimiento"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Fecha
+                                    de
+                                    Nacimiento</label>
+                                <p-datepicker [(ngModel)]="socio.fechaNacimiento" [showIcon]="true"
+                                              name="fechaNacimiento" class="w-full"
+                                              [dateFormat]="'dd/mm/yy'"
+                                              required></p-datepicker>
+                            </div>
+
+                            <!-- Dirección -->
+                            <div class="md:col-span-2">
+                                <label for="direccion"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Dirección</label>
+                                <input pInputText id="direccion" type="text"
+                                       placeholder="Calle, número, piso..."
+                                       class="w-full" [(ngModel)]="socio.direccion"
+                                       name="direccion"/>
+                            </div>
+
+                            <!-- Población -->
+                            <div>
+                                <label for="poblacion"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Población</label>
+                                <input pInputText id="poblacion" type="text"
+                                       placeholder="Tu población" class="w-full"
+                                       [(ngModel)]="socio.poblacion" name="poblacion"/>
+                            </div>
+
+                            <!-- Provincia -->
+                            <div>
+                                <label for="provincia"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Provincia</label>
+                                <input pInputText id="provincia" type="text"
+                                       placeholder="Tu provincia" class="w-full"
+                                       [(ngModel)]="socio.provincia" name="provincia"/>
+                            </div>
+
+                            <!-- Código Postal -->
+                            <div>
+                                <label for="codigoPostal"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Código
+                                    Postal</label>
+                                <input pInputText id="codigoPostal" type="text" placeholder="C.P."
+                                       class="w-full"
+                                       [(ngModel)]="socio.codigoPostal" name="codigoPostal"/>
+                            </div>
+
+                            <!-- Teléfono -->
+                            <div>
+                                <label for="telefono"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Teléfono</label>
+                                <input pInputText id="telefono" type="text"
+                                       placeholder="Tu teléfono" class="w-full"
+                                       [(ngModel)]="socio.telefono" name="telefono"/>
+                            </div>
+
+                            <!-- Número de Cuenta -->
+                            <div class="md:col-span-2">
+                                <label for="numeroCuenta"
+                                       class="block text-surface-900 dark:text-surface-0 font-medium mb-2">Número
+                                    de
+                                    Cuenta (IBAN)</label>
+                                <input pInputText id="numeroCuenta" type="text"
+                                       placeholder="ES00 0000 0000 0000 0000 0000"
+                                       class="w-full" [(ngModel)]="socio.numeroCuenta"
+                                       name="numeroCuenta"/>
+                            </div>
+
+                        </div>
+
+                        @if (error) {
+                            <p-message severity="error" size="small" variant="simple"
+                                       class="mt-6">{{ error }}
+                            </p-message>
+                        }
+
+                        <div class="flex items-center justify-between mt-8 gap-4">
+                            <p-button label="Completar más tarde" styleClass="w-full" [text]="true"
+                                      (onClick)="skip()"></p-button>
+                            <p-button label="Guardar Perfil" styleClass="w-full" type="submit"
+                                      [disabled]="profileForm.invalid"></p-button>
+                        </div>
+                    </form>
+                } @else {
+                    <div class="text-center">
+                        <p-progressSpinner/>
+                        <p class="text-muted-color mt-4">Cargando tu perfil...</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

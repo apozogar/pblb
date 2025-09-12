@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -94,6 +95,33 @@ public class SocioService {
     SocioEntity existente = obtenerPorId(id);
     socio.setUid(existente.getUid());
     return socioRepository.save(socio);
+  }
+
+
+  @Transactional
+  public SocioEntity actualizarMiSocio(UUID id, SocioEntity socioData) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String userEmail = authentication.getName();
+
+    SocioEntity existente = socioRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Socio no encontrado con ID: " + id));
+
+    // Verificación de seguridad: el socio debe pertenecer al usuario autenticado
+    if (!existente.getUsuario().getEmail().equals(userEmail)) {
+      throw new AccessDeniedException("No tienes permiso para modificar este socio.");
+    }
+
+    // Actualizamos solo los campos permitidos
+    existente.setFechaNacimiento(socioData.getFechaNacimiento());
+    existente.setDni(socioData.getDni());
+    existente.setDireccion(socioData.getDireccion());
+    existente.setPoblacion(socioData.getPoblacion());
+    existente.setProvincia(socioData.getProvincia());
+    existente.setCodigoPostal(socioData.getCodigoPostal());
+    existente.setTelefono(socioData.getTelefono());
+    existente.setNumeroCuenta(socioData.getNumeroCuenta());
+
+    return socioRepository.save(existente);
   }
 
   public void eliminar(UUID id) {
@@ -225,4 +253,15 @@ public class SocioService {
     };
   }
 
+  public List<SocioEntity> sociosByUsuario(UUID uid) {
+    return socioRepository.findByUsuarioUid(uid);
+  }
+
+
+  public List<SocioEntity> obtenerSocioAutenticado() {
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    // Asumimos que un usuario tiene al menos una ficha de socio.
+    // Esta lógica busca la primera que encuentra asociada a su email.
+    return socioRepository.findFirstByUsuarioEmail(userEmail);
+  }
 }

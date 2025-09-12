@@ -1,8 +1,8 @@
 import {Injectable, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, tap} from 'rxjs';
-import { RegisterRequest } from '../../models/register-request.model';
-import {Router} from "@angular/router";
+import {Observable, switchMap, tap} from 'rxjs';
+import {RegisterRequest} from '@/models/register-request.model';
+import {Router} from '@angular/router';
 import {environment} from "../../../enviroments/environment";
 
 @Injectable({
@@ -27,6 +27,14 @@ export class AuthService {
 
     register(registerData: RegisterRequest): Observable<any> {
         return this.http.post(`${this.baseUrl}/register`, registerData);
+    }
+
+    loginAfterRegister(registerData: RegisterRequest): Observable<any> {
+        return this.register(registerData).pipe(
+            switchMap(() => {
+                return this.login({email: registerData.email, password: registerData.password});
+            })
+        );
     }
 
     forgotPassword(email: string): Observable<any> {

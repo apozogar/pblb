@@ -5,7 +5,7 @@ export interface Socio {
     numeroSocio: string;
     nombre: string;
     apellidos: string;
-    fechaNacimiento: string;
+    fechaNacimiento: string | Date;
     dni: string;
     direccion?: string;
     poblacion?: string;

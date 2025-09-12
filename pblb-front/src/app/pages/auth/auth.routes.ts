@@ -5,6 +5,7 @@ import {ForgotPassword} from './forgot-password';
 import {ResetPassword} from './reset-password';
 import {LoginComponent} from "@/pages/auth/login/login.component";
 import {RegisterComponent} from "@/pages/auth/register/register.component";
+import {CompleteProfileComponent} from "@/pages/auth/complete-profile/complete-profile.component";
 
 export default [
     {path: 'access', component: Access},
@@ -12,5 +13,6 @@ export default [
     {path: 'login', component: LoginComponent},
     {path: 'forgot-password', component: ForgotPassword},
     {path: 'reset-password', component: ResetPassword},
-    {path: 'register', component: RegisterComponent}
+    {path: 'register', component: RegisterComponent},
+    {path: 'complete-profile', component: CompleteProfileComponent}
 ] as Routes;

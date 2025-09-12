@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
-import {RegisterRequest} from '../../../models/register-request.model';
+import {RegisterRequest} from '@/models/register-request.model';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {ButtonModule} from 'primeng/button';
@@ -28,7 +28,7 @@ import {AppFloatingConfigurator} from "@/layout/component/app.floatingconfigurat
     templateUrl: './register.component.html',
     styles: ``
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
 
     registerData: RegisterRequest = {
         nombre: '',
@@ -39,6 +39,10 @@ export class RegisterComponent {
     error: string | null = null;
 
     constructor(private authService: AuthService, private router: Router) {
+    }
+
+    ngOnInit(): void {
+        localStorage.removeItem('token');
     }
 
     register(): void {
@@ -54,10 +58,10 @@ export class RegisterComponent {
             return;
         }
 
-        this.authService.register(this.registerData).subscribe({
+        this.authService.loginAfterRegister(this.registerData).subscribe({
             next: () => {
-                // Registro exitoso, redirigir al login o a una página de "verifique su email"
-                this.router.navigate(['/auth/login'], {queryParams: {registered: 'true'}});
+                // Registro y login exitosos. Redirigimos a completar el perfil.
+                this.router.navigate(['/auth/complete-profile']);
             },
             error: (err) => {
                 // Manejo de errores del backend

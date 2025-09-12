@@ -26,4 +26,8 @@ public interface SocioRepository extends JpaRepository<SocioEntity, UUID> {
   boolean existsByNumeroSocio(String numeroSocio);
 
   long countByFechaAltaGreaterThanEqual(LocalDate fechaDesde);
+
+  List<SocioEntity> findByUsuarioUid(UUID usuarioUid);
+
+  List<SocioEntity> findFirstByUsuarioEmail(String email);
 }

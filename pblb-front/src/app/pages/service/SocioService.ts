@@ -72,4 +72,5 @@ export class SocioService {
 
         return this.http.post<ApiResponse<string>>(`${this.apiUrl}/importar`, formData);
     }
+
 }
