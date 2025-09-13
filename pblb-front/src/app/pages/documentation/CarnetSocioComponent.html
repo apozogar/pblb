@@ -2,7 +2,7 @@
     <!-- La cabecera ahora es un título general sobre el carrusel -->
     <div class="betis-header-main flex space-around" style="justify-content: space-around;">
         <div class="betis-title">
-            <h2>PEÑA BETICA LUIS BELLVER - GILENA</h2>
+            <h2>{{ penaInfo?.nombre || 'PEÑA BETICA LUIS BELLVER - GILENA' }}</h2>
             <h3>Mis Carnets de Socio</h3>
         </div>
         <div class="header-icons">
@@ -50,7 +50,7 @@
                 <!-- Historial de cuotas asociado a este carnet -->
                 <div class="history-table-container">
                     <p-card header="Historial de Cuotas">
-                        <p-table [value]="cuotas">
+                        <p-table [value]="socio.cuotas">
                             <ng-template pTemplate="header">
                                 <tr>
                                     <th>Mes</th>

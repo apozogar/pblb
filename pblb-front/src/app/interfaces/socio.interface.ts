@@ -1,5 +1,11 @@
 import {Cuota} from "@/interfaces/cuota.interface";
 
+export interface Pena {
+    id: number;
+    nombre: string;
+    // Añade aquí otros campos de la peña que necesites
+}
+
 export interface Socio {
     uid?: string;
     numeroSocio: string;
@@ -29,4 +35,9 @@ export interface EstadisticasSocio {
     edadMayoria: number;
     totalSociosJubilados: number;
     edadJubilacion: number;
+}
+
+export interface CarnetDto {
+    penaInfo: Pena;
+    socios: Socio[];
 }

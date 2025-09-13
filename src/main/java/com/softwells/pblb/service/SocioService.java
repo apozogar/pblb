@@ -1,6 +1,8 @@
 package com.softwells.pblb.service;
 
+import com.softwells.pblb.controller.dto.CarnetDto;
 import com.softwells.pblb.controller.dto.RegisterRequest;
+import com.softwells.pblb.controller.dto.SocioDto;
 import com.softwells.pblb.controller.dto.SocioStatsDto;
 import com.softwells.pblb.exception.EmailAlreadyExistsException;
 import com.softwells.pblb.model.CuotaEntity;
@@ -23,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -301,5 +304,21 @@ public class SocioService {
     // Asumimos que un usuario tiene al menos una ficha de socio.
     // Esta lógica busca la primera que encuentra asociada a su email.
     return socioRepository.findByUsuarioEmail(userEmail);
+  }
+
+  @Transactional(readOnly = true)
+  public CarnetDto obtenerDatosCarnetUsuarioAutenticado() {
+    String userEmail = Objects.requireNonNull(
+        SecurityContextHolder.getContext().getAuthentication()).getName();
+
+    // 1. Obtener la información de la peña
+    PenaEntity penaInfo = penaRepository.findById(1L) // Asumiendo que el ID es 1
+        .orElseThrow(() -> new EntityNotFoundException("No se encontró la información de la peña."));
+
+    // 2. Obtener todos los socios del usuario y mapearlos a DTOs
+    List<SocioDto> sociosDto = socioRepository.findByUsuarioEmail(userEmail).stream()
+        .map(SocioDto::fromEntity).collect(Collectors.toList());
+
+    return new CarnetDto(penaInfo, sociosDto);
   }
 }

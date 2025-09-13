@@ -11,13 +11,12 @@ import {Tooltip} from "primeng/tooltip";
 import {DialogModule} from "primeng/dialog";
 import {InputTextModule} from "primeng/inputtext";
 import {ToastModule} from "primeng/toast";
-import {environment} from "../../../enviroments/environment";
-import {Socio} from "@/interfaces/socio.interface";
-import {Cuota} from "@/interfaces/cuota.interface";
+import {CarnetDto, Pena, Socio} from "@/interfaces/socio.interface";
 import {ApiResponse} from "@/interfaces/api-response.interface";
 import {AppLogo} from "@/layout/component/app.logo";
-import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
 import {Carousel} from "primeng/carousel";
+import {environment} from "../../../enviroments/environment";
+
 @Component({
     selector: 'app-carnet-socio',
     standalone: true,
@@ -33,11 +32,6 @@ import {Carousel} from "primeng/carousel";
         InputTextModule,
         FormsModule,
         ToastModule,
-        Tabs,
-        TabList,
-        TabPanels,
-        Tab,
-        TabPanel,
         Carousel
     ],
     providers: [MessageService],
@@ -45,8 +39,8 @@ import {Carousel} from "primeng/carousel";
     styleUrl: 'CarnetSocioComponent.scss'
 })
 export class CarnetSocioComponent implements OnInit {
-    socios: Array<Socio> = [];
-    cuotas: Cuota[] = [];
+    penaInfo: Pena | null = null;
+    socios: Socio[] = []; // Cada socio ya tendrá sus cuotas
 
     displayNuevoSocioDialog: boolean = false;
     nuevoSocio: Partial<Socio> = {};
@@ -54,13 +48,16 @@ export class CarnetSocioComponent implements OnInit {
     private http = inject(HttpClient);
     private messageService = inject(MessageService);
 
-    ngOnInit(): void {this.cargarSocios();}
+    ngOnInit(): void {
+        this.cargarDatosCarnet();
+    }
 
-    cargarSocios() {
-        this.http.get<ApiResponse<Array<Socio>>>(`${environment.apiUrl}/api/socios/me`)
+    cargarDatosCarnet() {
+        this.http.get<ApiResponse<CarnetDto>>(`${environment.apiUrl}/api/socios/me`)
             .subscribe(response => {
                 if (response.success && response.data) {
-                    this.socios = response.data;
+                    this.penaInfo = response.data.penaInfo;
+                    this.socios = response.data.socios;
                 }
             });
     }
@@ -89,7 +86,7 @@ export class CarnetSocioComponent implements OnInit {
             .subscribe({
                 next: (response) => {
                     if (response.success) {
-                        this.cargarSocios(); // Recargamos la lista de socios
+                        this.cargarDatosCarnet(); // Recargamos toda la información
                         this.messageService.add({severity: 'success', summary: 'Éxito', detail: response.message});
                         this.cerrarDialogoNuevoSocio();
                     } else {

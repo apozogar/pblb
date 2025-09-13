@@ -1,6 +1,7 @@
 package com.softwells.pblb.controller;
 
 import com.softwells.pblb.controller.dto.ApiResponse;
+import com.softwells.pblb.controller.dto.CarnetDto;
 import com.softwells.pblb.controller.dto.SocioStatsDto;
 import com.softwells.pblb.model.CuotaEntity;
 import com.softwells.pblb.model.SocioEntity;
@@ -132,8 +133,8 @@ public class SocioController {
    */
   @GetMapping("/me")
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerMiInformacion() {
-    List<SocioEntity> socio = socioService.obtenerSocioAutenticado();
-    return ResponseEntity.ok(new ApiResponse<>(true, "Información del socio recuperada", socio));
+  public ResponseEntity<ApiResponse<CarnetDto>> obtenerMiInformacion() {
+    CarnetDto carnetData = socioService.obtenerDatosCarnetUsuarioAutenticado();
+    return ResponseEntity.ok(new ApiResponse<>(true, "Información del carnet recuperada", carnetData));
   }
 }
