@@ -104,36 +104,37 @@
              [showCurrentPageReport]="true">
         <ng-template pTemplate="header">
             <tr>
-                <th scope="col">Número Socio</th>
+                <th scope="col" class="hidden md:table-cell">Número Socio</th>
                 <th scope="col">Nombre</th>
-                <th scope="col">Teléfono</th>
-                <th scope="col">Email</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Acciones</th>
+                <th scope="col" class="hidden md:table-cell">Teléfono</th>
+                <th scope="col" class="hidden md:table-cell">Email</th>
+                <th scope="col" class="hidden md:table-cell">Estado</th>
+                <th scope="col" style="min-width: 130px;">Acciones</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-socio>
             <tr>
-                <td>{{ socio.numeroSocio }}</td>
+                <td class="hidden md:table-cell">{{ socio.numeroSocio }}</td>
                 <td>{{ socio.nombre }}</td>
-                <td>{{ socio.telefono }}</td>
-                <td>{{ socio.email }}</td>
-                <td>
+                <td class="hidden md:table-cell">{{ socio.telefono }}</td>
+                <td class="hidden md:table-cell">{{ socio.email }}</td>
+                <td class="hidden md:table-cell">
                     <p-tag [severity]="socio.activo ? 'success' : 'danger'"
                            [value]="socio.activo ? 'Activo' : 'Inactivo'"/>
                 </td>
-                <td>
-                    <button pButton pRipple icon="pi pi-pencil" [rounded]="true" [outlined]="true"
-                            class="p-button-rounded p-button-success mr-2"
-                            (click)="editarSocio(socio)" pTooltip="Editar Socio"
-                            tooltipPosition="top"></button>
+                <td style="min-width: 130px;">
                     <button pButton pRipple icon="pi pi-euro" [rounded]="true" [outlined]="true"
-                            class="p-button-rounded p-button-info mr-2"
+                            class="p-button-sm md:p-button-normal p-button-rounded p-button-info mr-2"
                             (click)="mostrarCuotas(socio)" pTooltip="Ver Cuotas"
                             tooltipPosition="top"></button>
+                    <button pButton pRipple icon="pi pi-pencil" [rounded]="true" [outlined]="true"
+                            class="p-button-sm md:p-button-normal p-button-rounded p-button-success mr-2"
+                            (click)="editarSocio(socio)" pTooltip="Editar Socio"
+                            tooltipPosition="top"></button>
                     <button pButton pRipple icon="pi pi-trash" [rounded]="true" [outlined]="true"
-                            class="p-button-rounded p-button-danger"
-                            (click)="eliminarSocio(socio)"></button>
+                            class="p-button-sm md:p-button-normal p-button-rounded p-button-danger"
+                            (click)="eliminarSocio(socio)" pTooltip="Eliminar Socio"
+                            tooltipPosition="top"></button>
                 </td>
             </tr>
         </ng-template>

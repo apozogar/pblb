@@ -20,11 +20,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.commons.text.WordUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -237,7 +239,8 @@ public class SocioService {
 
         // Asignamos los valores de las celdas al objeto SocioEntity
         // Ojo: los índices de las celdas empiezan en 0
-        socio.setNombre(getCellValueAsString(row.getCell(1)));
+        String nombreCompleto = getCellValueAsString(row.getCell(1));
+        socio.setNombre(WordUtils.capitalizeFully(nombreCompleto));
         socio.setDni(getCellValueAsString(row.getCell(2)));
         socio.setEmail(email);
 
@@ -292,11 +295,11 @@ public class SocioService {
     return socioRepository.findByUsuarioUid(uid);
   }
 
-
   public List<SocioEntity> obtenerSocioAutenticado() {
-    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    String userEmail = Objects.requireNonNull(
+        SecurityContextHolder.getContext().getAuthentication()).getName();
     // Asumimos que un usuario tiene al menos una ficha de socio.
     // Esta lógica busca la primera que encuentra asociada a su email.
-    return socioRepository.findFirstByUsuarioEmail(userEmail);
+    return socioRepository.findByUsuarioEmail(userEmail);
   }
 }

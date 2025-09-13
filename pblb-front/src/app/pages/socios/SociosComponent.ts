@@ -18,6 +18,7 @@ import {Textarea} from 'primeng/textarea';
 import {EstadisticasSocio} from "@/interfaces/socio.interface";
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
+import {Tooltip} from "primeng/tooltip";
 
 @Component({
     selector: 'app-socios',
@@ -36,7 +37,7 @@ import {InputIcon} from "primeng/inputicon";
         Ripple,
         CheckboxModule,
         DatePickerModule,
-        Textarea, IconField, InputIcon
+        Textarea, IconField, InputIcon, Tooltip
 
     ],
     templateUrl: './SociosComponent.html'

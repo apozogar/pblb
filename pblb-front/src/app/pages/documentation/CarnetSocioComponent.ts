@@ -16,6 +16,8 @@ import {Socio} from "@/interfaces/socio.interface";
 import {Cuota} from "@/interfaces/cuota.interface";
 import {ApiResponse} from "@/interfaces/api-response.interface";
 import {AppLogo} from "@/layout/component/app.logo";
+import {Tab, TabList, TabPanel, TabPanels, Tabs} from "primeng/tabs";
+import {Carousel} from "primeng/carousel";
 @Component({
     selector: 'app-carnet-socio',
     standalone: true,
@@ -30,7 +32,13 @@ import {AppLogo} from "@/layout/component/app.logo";
         DialogModule,
         InputTextModule,
         FormsModule,
-        ToastModule
+        ToastModule,
+        Tabs,
+        TabList,
+        TabPanels,
+        Tab,
+        TabPanel,
+        Carousel
     ],
     providers: [MessageService],
     templateUrl: 'CarnetSocioComponent.html',

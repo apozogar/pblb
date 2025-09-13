@@ -20,7 +20,7 @@ public interface SocioRepository extends JpaRepository<SocioEntity, UUID> {
 
   List<SocioEntity> findByUsuarioUid(UUID usuarioUid);
 
-  List<SocioEntity> findFirstByUsuarioEmail(String email);
+  List<SocioEntity> findByUsuarioEmail(String email);
 
   long countByFechaNacimientoAfter(LocalDate fecha);
 

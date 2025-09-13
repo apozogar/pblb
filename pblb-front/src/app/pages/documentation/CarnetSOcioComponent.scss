@@ -34,7 +34,6 @@
 
 .edit-icon, .add-icon {
     font-size: 1.5rem;
-    color: white;
     cursor: pointer;
     transition: color 0.2s ease-in-out;
 
@@ -47,7 +46,6 @@
     margin: 0;
     line-height: 1.2;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    color: white;
 }
 
 .betis-title h2 {
@@ -119,4 +117,42 @@
 
 .p-card.p-component.p-card-header {
     background-color: #00a859;
+}
+
+/* En el fichero de estilos de tu CarnetSocioComponent (e.g., carnet-socio.component.scss) */
+
+// Estilo para el contenedor principal del carnet
+.carnet-container {
+    width: 100%;
+    max-width: 600px; /* Ajusta el ancho máximo en escritorio si lo deseas */
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+// Estilos para el carrusel
+:host ::ng-deep .full-width-carousel {
+    .p-carousel-items-container {
+        // Asegura que el contenedor de los items no tenga un ancho fijo que cause problemas
+        width: 100%;
+    }
+
+    .p-carousel-item {
+        // Hace que cada slide ocupe todo el ancho disponible
+        flex: 1 0 100%;
+    }
+}
+
+// Estilos para el contenido de cada slide
+.carnet-slide {
+    padding: 0.5rem; // Un pequeño padding para que no se pegue a los bordes
+    box-sizing: border-box;
+}
+
+.betis-card {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.history-table-container {
+    width: 100%;
 }

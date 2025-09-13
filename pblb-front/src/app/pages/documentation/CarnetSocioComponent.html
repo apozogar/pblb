@@ -1,92 +1,102 @@
 <div class="carnet-container">
-    <p-card class="betis-card">
-        <div class="betis-header">
-            <div class="betis-title">
-                <h2>PEÑA BETICA LUIS BELLVER - GILENA</h2>
-                <h3>Carnet de Socio</h3>
-            </div>
-            <div class="header-icons">
-                <i
-                    pTooltip="Añadir Nuevo Socio"
-                    class="pi pi-plus add-icon"
-                    (click)="abrirDialogoNuevoSocio()">
-                </i>
-                <i
-                    pTooltip="Editar Datos"
-                    class="pi pi-pencil edit-icon">
-                </i>
-            </div>
+    <!-- La cabecera ahora es un título general sobre el carrusel -->
+    <div class="betis-header-main flex space-around" style="justify-content: space-around;">
+        <div class="betis-title">
+            <h2>PEÑA BETICA LUIS BELLVER - GILENA</h2>
+            <h3>Mis Carnets de Socio</h3>
         </div>
-
-        <div class="betis-body" *ngFor="let socio of socios">
-            <app-logo *ngIf="socio"></app-logo>
-            <div class="socio-info">
-                <div class="info-row">
-                    <span class="label">Nº Socio:</span>
-                    <span class="value">{{ socio?.numeroSocio || '...' }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Nombre:</span>
-                    <span class="value">{{ socio?.nombre || 'Cargando...' }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">DNI:</span>
-                    <span class="value">{{ socio?.dni || '...' }}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">Teléfono:</span>
-                    <span class="value">{{ socio?.telefono || '...' }}</span>
-                </div>
-            </div>
+        <div class="header-icons">
+            <i pTooltip="Añadir Nuevo Socio" class="pi pi-plus add-icon"
+               (click)="abrirDialogoNuevoSocio()"></i>
         </div>
-
-        <div class="betis-footer">
-            <p>¡Viva er Betis manque pierda!</p>
-        </div>
-    </p-card>
-
-    <div class="history-table-container">
-        <p-card header="Historial de Cuotas">
-            <p-table [value]="cuotas">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Mes</th>
-                        <th>Año</th>
-                        <th>Importe</th>
-                        <th class="text-center">Estado</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-cuota>
-                    <tr>
-                        <td>{{ cuota.mes }}</td>
-                        <td>{{ cuota.anio }}</td>
-                        <td>{{ cuota.importe | currency:'EUR':'symbol':'1.2-2' }}</td>
-                        <td class="text-center">
-                            <p-badge style="width: 100%"
-                                     [value]="cuota.estado"
-                                     [severity]="cuota.estado === 'Pagado' ? 'success' : 'danger'">
-                            </p-badge>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-card>
     </div>
+
+    <!-- Alternativa con Carrusel -->
+    <p-carousel [value]="socios" [numVisible]="1" [numScroll]="1" [circular]="false"
+                styleClass="full-width-carousel"
+                [showNavigators]="socios.length > 1" [showIndicators]="socios.length > 1">
+        <ng-template let-socio pTemplate="item">
+            <div class="carnet-slide">
+                <p-card class="betis-card">
+                    <!-- Cuerpo del carnet con la información del socio -->
+                    <div class="betis-body">
+                        <app-logo *ngIf="socio"></app-logo>
+                        <div class="socio-info">
+                            <div class="info-row">
+                                <span class="label">Nº Socio:</span>
+                                <span class="value">{{ socio?.numeroSocio || '...' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Nombre:</span>
+                                <span class="value">{{ socio?.nombre || 'Cargando...' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">DNI:</span>
+                                <span class="value">{{ socio?.dni || '...' }}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Teléfono:</span>
+                                <span class="value">{{ socio?.telefono || '...' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pie de página del carnet -->
+                    <div class="betis-footer">
+                        <p>¡Viva er Betis manque pierda!</p>
+                    </div>
+                </p-card>
+
+                <!-- Historial de cuotas asociado a este carnet -->
+                <div class="history-table-container">
+                    <p-card header="Historial de Cuotas">
+                        <p-table [value]="cuotas">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Mes</th>
+                                    <th>Año</th>
+                                    <th>Importe</th>
+                                    <th class="text-center">Estado</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-cuota>
+                                <tr>
+                                    <td>{{ cuota.mes }}</td>
+                                    <td>{{ cuota.anio }}</td>
+                                    <td>{{ cuota.importe | currency:'EUR':'symbol':'1.2-2' }}</td>
+                                    <td class="text-center">
+                                        <p-badge style="width: 100%"
+                                                 [value]="cuota.estado"
+                                                 [severity]="cuota.estado === 'Pagado' ? 'success' : 'danger'">
+                                        </p-badge>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </p-card>
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
 </div>
 
 <!-- Dialogo para añadir nuevo socio -->
-<p-dialog header="Añadir Nuevo Socio" [(visible)]="displayNuevoSocioDialog" [modal]="true" [style]="{width: '50vw', 'max-width': '500px'}"
+<p-dialog header="Añadir Nuevo Socio" [(visible)]="displayNuevoSocioDialog" [modal]="true"
+          [style]="{width: '50vw', 'max-width': '500px'}"
           (onHide)="cerrarDialogoNuevoSocio()">
     <div class="p-fluid">
         <div class="field">
             <label for="nombre">Nombre Completo del Nuevo Socio</label>
-            <input id="nombre" type="text" pInputText [(ngModel)]="nuevoSocio.nombre" required autofocus/>
+            <input id="nombre" type="text" pInputText [(ngModel)]="nuevoSocio.nombre" required
+                   autofocus/>
             <small *ngIf="!nuevoSocio.nombre" class="p-error">El nombre es obligatorio.</small>
         </div>
     </div>
     <ng-template pTemplate="footer">
-        <p-button icon="pi pi-times" (click)="cerrarDialogoNuevoSocio()" label="Cancelar" styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" (click)="guardarNuevoSocio()" label="Guardar" [disabled]="!nuevoSocio.nombre"></p-button>
+        <p-button icon="pi pi-times" (click)="cerrarDialogoNuevoSocio()" label="Cancelar"
+                  styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" (click)="guardarNuevoSocio()" label="Guardar"
+                  [disabled]="!nuevoSocio.nombre"></p-button>
     </ng-template>
 </p-dialog>
 

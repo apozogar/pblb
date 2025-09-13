@@ -12,6 +12,7 @@ import com.softwells.pblb.model.UsuarioEntity;
 import com.softwells.pblb.repository.UsuarioRepository;
 import com.softwells.pblb.security.JwtService;
 import com.softwells.pblb.service.SocioService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,11 +71,16 @@ public class AuthController {
   }
 
   @PostMapping("/forgot-password")
-  public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+  public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request,
+      HttpServletRequest servletRequest) {
     usuarioRepository.findByEmailIgnoreCase(request.getEmail()).ifPresent(usuario -> {
       String token = jwtService.generateToken(usuario);
-      // TODO: Actualizar la URL del frontend si es necesario
-      String resetLink = "http://localhost:4200/auth/reset-password?token=" + token;
+
+      // Construimos el enlace de reseteo dinámicamente a partir del origen de la petición
+      String origin = servletRequest.getHeader("Origin");
+      String frontendBaseUrl =
+          (origin != null) ? origin : "http://localhost:4200"; // Fallback por si no hay Origin
+      String resetLink = frontendBaseUrl + "/auth/reset-password?token=" + token;
 
       try {
         SimpleMailMessage message = new SimpleMailMessage();
