@@ -71,7 +71,7 @@ public class AuthController {
 
   @PostMapping("/forgot-password")
   public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-    usuarioRepository.findByEmail(request.getEmail()).ifPresent(usuario -> {
+    usuarioRepository.findByEmailIgnoreCase(request.getEmail()).ifPresent(usuario -> {
       String token = jwtService.generateToken(usuario);
       // TODO: Actualizar la URL del frontend si es necesario
       String resetLink = "http://localhost:4200/auth/reset-password?token=" + token;
@@ -81,10 +81,12 @@ public class AuthController {
         message.setFrom(fromAddress);
         message.setTo(usuario.getEmail());
         message.setSubject("Solicitud de restablecimiento de contraseña");
-        message.setText("Para restablecer tu contraseña, haz clic en el siguiente enlace: " + resetLink);
+        message.setText(
+            "Para restablecer tu contraseña, haz clic en el siguiente enlace: " + resetLink);
         mailSender.send(message);
       } catch (Exception e) {
-        log.error("Error al enviar el correo de restablecimiento de contraseña a {}", usuario.getEmail(), e);
+        log.error("Error al enviar el correo de restablecimiento de contraseña a {}",
+            usuario.getEmail(), e);
       }
     });
 
@@ -99,7 +101,7 @@ public class AuthController {
       if (userEmail != null) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
         if (jwtService.isTokenValid(request.getToken(), userDetails)) {
-          UsuarioEntity usuario = usuarioRepository.findByEmail(userEmail)
+          UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(userEmail)
               .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
           usuario.setPassword(passwordEncoder.encode(request.getPassword()));
           usuarioRepository.save(usuario);

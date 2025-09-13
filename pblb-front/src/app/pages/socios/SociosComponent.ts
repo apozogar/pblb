@@ -62,11 +62,11 @@ export class SociosComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarSocios();
-        this.obtenerEstatidicas();
     }
 
     cargarSocios(): void {
         this.loading = true;
+        this.obtenerEstatidicas();
         this.socioService.getSocios().subscribe({
             next: (response: any) => {
                 this.socios = response.data;

@@ -29,4 +29,5 @@ public class PenaEntity {
   private Double cuotaAdulto;
   private Double cuotaMenor;
   private Integer edadMayoria;
+  private Integer edadJubilacion;
 }

@@ -18,7 +18,7 @@ public class SocioEntity {
   private UUID uid;
 
   @Column(unique = true, nullable = false)
-  private String numeroSocio;
+  private Integer numeroSocio;
 
   @Column(nullable = false)
   private String nombre;

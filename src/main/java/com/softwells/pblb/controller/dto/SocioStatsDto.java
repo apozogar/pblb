@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class SocioStatsDto {
   private long totalSocios;
   private long nuevosSocios;
+  private long totalSociosJovenes;
+  private long edadMayoria;
+  private long totalSociosJubilados;
+  private int edadJubilacion;
 }

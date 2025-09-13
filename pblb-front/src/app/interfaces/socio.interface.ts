@@ -25,5 +25,8 @@ export interface Socio {
 export interface EstadisticasSocio {
     totalSocios: number;
     nuevosSocios: number;
+    totalSociosJovenes: number;
+    edadMayoria: number;
+    totalSociosJubilados: number;
+    edadJubilacion: number;
 }
-

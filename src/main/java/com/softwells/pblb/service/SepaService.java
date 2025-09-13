@@ -42,8 +42,10 @@ public class SepaService {
     // Asume que la lista de socios incluye los datos de mandato y dirección
     for (SocioEntity socio : socios) {
       double montoCuota;
-      int edad = Period.between(socio.getFechaNacimiento(), LocalDate.now()).getYears();
-
+      int edad = 30;
+      if (socio.getFechaNacimiento() != null) {
+        edad = Period.between(socio.getFechaNacimiento(), LocalDate.now()).getYears();
+      }
       if (edad > pena.getEdadMayoria()) {
         montoCuota = pena.getCuotaAdulto();
       } else {

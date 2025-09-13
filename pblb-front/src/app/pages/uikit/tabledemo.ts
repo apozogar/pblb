@@ -66,7 +66,7 @@ interface expandedRows {
                             <p-inputicon>
                                 <i class="pi pi-search"></i>
                             </p-inputicon>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
+                            <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Búsqueda por palabra clave" />
                         </p-iconfield>
                     </div>
                 </ng-template>

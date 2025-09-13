@@ -17,7 +17,7 @@ public class UsuarioService {
   public UsuarioEntity obtenerUsuarioAutenticado() {
     String userEmail = Objects.requireNonNull(
         SecurityContextHolder.getContext().getAuthentication()).getName();
-    return usuarioRepository.findByEmail(userEmail)
+    return usuarioRepository.findByEmailIgnoreCase(userEmail)
         .orElseThrow(() -> new EntityNotFoundException(
             "No se encontró un usuario con el email: " + userEmail));
   }

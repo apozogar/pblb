@@ -1,22 +1,27 @@
 package com.softwells.pblb.service;
 
+import com.softwells.pblb.controller.dto.RegisterRequest;
 import com.softwells.pblb.controller.dto.SocioStatsDto;
+import com.softwells.pblb.exception.EmailAlreadyExistsException;
 import com.softwells.pblb.model.CuotaEntity;
+import com.softwells.pblb.model.PenaEntity;
 import com.softwells.pblb.model.RoleEntity;
 import com.softwells.pblb.model.SocioEntity;
 import com.softwells.pblb.model.UsuarioEntity;
-import com.softwells.pblb.exception.EmailAlreadyExistsException;
 import com.softwells.pblb.repository.CuotaRepository;
-import com.softwells.pblb.controller.dto.RegisterRequest;
+import com.softwells.pblb.repository.PenaRepository;
 import com.softwells.pblb.repository.RoleRepository;
-import com.softwells.pblb.repository.UsuarioRepository;
 import com.softwells.pblb.repository.SocioRepository;
-import java.io.IOException;
+import com.softwells.pblb.repository.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,19 +29,12 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import jakarta.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Set;
-import java.util.Set;
-import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -50,6 +48,7 @@ public class SocioService {
   private final PasswordEncoder passwordEncoder;
   private final UsuarioRepository usuarioRepository;
   private final RoleRepository roleRepository;
+  private final PenaRepository penaRepository;
 
   public SocioEntity crear(SocioEntity socio) {
     if (socioRepository.existsByDni(socio.getDni())) {
@@ -60,7 +59,7 @@ public class SocioService {
 
   public SocioEntity registrarSocio(RegisterRequest request) {
     // 1. Verifica que el email no esté ya en uso para un Usuario.
-    if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+    if (usuarioRepository.findByEmailIgnoreCase(request.getEmail()).isPresent()) {
       throw new EmailAlreadyExistsException("El email ya está registrado.");
     }
 
@@ -101,6 +100,7 @@ public class SocioService {
   @Transactional
   public SocioEntity actualizarMiSocio(UUID id, SocioEntity socioData) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    assert authentication != null;
     String userEmail = authentication.getName();
 
     SocioEntity existente = socioRepository.findById(id)
@@ -137,6 +137,7 @@ public class SocioService {
 
     // Lógica de autorización
     var authentication = SecurityContextHolder.getContext().getAuthentication();
+    assert authentication != null;
     String currentUsername = authentication.getName();
     boolean isAdmin = authentication.getAuthorities().stream()
         .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
@@ -165,13 +166,28 @@ public class SocioService {
     // Suponiendo que tienes un SocioRepository inyectado
     long totalSocios = socioRepository.count();
     long nuevosSocios = socioRepository.countByFechaAltaGreaterThanEqual(fechaDesde);
-    return new SocioStatsDto(totalSocios, nuevosSocios);
+
+    // Obtenemos la configuración de la peña para la edad de mayoría
+    PenaEntity pena = penaRepository.findById(1L)
+        .orElseThrow(
+            () -> new IllegalStateException("No se encontraron los datos de la peña con ID 1"));
+
+    LocalDate fechaCorteJovenes = LocalDate.now().minusYears(pena.getEdadMayoria());
+    long totalSociosJovenes = socioRepository.countByFechaNacimientoAfter(fechaCorteJovenes);
+
+    // Calculamos la fecha de corte para ser jubilado
+    LocalDate fechaCorteJubilados = LocalDate.now().minusYears(pena.getEdadJubilacion());
+    long totalSociosJubilados = socioRepository.countByFechaNacimientoBeforeOrFechaNacimientoEquals(
+        fechaCorteJubilados, fechaCorteJubilados);
+
+    return new SocioStatsDto(totalSocios, nuevosSocios, totalSociosJovenes, pena.getEdadMayoria(),
+        totalSociosJubilados, pena.getEdadJubilacion());
   }
 
-  private String generarNumeroSocio() {
-    // Lógica para generar un número de socio único.
-    // Puede ser un correlativo o un UUID.
-    return "SOC-" + UUID.randomUUID().toString().substring(0, 8);
+  private Integer generarNumeroSocio() {
+    // Busca el número de socio máximo actual y le suma 1.
+    // Si no hay socios, empieza en 1.
+    return socioRepository.findMaxNumeroSocio().orElse(0) + 1;
   }
 
   public void importarSocios(MultipartFile file) {
@@ -190,8 +206,13 @@ public class SocioService {
           .appendOptional(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
           .toFormatter();
 
+      // Obtenemos el rol de usuario una sola vez para reutilizarlo
+      RoleEntity userRole = roleRepository.findByName("ROLE_USER")
+          .orElseThrow(() -> new RuntimeException("Error: Rol ROLE_USER no encontrado."));
+
+      // Obtenemos el número de socio máximo actual para empezar a incrementar desde ahí
+      Integer numSocio = socioRepository.findMaxNumeroSocio().orElse(0) + 1;
       // Saltamos la primera fila (cabecera)
-      Integer numSocio = 100;
       for (int i = 1; i <= sheet.getLastRowNum(); i++) {
         Row row = sheet.getRow(i);
         if (row == null) {
@@ -199,18 +220,34 @@ public class SocioService {
         }
 
         SocioEntity socio = new SocioEntity();
+        String email = getCellValueAsString(row.getCell(9));
+
+        // --- Lógica para crear o encontrar el Usuario ---
+        UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(email)
+            .orElseGet(() -> {
+              UsuarioEntity nuevoUsuario = new UsuarioEntity();
+              nuevoUsuario.setEmail(email);
+              // Asignamos una contraseña temporal. El usuario deberá usar "olvidé mi contraseña".
+              nuevoUsuario.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+              nuevoUsuario.setActivo(true);
+              nuevoUsuario.setRoles(Set.of(userRole));
+              return usuarioRepository.save(nuevoUsuario);
+            });
+        // --- Fin de la lógica de Usuario ---
 
         // Asignamos los valores de las celdas al objeto SocioEntity
         // Ojo: los índices de las celdas empiezan en 0
         socio.setNombre(getCellValueAsString(row.getCell(1)));
         socio.setDni(getCellValueAsString(row.getCell(2)));
+        socio.setEmail(email);
 
         String fechaNacimientoStr = getCellValueAsString(row.getCell(3));
         if (fechaNacimientoStr != null && !fechaNacimientoStr.isEmpty()) {
           try {
             socio.setFechaNacimiento(LocalDate.parse(fechaNacimientoStr, dateFormatter));
           } catch (Exception e) {
-            log.debug("Error formateo {}", fechaNacimientoStr);
+            log.warn("Error al formatear la fecha '{}' para el socio '{}'", fechaNacimientoStr,
+                socio.getNombre());
           }
         }
 
@@ -219,22 +256,20 @@ public class SocioService {
         socio.setProvincia(getCellValueAsString(row.getCell(6)));
         socio.setCodigoPostal(getCellValueAsString(row.getCell(7)));
         socio.setTelefono(getCellValueAsString(row.getCell(8)));
-        socio.setEmail(getCellValueAsString(row.getCell(9)));
 
         // Extraemos el IBAN del campo de domiciliación
         String domiciliacion = getCellValueAsString(row.getCell(13));
         socio.setNumeroCuenta(domiciliacion);
 
         socio.setActivo(true); // Por defecto, los nuevos socios están activos
-
-        socio.setNumeroSocio((numSocio++).toString());
+        socio.setNumeroSocio(numSocio++);
         socio.setFechaAlta(LocalDate.now());
+        socio.setUsuario(usuario); // Asociamos el socio al usuario
 
         socios.add(socio);
       }
 
       socioRepository.saveAll(socios);
-
     } catch (Exception e) {
       log.error("Error al procesar el fichero Excel: {}", e.getMessage());
       throw new RuntimeException("Error al procesar el fichero Excel: " + e.getMessage());
