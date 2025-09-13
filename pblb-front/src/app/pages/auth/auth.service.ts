@@ -1,9 +1,11 @@
 import {Injectable, inject} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, switchMap, tap} from 'rxjs';
+import {BehaviorSubject, Observable, switchMap, tap} from 'rxjs';
 import {RegisterRequest} from '@/models/register-request.model';
 import {Router} from '@angular/router';
 import {environment} from "../../../enviroments/environment";
+import { jwtDecode } from "jwt-decode";
+import {User} from "@/interfaces/user";
 
 @Injectable({
     providedIn: 'root'
@@ -15,11 +17,22 @@ export class AuthService {
 
     private baseUrl = environment.apiUrl + '/auth';
 
+    private currentUserSubject = new BehaviorSubject<User | null>(null);
+    public currentUser = this.currentUserSubject.asObservable();
+
+    constructor() {
+        const token = this.getToken();
+        if (token) {
+            this.decodeToken(token);
+        }
+    }
+
     login(credentials: { email: string, password: string }): Observable<any> {
         return this.http.post<{ token: string }>(`${this.baseUrl}/login`, credentials).pipe(
             tap(response => {
                 if (response.token) {
                     localStorage.setItem('token', response.token);
+                    this.decodeToken(response.token);
                 }
             })
         );
@@ -52,10 +65,20 @@ export class AuthService {
 
     logout(): void {
         localStorage.removeItem('token');
+        this.currentUserSubject.next(null);
         this.router.navigate(['/auth/login']);
     }
 
     getToken(): string | null {
         return localStorage.getItem('token');
+    }
+
+    private decodeToken(token: string): void {
+        try {
+            const decodedToken: User = jwtDecode(token);
+            this.currentUserSubject.next(decodedToken);
+        } catch (error) {
+            this.currentUserSubject.next(null);
+        }
     }
 }

@@ -5,11 +5,17 @@
                 <h2>PEÑA BETICA LUIS BELLVER - GILENA</h2>
                 <h3>Carnet de Socio</h3>
             </div>
-            <i
-                pTooltip="Editar Datos"
-                class="pi pi-pencil edit-icon"
-                (click)="modificarDatos()">
-            </i>
+            <div class="header-icons">
+                <i
+                    pTooltip="Añadir Nuevo Socio"
+                    class="pi pi-plus add-icon"
+                    (click)="abrirDialogoNuevoSocio()">
+                </i>
+                <i
+                    pTooltip="Editar Datos"
+                    class="pi pi-pencil edit-icon">
+                </i>
+            </div>
         </div>
 
         <div class="betis-body" *ngFor="let socio of socios">
@@ -67,3 +73,22 @@
         </p-card>
     </div>
 </div>
+
+<!-- Dialogo para añadir nuevo socio -->
+<p-dialog header="Añadir Nuevo Socio" [(visible)]="displayNuevoSocioDialog" [modal]="true" [style]="{width: '50vw', 'max-width': '500px'}"
+          (onHide)="cerrarDialogoNuevoSocio()">
+    <div class="p-fluid">
+        <div class="field">
+            <label for="nombre">Nombre Completo del Nuevo Socio</label>
+            <input id="nombre" type="text" pInputText [(ngModel)]="nuevoSocio.nombre" required autofocus/>
+            <small *ngIf="!nuevoSocio.nombre" class="p-error">El nombre es obligatorio.</small>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-times" (click)="cerrarDialogoNuevoSocio()" label="Cancelar" styleClass="p-button-text"></p-button>
+        <p-button icon="pi pi-check" (click)="guardarNuevoSocio()" label="Guardar" [disabled]="!nuevoSocio.nombre"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- Toast para notificaciones -->
+<p-toast></p-toast>

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {booleanAttribute, Component, Input} from '@angular/core';
 import {MenuItem} from 'primeng/api';
 import {Router, RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
@@ -20,7 +20,7 @@ import {AuthService} from "../../pages/auth/auth.service";
     template: `
         <div class="layout-topbar">
             <div class="layout-topbar-logo-container">
-                <button class="layout-menu-button layout-topbar-action"
+                <button *ngIf="showMenuButton" class="layout-menu-button layout-topbar-action"
                         (click)="layoutService.onMenuToggle()">
                     <i class="pi pi-bars"></i>
                 </button>
@@ -90,6 +90,8 @@ import {AuthService} from "../../pages/auth/auth.service";
 })
 export class AppTopbar {
     items!: MenuItem[];
+
+    @Input({transform: booleanAttribute}) showMenuButton: boolean = true;
 
     constructor(
         public layoutService: LayoutService,

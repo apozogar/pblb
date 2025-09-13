@@ -3,6 +3,7 @@ import { AppLayout } from '@//layout/component/app.layout';
 import { Landing } from '@//pages/landing/landing';
 import { Notfound } from '@//pages/notfound/notfound';
 import { CarnetSocioComponent } from "@/pages/documentation/CarnetSocioComponent";
+import { adminGuard } from '@/guards/admin.guard';
 import { authGuard } from '@/guards/auth.guard';
 
 export const appRoutes: Routes = [
@@ -15,7 +16,8 @@ export const appRoutes: Routes = [
             {
                 path: 'socios',
                 loadComponent: () =>
-                    import('@/pages/socios/SociosComponent').then(m => m.SociosComponent)
+                    import('@/pages/socios/SociosComponent').then(m => m.SociosComponent),
+                canActivate: [adminGuard]
             },
             // {
             //     path: 'eventos',

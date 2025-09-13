@@ -1,27 +1,31 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
-import { AppTopbar } from './app.topbar';
-import { AppSidebar } from './app.sidebar';
-import { AppFooter } from './app.footer';
-import { LayoutService } from '../service/layout.service';
+import {Component, inject, Renderer2, ViewChild} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NavigationEnd, Router, RouterModule} from '@angular/router';
+import {filter, map, Subscription} from 'rxjs';
+import {AppTopbar} from './app.topbar';
+import {AppSidebar} from './app.sidebar';
+import {AppFooter} from './app.footer';
+import {LayoutService} from '../service/layout.service';
+import {Observable} from 'rxjs';
+import {User} from "@/interfaces/user";
+import {AuthService} from "@/pages/auth/auth.service";
 
 @Component({
     selector: 'app-layout',
     standalone: true,
     imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
-    template: `<div class="layout-wrapper" [ngClass]="containerClass">
-        <app-topbar></app-topbar>
-        <app-sidebar></app-sidebar>
-        <div class="layout-main-container">
-            <div class="layout-main">
-                <router-outlet></router-outlet>
+    template: `
+        <div class="layout-wrapper" [ngClass]="containerClass">
+            <app-topbar [showMenuButton]="isAdmin$ | async"></app-topbar>
+            <app-sidebar *ngIf="isAdmin$ | async"></app-sidebar>
+            <div class="layout-main-container">
+                <div class="layout-main">
+                    <router-outlet></router-outlet>
+                </div>
+                <app-footer></app-footer>
             </div>
-            <app-footer></app-footer>
-        </div>
-        <div class="layout-mask animate-fadein"></div>
-    </div> `
+            <div class="layout-mask animate-fadein"></div>
+        </div> `
 })
 export class AppLayout {
     overlayMenuOpenSubscription: Subscription;
@@ -32,12 +36,17 @@ export class AppLayout {
 
     @ViewChild(AppTopbar) appTopBar!: AppTopbar;
 
+    isAdmin$: Observable<boolean>;
+
     constructor(
+        private authService: AuthService,
         public layoutService: LayoutService,
         public renderer: Renderer2,
         public router: Router
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
+            // @ts-ignore
+            if (!(this.isAdmin$ | async)) return; // No hacer nada si no es admin
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', (event) => {
                     if (this.isOutsideClicked(event)) {
@@ -54,6 +63,10 @@ export class AppLayout {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.hideMenu();
         });
+
+        this.isAdmin$ = this.authService.currentUser.pipe(
+            map((user) => user?.authorities?.some(auth => auth.authority === 'ROLE_ADMIN') ?? false)
+        );
     }
 
     isOutsideClicked(event: MouseEvent) {
@@ -65,7 +78,12 @@ export class AppLayout {
     }
 
     hideMenu() {
-        this.layoutService.layoutState.update((prev) => ({ ...prev, overlayMenuActive: false, staticMenuMobileActive: false, menuHoverActive: false }));
+        this.layoutService.layoutState.update((prev) => ({
+            ...prev,
+            overlayMenuActive: false,
+            staticMenuMobileActive: false,
+            menuHoverActive: false
+        }));
         if (this.menuOutsideClickListener) {
             this.menuOutsideClickListener();
             this.menuOutsideClickListener = null;
