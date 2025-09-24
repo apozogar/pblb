@@ -21,9 +21,11 @@ public class SepaService {
   private final SocioRepository socioRepository;
   private final PenaRepository penaRepository;
 
-  public String generarFicheroSepa(LocalDateTime fechaPago) {
+  public void generarFicheroSepa(LocalDateTime fechaPago) {
     List<SocioEntity> sociosActivos = socioRepository.findByActivo(true);
-    return generarXml(sociosActivos, fechaPago);
+    String xmlContent = generarXml(sociosActivos, fechaPago);
+    // Aquí puedes guardar el 'xmlContent' en un fichero, enviarlo, etc.
+    // Por ejemplo: Files.writeString(Paths.get("sepa.xml"), xmlContent);
   }
 
   public String generarXml(List<SocioEntity> socios, LocalDateTime fechaPago) {

@@ -15,6 +15,7 @@ import {CarnetDto, Pena, Socio} from "@/interfaces/socio.interface";
 import {ApiResponse} from "@/interfaces/api-response.interface";
 import {AppLogo} from "@/layout/component/app.logo";
 import {Carousel} from "primeng/carousel";
+import {CuotasSocioTableComponent} from "@/components/cuotas-socio-table/cuotas-socio-table.component";
 import {environment} from "../../../enviroments/environment";
 
 @Component({
@@ -32,7 +33,8 @@ import {environment} from "../../../enviroments/environment";
         InputTextModule,
         FormsModule,
         ToastModule,
-        Carousel
+        Carousel,
+        CuotasSocioTableComponent
     ],
     providers: [MessageService],
     templateUrl: 'CarnetSocioComponent.html',

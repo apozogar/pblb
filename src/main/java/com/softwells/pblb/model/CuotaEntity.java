@@ -1,10 +1,9 @@
 package com.softwells.pblb.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.softwells.pblb.enums.EstadoCuota;
-import com.softwells.pblb.enums.PeriodoCuota;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.Data;
 
@@ -18,23 +17,24 @@ public class CuotaEntity {
   private UUID uid;
 
   @Column(nullable = false)
-  private BigDecimal monto;
+  private Double importe;
 
   @Column(nullable = false)
-  private LocalDate fechaVencimiento;
+  private LocalDate fechaEmision;
 
   private LocalDate fechaPago;
 
-  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private EstadoCuota estado;
+  private EstadoCuota estado; // Ej: PAGADA, PENDIENTE, VENCIDA
 
-  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private PeriodoCuota periodo;
+  private Integer mes; // 1-12
 
+  @Column(nullable = false)
+  private Integer anio;
+
+  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "socio_uid", nullable = false)
   private SocioEntity socio;
-
 }

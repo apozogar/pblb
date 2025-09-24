@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Empty } from './empty/empty';
-import {CarnetSocioComponent} from "@/pages/documentation/CarnetSocioComponent";
+import {CarnetSocioComponent} from "@/pages/carnetSocio/CarnetSocioComponent";
 
 export default [
     { path: 'empty', component: Empty },

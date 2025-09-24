@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { AppLayout } from '@//layout/component/app.layout';
 import { Landing } from '@//pages/landing/landing';
 import { Notfound } from '@//pages/notfound/notfound';
-import { CarnetSocioComponent } from "@/pages/documentation/CarnetSocioComponent";
+import { CarnetSocioComponent } from "@/pages/carnetSocio/CarnetSocioComponent";
 import { adminGuard } from '@/guards/admin.guard';
 import { authGuard } from '@/guards/auth.guard';
 

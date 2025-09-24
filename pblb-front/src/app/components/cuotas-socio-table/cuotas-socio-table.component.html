@@ -1,0 +1,23 @@
+<p-table [value]="cuotas" [rows]="10" [paginator]="cuotas.length > 10" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Mes</th>
+            <th>Año</th>
+            <th>Importe</th>
+            <th class="text-center">Estado</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cuota>
+        <tr>
+            <td>{{ cuota.mes }}</td>
+            <td>{{ cuota.anio }}</td>
+            <td>{{ cuota.importe | currency:'EUR':'symbol':'1.2-2' }}</td>
+            <td class="text-center">
+                <p-badge style="width: 100%"
+                         [value]="cuota.estado"
+                         [severity]="getSeverity(cuota.estado)">
+                </p-badge>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

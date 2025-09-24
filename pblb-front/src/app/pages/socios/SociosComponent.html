@@ -141,6 +141,8 @@
     </p-table>
 </div>
 
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
 <p-dialog [(visible)]="socioDialog" [style]="{ width: '650px' }" header="Detalles del Socio"
           [modal]="true">
     <ng-template #content>
@@ -301,26 +303,6 @@
 <p-dialog [(visible)]="cuotasDialog" [style]="{ width: '750px' }" header="Historial de Cuotas"
           [modal]="true">
     <ng-template pTemplate="content">
-        <p-table [value]="cuotasSocio" [rows]="5" [paginator]="true">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Fecha</th>
-                    <th>Importe</th>
-                    <th>Estado</th>
-                    <th>Fecha de Pago</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-cuota>
-                <tr>
-                    <td>{{ cuota.fecha | date: 'dd/MM/yyyy' }}</td>
-                    <td>{{ cuota.importe | currency:'EUR' }}</td>
-                    <td>
-                        <p-tag [severity]="cuota.pagada ? 'success' : 'warning'"
-                               [value]="cuota.pagada ? 'Pagada' : 'Pendiente'"></p-tag>
-                    </td>
-                    <td>{{ cuota.fechaPago ? (cuota.fechaPago | date: 'dd/MM/yyyy') : 'N/A' }}</td>
-                </tr>
-            </ng-template>
-        </p-table>
+        <app-cuotas-socio-table [cuotas]="cuotasSocio"></app-cuotas-socio-table>
     </ng-template>
 </p-dialog>

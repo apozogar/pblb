@@ -19,6 +19,9 @@ import {EstadisticasSocio} from "@/interfaces/socio.interface";
 import {IconField} from "primeng/iconfield";
 import {InputIcon} from "primeng/inputicon";
 import {Tooltip} from "primeng/tooltip";
+import {
+    CuotasSocioTableComponent
+} from "@/components/cuotas-socio-table/cuotas-socio-table.component";
 
 @Component({
     selector: 'app-socios',
@@ -37,7 +40,7 @@ import {Tooltip} from "primeng/tooltip";
         Ripple,
         CheckboxModule,
         DatePickerModule,
-        Textarea, IconField, InputIcon, Tooltip
+        Textarea, IconField, InputIcon, Tooltip, CuotasSocioTableComponent
 
     ],
     templateUrl: './SociosComponent.html'
@@ -145,20 +148,27 @@ export class SociosComponent implements OnInit {
     }
 
     cobrarCuota(): void {
-        this.socioService.generarSepa().subscribe((data) => {
-            // Suponiendo que `data` contiene el contenido del archivo que deseas descargar
-            const blob = new Blob([data], {type: 'application/octet-stream'});
-            const url = window.URL.createObjectURL(blob);
-
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'sepa.xml'; // Cambia el nombre del archivo según sea necesario
-            document.body.appendChild(a);
-            a.click();
-
-            // Limpieza
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
+        this.confirmationService.confirm({
+            message: '¿Estás seguro de que quieres generar la remesa de cuotas para el mes actual? Esta acción no se puede deshacer.',
+            header: 'Confirmación de Cobro',
+            icon: 'pi pi-exclamation-triangle',
+            acceptLabel: 'Sí, generar',
+            rejectLabel: 'Cancelar',
+            accept: () => {
+                this.loading = true;
+                // Asumo que tienes un método en tu servicio que llama a /api/cobros/generar-remesa
+                // Si no, habría que añadirlo. Por ahora, lo hago directamente con http.
+                this.socioService.generarRemesaMensual().subscribe({
+                    next: (response) => {
+                        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: response.message });
+                        this.loading = false;
+                    },
+                    error: (err) => {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo generar la remesa.' });
+                        this.loading = false;
+                    }
+                });
+            }
         });
     }
 

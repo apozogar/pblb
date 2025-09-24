@@ -110,22 +110,22 @@ public class SocioController {
     return ResponseEntity.ok(new ApiResponse<>(true, "Socios importados correctamente", null));
   }
 
-  @GetMapping(value = "/generar-sepa", produces = MediaType.APPLICATION_XML_VALUE)
-  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-  public ResponseEntity<byte[]> generarFicheroSepa() {
-    LocalDateTime fechaDesde = LocalDateTime.now().minusMonths(1);
-    String sepaFile = sepaService.generarFicheroSepa(fechaDesde);
-    byte[] fileContent = sepaFile.getBytes(StandardCharsets.UTF_8);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_XML);
-    headers.setContentDisposition(ContentDisposition.attachment().filename("sepa.xml").build());
-    headers.setContentLength(fileContent.length);
-
-    return ResponseEntity.ok()
-        .headers(headers)
-        .body(fileContent);
-  }
+//  @GetMapping(value = "/generar-sepa", produces = MediaType.APPLICATION_XML_VALUE)
+//  @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//  public ResponseEntity<byte[]> generarFicheroSepa() {
+//    LocalDateTime fechaDesde = LocalDateTime.now().minusMonths(1);
+//    String sepaFile = sepaService.generarFicheroSepa(fechaDesde);
+//    byte[] fileContent = sepaFile.getBytes(StandardCharsets.UTF_8);
+//
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setContentType(MediaType.APPLICATION_XML);
+//    headers.setContentDisposition(ContentDisposition.attachment().filename("sepa.xml").build());
+//    headers.setContentLength(fileContent.length);
+//
+//    return ResponseEntity.ok()
+//        .headers(headers)
+//        .body(fileContent);
+//  }
 
   /**
    * Endpoint para que un usuario autenticado obtenga su propia ficha de socio principal. La

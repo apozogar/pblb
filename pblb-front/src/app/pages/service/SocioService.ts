@@ -73,4 +73,8 @@ export class SocioService {
         return this.http.post<ApiResponse<string>>(`${this.apiUrl}/importar`, formData);
     }
 
+    generarRemesaMensual(): Observable<ApiResponse<string>> {
+        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/generar-remesa`, {});
+    }
+
 }
