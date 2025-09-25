@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table'; // Import Table
+import { Socio } from '@/interfaces/socio.interface'; // Import Socio interface for participants
 import { Evento } from '@/interfaces/evento.interface'; // Import Evento interface
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -48,6 +49,8 @@ export class EventosComponent implements OnInit { // Implement OnInit
   eventos: Evento[] = []; // Use Evento interface
   evento: Partial<Evento> = {}; // Use Partial<Evento> for form
   eventoDialog: boolean = false;
+  displayParticipantesDialog: boolean = false; // New property for participants dialog
+  participantesEventoSeleccionado: Socio[] = []; // New property for selected event's participants
   loading: boolean = false;
 
   private eventoService = inject(EventoService);
@@ -85,6 +88,15 @@ export class EventosComponent implements OnInit { // Implement OnInit
   editarEvento(evento: Evento) { // Use Evento interface
     this.evento = { ...evento }; // Create a copy to avoid direct modification
     this.eventoDialog = true;
+  }
+
+  mostrarParticipantes(evento: Evento) {
+    if (evento.participantes) {
+      this.participantesEventoSeleccionado = Array.from(evento.participantes); // Convert Set to Array for p-table
+    } else {
+      this.participantesEventoSeleccionado = [];
+    }
+    this.displayParticipantesDialog = true;
   }
 
   eliminarEvento(evento: Evento) {

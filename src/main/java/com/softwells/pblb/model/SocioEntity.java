@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(name = "socios")
@@ -25,6 +27,8 @@ import lombok.Setter;
 @Setter
 public class SocioEntity {
 
+  @EqualsAndHashCode.Include
+  @ToString.Include
   @Id
   @GeneratedValue
   private UUID uid;
