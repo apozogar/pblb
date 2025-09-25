@@ -27,4 +27,12 @@ export class EventoService {
   eliminarEvento(uid: string): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${uid}`);
   }
+
+  inscribir(eventoId: string): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/${eventoId}/inscribir`, {});
+  }
+
+  anularInscripcion(eventoId: string): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${eventoId}/anular`);
+  }
 }

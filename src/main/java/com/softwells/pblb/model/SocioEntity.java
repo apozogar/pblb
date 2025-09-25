@@ -74,9 +74,6 @@ public class SocioEntity {
   @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL)
   private Set<CuotaEntity> cuotas = new HashSet<>();
 
-  @OneToMany(mappedBy = "socio", cascade = CascadeType.ALL)
-  private Set<ParticipacionEventoEntity> participaciones = new HashSet<>();
-
   @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "usuario_uid")

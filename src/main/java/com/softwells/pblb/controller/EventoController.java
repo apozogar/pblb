@@ -26,6 +26,7 @@ public class EventoController {
   private final EventoService eventoService;
 
   @GetMapping
+  @PreAuthorize("isAuthenticated()") // Permitir a cualquier usuario autenticado ver los eventos
   public ResponseEntity<ApiResponse<List<EventoEntity>>> getAllEventos() {
     List<EventoEntity> eventos = eventoService.findAll();
     return ResponseEntity.ok(new ApiResponse<>(true, "Eventos recuperados", eventos));
@@ -51,5 +52,19 @@ public class EventoController {
   public ResponseEntity<ApiResponse<Void>> deleteEvento(@PathVariable UUID id) {
     eventoService.delete(id);
     return ResponseEntity.ok(new ApiResponse<>(true, "Evento eliminado correctamente", null));
+  }
+
+  @PostMapping("/{id}/inscribir")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<ApiResponse<Void>> inscribir(@PathVariable UUID id) {
+    eventoService.inscribirSocio(id);
+    return ResponseEntity.ok(new ApiResponse<>(true, "Inscripción realizada correctamente", null));
+  }
+
+  @DeleteMapping("/{id}/anular")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<ApiResponse<Void>> anularInscripcion(@PathVariable UUID id) {
+    eventoService.anularInscripcionSocio(id);
+    return ResponseEntity.ok(new ApiResponse<>(true, "Inscripción anulada correctamente", null));
   }
 }

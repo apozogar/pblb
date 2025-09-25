@@ -5,6 +5,9 @@ import {Notfound} from '@//pages/notfound/notfound';
 import {CarnetSocioComponent} from "@/pages/carnetSocio/CarnetSocioComponent";
 import {adminGuard} from '@/guards/admin.guard';
 import {authGuard} from '@/guards/auth.guard';
+import {
+    InscripcionEventosComponent
+} from "@/pages/inscripcion-eventos/inscripcion-eventos.component";
 
 export const appRoutes: Routes = [
     {
@@ -37,6 +40,10 @@ export const appRoutes: Routes = [
             {
                 path: 'carnet-socio',
                 component: CarnetSocioComponent
+            },
+            {
+                path: 'inscripciones',
+                component: InscripcionEventosComponent
             },
         ]
     },

@@ -39,6 +39,11 @@ export class AppMenu implements OnInit {
                             routerLink: ['/carnet-socio'],
                             icon: 'pi pi-id-card'
                         },
+                        {
+                            label: 'Inscripción a Eventos',
+                            routerLink: ['/inscripciones'],
+                            icon: 'pi pi-calendar-plus'
+                        },
                     ]
                 });
             if (isAdmin) {

@@ -1,11 +1,16 @@
 package com.softwells.pblb.service;
 
 import com.softwells.pblb.model.EventoEntity;
+import com.softwells.pblb.model.SocioEntity;
+import com.softwells.pblb.model.UsuarioEntity;
 import com.softwells.pblb.repository.EventoRepository;
+import com.softwells.pblb.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,9 +20,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventoService {
 
   private final EventoRepository eventoRepository;
+  private final UsuarioRepository usuarioRepository;
 
   public List<EventoEntity> findAll() {
-    return eventoRepository.findAll();
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(userEmail)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+    // Asumimos que el primer socio es el principal para la inscripción
+    SocioEntity socioPrincipal = usuario.getSocios().stream().findFirst()
+        .orElseThrow(() -> new IllegalStateException("El usuario no tiene un socio asociado."));
+
+    List<EventoEntity> eventos = eventoRepository.findAll();
+
+    // Para cada evento, comprobamos si el socio principal está en la lista de participantes
+    eventos.forEach(evento -> {
+      boolean inscrito = evento.getParticipantes().stream()
+          .anyMatch(participante -> participante.getUid().equals(socioPrincipal.getUid()));
+      evento.setCurrentUserInscrito(inscrito);
+    });
+
+    return eventos;
   }
 
   public EventoEntity save(EventoEntity evento) {
@@ -35,12 +58,45 @@ public class EventoService {
     eventoExistente.setNombreEvento(eventoDetails.getNombreEvento());
     eventoExistente.setFechaEvento(eventoDetails.getFechaEvento());
     eventoExistente.setUbicacion(eventoDetails.getUbicacion());
-    // ... actualizar otros campos según sea necesario
+    eventoExistente.setDescripcion(eventoDetails.getDescripcion());
+    eventoExistente.setNumeroPlazas(eventoDetails.getNumeroPlazas());
+    eventoExistente.setCosteTotalEstimado(eventoDetails.getCosteTotalEstimado());
+    eventoExistente.setCosteTotalReal(eventoDetails.getCosteTotalReal());
 
     return eventoRepository.save(eventoExistente);
   }
 
   public void delete(UUID id) {
     eventoRepository.deleteById(id);
+  }
+
+
+  @Transactional
+  public void inscribirSocio(UUID eventoId) {
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(userEmail)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+    SocioEntity socio = usuario.getSocios().stream().findFirst()
+        .orElseThrow(() -> new IllegalStateException("Usuario sin socio principal."));
+
+    EventoEntity evento = eventoRepository.findById(eventoId)
+        .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
+
+    evento.getParticipantes().add(socio);
+    eventoRepository.save(evento);
+  }
+
+  @Transactional
+  public void anularInscripcionSocio(UUID eventoId) {
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    SocioEntity socio = usuarioRepository.findByEmailIgnoreCase(userEmail)
+        .flatMap(u -> u.getSocios().stream().findFirst())
+        .orElseThrow(() -> new IllegalStateException("Usuario sin socio principal."));
+
+    EventoEntity evento = eventoRepository.findById(eventoId)
+        .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
+
+    evento.getParticipantes().removeIf(p -> p.getUid().equals(socio.getUid()));
+    eventoRepository.save(evento);
   }
 }

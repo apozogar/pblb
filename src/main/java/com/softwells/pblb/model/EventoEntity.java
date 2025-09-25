@@ -31,10 +31,17 @@ public class EventoEntity {
   private Integer numeroPlazas;
 
   private BigDecimal costeTotalEstimado;
+
   private BigDecimal costeTotalReal;
 
-  @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
-  private Set<ParticipacionEventoEntity> participaciones = new HashSet<>();
 
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(name = "evento_participaciones",
+      joinColumns = @JoinColumn(name = "evento_uid"),
+      inverseJoinColumns = @JoinColumn(name = "socio_uid"))
+  private Set<SocioEntity> participantes = new HashSet<>();
+
+  @Transient // No se persiste en la base de datos
+  private boolean isCurrentUserInscrito;
 
 }
