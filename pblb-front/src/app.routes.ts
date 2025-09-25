@@ -1,10 +1,10 @@
-import { Routes } from '@angular/router';
-import { AppLayout } from '@//layout/component/app.layout';
-import { Landing } from '@//pages/landing/landing';
-import { Notfound } from '@//pages/notfound/notfound';
-import { CarnetSocioComponent } from "@/pages/carnetSocio/CarnetSocioComponent";
-import { adminGuard } from '@/guards/admin.guard';
-import { authGuard } from '@/guards/auth.guard';
+import {Routes} from '@angular/router';
+import {AppLayout} from '@//layout/component/app.layout';
+import {Landing} from '@//pages/landing/landing';
+import {Notfound} from '@//pages/notfound/notfound';
+import {CarnetSocioComponent} from "@/pages/carnetSocio/CarnetSocioComponent";
+import {adminGuard} from '@/guards/admin.guard';
+import {authGuard} from '@/guards/auth.guard';
 
 export const appRoutes: Routes = [
     {
@@ -12,18 +12,18 @@ export const appRoutes: Routes = [
         component: AppLayout,
         canActivate: [authGuard],
         children: [
-            { path: '', redirectTo: 'socios', pathMatch: 'full' },
+            {path: '', redirectTo: 'socios', pathMatch: 'full'},
             {
                 path: 'socios',
                 loadComponent: () =>
                     import('@/pages/socios/SociosComponent').then(m => m.SociosComponent),
                 canActivate: [adminGuard]
             },
-            // {
-            //     path: 'eventos',
-            //     loadComponent: () =>
-            //         import('@/pages/eventos/EventosComponent').then(m => m.EventosComponent)
-            // },
+            {
+                path: 'eventos',
+                loadComponent: () =>
+                    import('@/pages/eventos/EventosComponent').then(m => m.EventosComponent)
+            },
             // {
             //     path: 'cuotas',
             //     loadComponent: () =>
@@ -42,12 +42,12 @@ export const appRoutes: Routes = [
     },
     {
         path: 'landing', component:
-            Landing
+        Landing
     }
     ,
     {
         path: 'notfound', component:
-            Notfound
+        Notfound
     }
     ,
     {

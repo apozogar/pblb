@@ -28,16 +28,13 @@ public class EventoEntity {
   @Column(length = 1000)
   private String descripcion;
 
+  private Integer numeroPlazas;
+
   private BigDecimal costeTotalEstimado;
   private BigDecimal costeTotalReal;
 
   @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
   private Set<ParticipacionEventoEntity> participaciones = new HashSet<>();
 
-  @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
-  private Set<GastoEntity> gastos = new HashSet<>();
-
-  @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
-  private Set<IngresoEntity> ingresos = new HashSet<>();
 
 }

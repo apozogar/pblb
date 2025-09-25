@@ -2,52 +2,45 @@ package com.softwells.pblb.service;
 
 import com.softwells.pblb.model.EventoEntity;
 import com.softwells.pblb.repository.EventoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
-
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class EventoService {
-    private final EventoRepository eventoRepository;
 
-    @Autowired
-    public EventoService(EventoRepository eventoRepository) {
-        this.eventoRepository = eventoRepository;
-    }
+  private final EventoRepository eventoRepository;
 
-    public EventoEntity crear(EventoEntity evento) {
-        return eventoRepository.save(evento);
-    }
+  public List<EventoEntity> findAll() {
+    return eventoRepository.findAll();
+  }
 
-    public EventoEntity actualizar(UUID id, EventoEntity evento) {
-        EventoEntity existente = obtenerPorId(id);
-        evento.setUid(existente.getUid());
-        return eventoRepository.save(evento);
-    }
+  public EventoEntity save(EventoEntity evento) {
+    // Aquí se podrían añadir validaciones antes de guardar
+    return eventoRepository.save(evento);
+  }
 
-    public void eliminar(UUID id) {
-        if (!eventoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Evento no encontrado");
-        }
-        eventoRepository.deleteById(id);
-    }
+  public EventoEntity update(UUID id, EventoEntity eventoDetails) {
+    EventoEntity eventoExistente =
+        eventoRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado con ID: " + id));
 
-    public EventoEntity obtenerPorId(UUID id) {
-        return eventoRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Evento no encontrado"));
-    }
+    // Actualizar los campos
+    eventoExistente.setNombreEvento(eventoDetails.getNombreEvento());
+    eventoExistente.setFechaEvento(eventoDetails.getFechaEvento());
+    eventoExistente.setUbicacion(eventoDetails.getUbicacion());
+    // ... actualizar otros campos según sea necesario
 
-    public List<EventoEntity> obtenerTodos() {
-        return eventoRepository.findAll();
-    }
+    return eventoRepository.save(eventoExistente);
+  }
 
-    public List<EventoEntity> obtenerEventosFuturos() {
-        return eventoRepository.findByFechaEventoAfter(LocalDate.now());
-    }
+  public void delete(UUID id) {
+    eventoRepository.deleteById(id);
+  }
 }

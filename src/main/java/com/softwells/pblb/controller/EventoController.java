@@ -3,57 +3,53 @@ package com.softwells.pblb.controller;
 import com.softwells.pblb.controller.dto.ApiResponse;
 import com.softwells.pblb.model.EventoEntity;
 import com.softwells.pblb.service.EventoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/eventos")
+@RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')") // Proteger todo el controlador para administradores
 public class EventoController {
-    private final EventoService eventoService;
 
-    @Autowired
-    public EventoController(EventoService eventoService) {
-        this.eventoService = eventoService;
-    }
+  private final EventoService eventoService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<EventoEntity>> crear(@RequestBody EventoEntity evento) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Evento creado exitosamente", 
-            eventoService.crear(evento)));
-    }
+  @GetMapping
+  public ResponseEntity<ApiResponse<List<EventoEntity>>> getAllEventos() {
+    List<EventoEntity> eventos = eventoService.findAll();
+    return ResponseEntity.ok(new ApiResponse<>(true, "Eventos recuperados", eventos));
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<EventoEntity>> actualizar(@PathVariable UUID id, 
-                                                              @RequestBody EventoEntity evento) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Evento actualizado exitosamente", 
-            eventoService.actualizar(id, evento)));
-    }
+  @PostMapping
+  public ResponseEntity<ApiResponse<EventoEntity>> createEvento(
+      @RequestBody EventoEntity evento) {
+    EventoEntity nuevoEvento = eventoService.save(evento);
+    return ResponseEntity.ok(
+        new ApiResponse<>(true, "Evento creado correctamente", nuevoEvento));
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> eliminar(@PathVariable UUID id) {
-        eventoService.eliminar(id);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Evento eliminado exitosamente", null));
-    }
+  @PutMapping("/{id}")
+  public ResponseEntity<ApiResponse<EventoEntity>> updateEvento(
+      @PathVariable UUID id, @RequestBody EventoEntity eventoDetails) {
+    EventoEntity eventoActualizado = eventoService.update(id, eventoDetails);
+    return ResponseEntity.ok(
+        new ApiResponse<>(true, "Evento actualizado correctamente", eventoActualizado));
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<EventoEntity>> obtenerPorId(@PathVariable UUID id) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Evento encontrado", 
-            eventoService.obtenerPorId(id)));
-    }
-
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<EventoEntity>>> obtenerTodos() {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Lista de eventos", 
-            eventoService.obtenerTodos()));
-    }
-
-    @GetMapping("/futuros")
-    public ResponseEntity<ApiResponse<List<EventoEntity>>> obtenerEventosFuturos() {
-        return ResponseEntity.ok(new ApiResponse<>(true, "Lista de eventos futuros", 
-            eventoService.obtenerEventosFuturos()));
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<ApiResponse<Void>> deleteEvento(@PathVariable UUID id) {
+    eventoService.delete(id);
+    return ResponseEntity.ok(new ApiResponse<>(true, "Evento eliminado correctamente", null));
+  }
 }

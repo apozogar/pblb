@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table'; // Import Table
+import { Evento } from '@/interfaces/evento.interface'; // Import Evento interface
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -13,6 +14,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CardModule } from 'primeng/card';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
+import { IconFieldModule } from 'primeng/iconfield'; // Import IconFieldModule
+import { InputIconModule } from 'primeng/inputicon'; // Import InputIconModule
+import { EventoService } from '@/services/evento.service';
 
 
 @Component({
@@ -31,108 +35,27 @@ import { DatePickerModule } from 'primeng/datepicker';
     ConfirmDialogModule,
     CardModule,
     TextareaModule,
-    DatePickerModule
+    DatePickerModule,
+    IconFieldModule, // Add IconFieldModule
+    InputIconModule // Add InputIconModule
   ],
-  template: `
-    <div class="card">
-      <p-toast></p-toast>
-      <p-toolbar styleClass="mb-4">
-        <ng-template pTemplate="left">
-          <button pButton pRipple label="Nuevo Evento" icon="pi pi-plus"
-                  class="p-button-success mr-2" (click)="abrirNuevo()"></button>
-        </ng-template>
-      </p-toolbar>
-
-      <p-table [value]="eventos" [rows]="10" [paginator]="true"
-               [rowHover]="true" dataKey="id" [loading]="loading"
-               styleClass="p-datatable-gridlines">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Nombre</th>
-            <th>Fecha</th>
-            <th>Ubicación</th>
-            <th>Coste Estimado</th>
-            <th>Participantes</th>
-            <th>Acciones</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-evento>
-          <tr>
-            <td>{{ evento.nombreEvento }}</td>
-            <td>{{ evento.fechaEvento | date:'dd/MM/yyyy' }}</td>
-            <td>{{ evento.ubicacion }}</td>
-            <td>{{ evento.costeTotalEstimado | currency:'EUR' }}</td>
-            <td>{{ evento.participantes }}</td>
-            <td>
-              <button pButton pRipple icon="pi pi-pencil"
-                      class="p-button-rounded p-button-success mr-2"
-                      (click)="editarEvento(evento)"></button>
-              <button pButton pRipple icon="pi pi-trash"
-                      class="p-button-rounded p-button-danger"
-                      (click)="eliminarEvento(evento)"></button>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-
-    <p-dialog [(visible)]="eventoDialog" [style]="{width: '450px'}"
-              header="Detalles del Evento" [modal]="true" class="p-fluid">
-      <ng-template pTemplate="content">
-        <div class="field">
-          <label for="nombre">Nombre</label>
-          <input type="text" pInputText id="nombre"
-                 [(ngModel)]="evento.nombreEvento" required/>
-        </div>
-        <div class="field">
-          <label for="fecha">Fecha</label>
-          <p-datepicker
-            id="fecha"
-            [(ngModel)]="evento.fechaEvento"
-            dateFormat="dd/mm/yy"
-            [showIcon]="true">
-          </p-datepicker>
-        </div>
-        <div class="field">
-          <label for="ubicacion">Ubicación</label>
-          <input type="text" pInputText id="ubicacion"
-                 [(ngModel)]="evento.ubicacion"/>
-        </div>
-        <div class="field">
-          <label for="coste">Coste Estimado</label>
-          <p-inputNumber id="coste" [(ngModel)]="evento.costeTotalEstimado"
-                         mode="currency" currency="EUR"></p-inputNumber>
-        </div>
-
-        <div class="field">
-          <label for="descripcion">Descripción</label>
-          <textarea pTextarea
-                    id="descripcion"
-                    [(ngModel)]="evento.descripcion"
-                    [rows]="3"
-                    [autoResize]="true"></textarea>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancelar" icon="pi pi-times"
-                class="p-button-text" (click)="eventoDialog = false"></button>
-        <button pButton pRipple label="Guardar" icon="pi pi-check"
-                class="p-button-text" (click)="guardarEvento()"></button>
-      </ng-template>
-    </p-dialog>
-  `
+  templateUrl: './EventosComponent.html',
+  styleUrls: ['./EventosComponent.scss'],
+  providers: [MessageService, ConfirmationService]
 })
 
-export class EventosComponent implements OnInit {
-  eventos: any[] = [];
-  evento: any = {};
+export class EventosComponent implements OnInit { // Implement OnInit
+  eventos: Evento[] = []; // Use Evento interface
+  evento: Partial<Evento> = {}; // Use Partial<Evento> for form
   eventoDialog: boolean = false;
   loading: boolean = false;
 
-  constructor(
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService
-  ) {}
+  private eventoService = inject(EventoService);
+  private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
+
+
+  @ViewChild('dt') dt: Table | undefined; // Reference to the p-table for global filter
 
   ngOnInit() {
     // Aquí cargarías los eventos desde tu servicio
@@ -141,43 +64,75 @@ export class EventosComponent implements OnInit {
 
   cargarEventos() {
     this.loading = true;
-    // Implementar la carga de eventos
-    this.loading = false;
+    this.eventoService.getEventos().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.eventos = response.data;
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
   }
 
   abrirNuevo() {
-    this.evento = {};
+    this.evento = { nombreEvento: '' }; // Initialize with required fields
     this.eventoDialog = true;
   }
 
-  editarEvento(evento: any) {
-    this.evento = { ...evento };
+  editarEvento(evento: Evento) { // Use Evento interface
+    this.evento = { ...evento }; // Create a copy to avoid direct modification
     this.eventoDialog = true;
   }
 
-  eliminarEvento(evento: any) {
+  eliminarEvento(evento: Evento) {
     this.confirmationService.confirm({
       message: '¿Está seguro que desea eliminar este evento?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        // Implementar eliminación
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Evento eliminado'
+        if (!evento.uid) return;
+        this.eventoService.eliminarEvento(evento.uid).subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Evento eliminado'
+            });
+            this.cargarEventos(); // Recargar la lista
+          },
+          error: (err) => {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: err.error.message || 'No se pudo eliminar el evento'
+            });
+          }
         });
       }
     });
   }
 
-  guardarEvento() {
-    // Implementar guardado
-    this.eventoDialog = false;
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Éxito',
-      detail: 'Evento guardado'
+  guardarEvento() { // No need for 'any' here, as 'this.evento' is already typed
+    this.eventoService.guardarEvento(this.evento).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Evento guardado correctamente'
+        });
+        this.eventoDialog = false;
+        this.cargarEventos(); // Recargar la lista
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.error.message || 'No se pudo guardar el evento'
+        });
+      }
     });
   }
 }
