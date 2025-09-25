@@ -37,6 +37,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -313,12 +314,53 @@ public class SocioService {
 
     // 1. Obtener la información de la peña
     PenaEntity penaInfo = penaRepository.findById(1L) // Asumiendo que el ID es 1
-        .orElseThrow(() -> new EntityNotFoundException("No se encontró la información de la peña."));
+        .orElseThrow(
+            () -> new EntityNotFoundException("No se encontró la información de la peña."));
 
     // 2. Obtener todos los socios del usuario y mapearlos a DTOs
     List<SocioDto> sociosDto = socioRepository.findByUsuarioEmail(userEmail).stream()
         .map(SocioDto::fromEntity).collect(Collectors.toList());
 
     return new CarnetDto(penaInfo, sociosDto);
+  }
+
+  public SocioEntity crearSocioAsociado(SocioEntity nuevoSocioData) {
+    // 1. Obtener el email del usuario autenticado desde el contexto de seguridad
+    String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    // 2. Buscar el usuario principal en la base de datos
+    UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(userEmail)
+        .orElseThrow(
+            () -> new UsernameNotFoundException("Usuario no encontrado con email: " + userEmail));
+
+    // 3. Crear y configurar la nueva entidad Socio
+    SocioEntity nuevoSocio = new SocioEntity();
+    nuevoSocio.setNumeroSocio(generarNumeroSocio());
+    nuevoSocio.setNombre(nuevoSocioData.getNombre());
+    nuevoSocio.setDni(nuevoSocioData.getDni());
+    nuevoSocio.setFechaNacimiento(nuevoSocioData.getFechaNacimiento());
+    nuevoSocio.setTelefono(nuevoSocioData.getTelefono());
+    nuevoSocio.setDireccion(nuevoSocioData.getDireccion());
+    nuevoSocio.setPoblacion(nuevoSocioData.getPoblacion());
+    nuevoSocio.setProvincia(nuevoSocioData.getProvincia());
+    nuevoSocio.setFechaAlta(LocalDate.now());
+    nuevoSocio.setCodigoPostal(nuevoSocioData.getCodigoPostal());
+
+    // Si no se proporciona un número de cuenta, hereda el del socio principal.
+    if (nuevoSocioData.getNumeroCuenta() == null || nuevoSocioData.getNumeroCuenta().isBlank()) {
+      SocioEntity socioPrincipal = usuario.getSocios().stream().findFirst()
+          .orElseThrow(() -> new IllegalStateException(
+              "El usuario no tiene un socio principal para heredar la cuenta."));
+      nuevoSocio.setNumeroCuenta(socioPrincipal.getNumeroCuenta());
+    } else {
+      nuevoSocio.setNumeroCuenta(nuevoSocioData.getNumeroCuenta());
+    }
+
+    // 4. Asignar el usuario al nuevo socio
+    nuevoSocio.setUsuario(usuario);
+    nuevoSocio.setActivo(true); // Por defecto, el nuevo socio se crea como activo
+
+    // 5. Guardar el nuevo socio en la base de datos
+    return socioRepository.save(nuevoSocio);
   }
 }

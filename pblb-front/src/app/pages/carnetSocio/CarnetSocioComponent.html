@@ -60,22 +60,18 @@
 
 <!-- Dialogo para añadir nuevo socio -->
 <p-dialog header="Añadir Nuevo Socio" [(visible)]="displayNuevoSocioDialog" [modal]="true"
-          [style]="{width: '50vw', 'max-width': '500px'}"
+          [style]="{width: '50vw', 'min-width': '450px', 'max-width': '700px'}"
           (onHide)="cerrarDialogoNuevoSocio()">
-    <div class="p-fluid">
-        <div class="field">
-            <label for="nombre">Nombre Completo del Nuevo Socio</label>
-            <input id="nombre" type="text" pInputText [(ngModel)]="nuevoSocio.nombre" required
-                   autofocus/>
-            <small *ngIf="!nuevoSocio.nombre" class="p-error">El nombre es obligatorio.</small>
+    <app-socio-form [socio]="nuevoSocio" (save)="guardarNuevoSocio($event)">
+        <!-- Proyectamos los botones de acción en el footer del formulario -->
+        <div footer class="flex justify-end gap-2">
+            <p-button icon="pi pi-times" (click)="cerrarDialogoNuevoSocio()" label="Cancelar"
+                      styleClass="p-button-text"></p-button>
+            <!-- El botón de guardar ahora está dentro del componente del formulario para que el (ngSubmit) funcione -->
+            <button pButton icon="pi pi-check" type="submit" label="Guardar"
+                    [disabled]="socioFormComponent?.isFormInvalid()"></button>
         </div>
-    </div>
-    <ng-template pTemplate="footer">
-        <p-button icon="pi pi-times" (click)="cerrarDialogoNuevoSocio()" label="Cancelar"
-                  styleClass="p-button-text"></p-button>
-        <p-button icon="pi pi-check" (click)="guardarNuevoSocio()" label="Guardar"
-                  [disabled]="!nuevoSocio.nombre"></p-button>
-    </ng-template>
+    </app-socio-form>
 </p-dialog>
 
 <!-- Toast para notificaciones -->

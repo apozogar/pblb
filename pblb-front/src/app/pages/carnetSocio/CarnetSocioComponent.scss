@@ -146,6 +146,9 @@
 .carnet-slide {
     padding: 0.5rem; // Un pequeño padding para que no se pegue a los bordes
     box-sizing: border-box;
+    @media (max-width: 768px) {
+        zoom: 0.6;
+    }
 }
 
 .betis-card {

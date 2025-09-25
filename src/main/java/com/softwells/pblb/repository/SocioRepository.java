@@ -27,6 +27,6 @@ public interface SocioRepository extends JpaRepository<SocioEntity, UUID> {
   long countByFechaNacimientoBeforeOrFechaNacimientoEquals(LocalDate fechaNacimiento,
       LocalDate fechaNacimiento2);
 
-  @Query("SELECT MAX(s.numeroSocio) FROM SocioEntity s")
+  @Query("SELECT MAX(CAST(s.numeroSocio as INTEGER)) FROM SocioEntity s")
   Optional<Integer> findMaxNumeroSocio();
 }

@@ -137,4 +137,15 @@ public class SocioController {
     CarnetDto carnetData = socioService.obtenerDatosCarnetUsuarioAutenticado();
     return ResponseEntity.ok(new ApiResponse<>(true, "Información del carnet recuperada", carnetData));
   }
+
+  /**
+   * Endpoint para que un usuario autenticado pueda añadir un nuevo socio asociado a su cuenta.
+   */
+  @PostMapping("/me/asociado")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<ApiResponse<SocioEntity>> crearSocioAsociado(@RequestBody SocioEntity nuevoSocioData) {
+    // El servicio se encargará de obtener el usuario autenticado y asociarlo.
+    SocioEntity nuevoSocio = socioService.crearSocioAsociado(nuevoSocioData);
+    return ResponseEntity.ok(new ApiResponse<>(true, "Nuevo socio asociado creado correctamente.", nuevoSocio));
+  }
 }

@@ -14,6 +14,7 @@ public class SocioDto {
   private Integer numeroSocio;
   private String nombre;
   private String dni;
+  private String email;
   private String telefono;
   private List<CuotaEntity> cuotas;
 
@@ -23,6 +24,7 @@ public class SocioDto {
     dto.setNumeroSocio(entity.getNumeroSocio());
     dto.setNombre(entity.getNombre());
     dto.setDni(entity.getDni());
+    dto.setEmail(entity.getEmail());
     dto.setTelefono(entity.getTelefono());
     dto.setCuotas(entity.getCuotas().stream().toList()); // Asumiendo que la relación está cargada
     return dto;

@@ -1,6 +1,6 @@
 import {CommonModule} from '@angular/common';
-import {Component, inject, OnInit} from '@angular/core';
-import {FormsModule} from "@angular/forms";
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
+import {FormsModule, NgForm} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {MessageService} from "primeng/api";
 import {CardModule} from 'primeng/card';
@@ -16,6 +16,7 @@ import {ApiResponse} from "@/interfaces/api-response.interface";
 import {AppLogo} from "@/layout/component/app.logo";
 import {Carousel} from "primeng/carousel";
 import {CuotasSocioTableComponent} from "@/components/cuotas-socio-table/cuotas-socio-table.component";
+import {SocioFormComponent} from "@/components/socio-form/socio-form.component";
 import {environment} from "../../../enviroments/environment";
 
 @Component({
@@ -34,7 +35,8 @@ import {environment} from "../../../enviroments/environment";
         FormsModule,
         ToastModule,
         Carousel,
-        CuotasSocioTableComponent
+        CuotasSocioTableComponent,
+        SocioFormComponent
     ],
     providers: [MessageService],
     templateUrl: 'CarnetSocioComponent.html',
@@ -46,6 +48,8 @@ export class CarnetSocioComponent implements OnInit {
 
     displayNuevoSocioDialog: boolean = false;
     nuevoSocio: Partial<Socio> = {};
+
+    @ViewChild(SocioFormComponent) socioFormComponent!: SocioFormComponent;
 
     private http = inject(HttpClient);
     private messageService = inject(MessageService);
@@ -65,7 +69,9 @@ export class CarnetSocioComponent implements OnInit {
     }
 
     abrirDialogoNuevoSocio() {
-        this.nuevoSocio = {};
+        // Inicializamos el nuevo socio. El email se tomará del socio principal en el backend.
+        // La cuenta bancaria se heredará si se deja en blanco.
+        this.nuevoSocio = { nombre: '' };
         this.displayNuevoSocioDialog = true;
     }
 
@@ -73,18 +79,13 @@ export class CarnetSocioComponent implements OnInit {
         this.displayNuevoSocioDialog = false;
     }
 
-    guardarNuevoSocio() {
-        // Reutilizamos el endpoint de registro. El backend asociará este nuevo socio
-        // al usuario existente porque el email ya está registrado.
-        const currentUserEmail = this.socios[0]?.email;
-        if (!currentUserEmail) {
-            this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo obtener el email del usuario actual.'});
-            return;
-        }
+    guardarNuevoSocio(socio: Partial<Socio>) {
+        // El endpoint /api/socios/me/asociado está pensado para esto:
+        // crea un nuevo socio y lo asocia al usuario autenticado.
+        // No es necesario enviar el email del usuario, el backend lo obtiene del token de autenticación.
+        const payload = { ...socio };
 
-        const payload = { nombre: this.nuevoSocio.nombre, email: currentUserEmail, password: 'temporaryPassword' }; // La contraseña no se usará
-
-        this.http.post<ApiResponse<Socio>>(`${environment.apiUrl}/api/auth/register`, payload)
+        this.http.post<ApiResponse<Socio>>(`${environment.apiUrl}/api/socios/me/asociado`, payload)
             .subscribe({
                 next: (response) => {
                     if (response.success) {
