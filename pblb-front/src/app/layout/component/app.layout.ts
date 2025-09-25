@@ -16,8 +16,8 @@ import {AuthService} from "@/pages/auth/auth.service";
     imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
     template: `
         <div class="layout-wrapper" [ngClass]="containerClass">
-            <app-topbar [showMenuButton]="isAdmin$ | async"></app-topbar>
-            <app-sidebar *ngIf="isAdmin$ | async"></app-sidebar>
+            <app-topbar></app-topbar>
+            <app-sidebar></app-sidebar>
             <div class="layout-main-container">
                 <div class="layout-main">
                     <router-outlet></router-outlet>
@@ -36,17 +36,13 @@ export class AppLayout {
 
     @ViewChild(AppTopbar) appTopBar!: AppTopbar;
 
-    isAdmin$: Observable<boolean>;
-
     constructor(
-        private authService: AuthService,
         public layoutService: LayoutService,
         public renderer: Renderer2,
         public router: Router
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             // @ts-ignore
-            if (!(this.isAdmin$ | async)) return; // No hacer nada si no es admin
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', (event) => {
                     if (this.isOutsideClicked(event)) {
@@ -64,9 +60,6 @@ export class AppLayout {
             this.hideMenu();
         });
 
-        this.isAdmin$ = this.authService.currentUser.pipe(
-            map((user) => user?.authorities?.some(auth => auth.authority === 'ROLE_ADMIN') ?? false)
-        );
     }
 
     isOutsideClicked(event: MouseEvent) {

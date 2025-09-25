@@ -1,8 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {MenuItem} from 'primeng/api';
 import {AppMenuitem} from './app.menuitem';
+import {map} from "rxjs/operators";
+import {AuthService} from "@/pages/auth/auth.service";
 
 @Component({
     selector: 'app-menu',
@@ -17,36 +19,51 @@ import {AppMenuitem} from './app.menuitem';
             </ng-container>
         </ul> `
 })
-export class AppMenu {
+export class AppMenu implements OnInit {
     model: MenuItem[] = [];
 
-    ngOnInit() {
+    constructor(private authService: AuthService) {
+    }
 
-        this.model = [
-            {
-                label: 'Gestion socios',
-                items: [
-                    {
-                        label: 'Socios',
-                        icon: 'pi pi-users',
-                        routerLink: ['/socios']
-                    },
-                    // {
-                    //     label: 'Cuotas',
-                    //     icon: 'pi pi-money-bill',
-                    //     routerLink: ['/cuotas']
-                    // }
+    ngOnInit() {
+        this.authService.currentUser.pipe(
+            map((user) => user?.authorities?.some(auth => auth.authority === 'ROLE_ADMIN') ?? false)
+        ).subscribe((isAdmin: boolean) => {
+            this.model = [];
+            this.model.push(
+                {
+                    label: 'Area personal',
+                    items: [
+                        {
+                            label: 'Mi carnet',
+                            routerLink: ['/carnet-socio'],
+                            icon: 'pi pi-id-card'
+                        },
                     ]
-            },
-            // {
-            //     label: 'Gestion eventos',
-            //     items: [
-            //         {
-            //             label: 'Eventos',
-            //             icon: 'pi pi-calendar',
-            //             routerLink: ['/eventos']
-            //         }]
-            // }
-        ]
+                });
+            if (isAdmin) {
+                this.model.push(
+                    {
+                        label: 'Gestion socios',
+                        items: [
+                            {
+                                label: 'Socios',
+                                icon: 'pi pi-users',
+                                routerLink: ['/socios']
+                            },
+                        ]
+                    });
+                this.model.push(
+                    {
+                        label: 'Gestion eventos',
+                        items: [
+                            {
+                                label: 'Eventos',
+                                icon: 'pi pi-calendar',
+                                routerLink: ['/eventos']
+                            }]
+                    });
+            }
+        });
     };
 }
