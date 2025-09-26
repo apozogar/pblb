@@ -1,6 +1,6 @@
 spring:
   application:
-    name: pblb
+    name: fanops
 
   datasource:
     url: jdbc:postgresql://localhost:5432/pblb
@@ -39,7 +39,7 @@ server:
 logging:
   level:
     root: INFO
-    com.softwells.pblb: DEBUG
+    com.softwells.fanops: DEBUG
 
 
 cors:

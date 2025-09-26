@@ -1,0 +1,13 @@
+# Ignorar archivos y carpetas de Git
+.git
+.gitignore
+
+# Ignorar la carpeta de compilación de Maven
+target/
+
+# Ignorar la carpeta de dependencias de Node.js que se genera dentro de frontend
+frontend/node/
+frontend/node_modules/
+
+# Ignorar logs y archivos temporales
+*.log

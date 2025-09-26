@@ -10,10 +10,11 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.softwells</groupId>
-  <artifactId>pblb</artifactId>
+  <artifactId>FanOps</artifactId>
+  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
-  <name>pblb</name>
-  <description>Gestión peña betica Luis Belver</description>
+  <name>FanOps</name>
+  <description>Aplicacion de gestión de Peñas</description>
   <url/>
   <licenses>
     <license/>
@@ -30,6 +31,8 @@
   <properties>
     <java.version>21</java.version>
     <jjwt.version>0.12.5</jjwt.version>
+    <node.version>v22.20.0</node.version>
+    <npm.version>10.9.0</npm.version>
   </properties>
   <dependencies>
     <dependency>
@@ -63,6 +66,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -115,7 +124,7 @@
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
-      <version>5.2.5</version>
+      <version>5.4.0</version>
     </dependency>
 
   </dependencies>
@@ -125,6 +134,46 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <version>1.15.0</version>
+        <configuration>
+          <nodeVersion>${node.version}</nodeVersion>
+          <npmVersion>${npm.version}</npmVersion>
+          <workingDirectory>frontend</workingDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+          </execution>
+          <execution>
+            <id>npm install</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>install</arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>npm run build</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <!-- El script 'build' viene de tu package.json -->
+              <!-- El destino es donde Spring Boot busca los ficheros estáticos -->
+              <arguments>run build -- --output-path=${project.build.directory}/classes/static</arguments>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
