@@ -7,9 +7,9 @@ import {InputTextModule} from 'primeng/inputtext';
 import {MessageModule} from 'primeng/message';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {DatePicker} from "primeng/datepicker";
-import {SocioService} from "@/pages/service/SocioService";
+import {SocioService} from "@/services/SocioService";
 import {Socio} from "@/interfaces/socio.interface";
-import {UsuarioService} from "@/pages/service/UsuarioService";
+import {UsuarioService} from "@/services/UsuarioService";
 
 @Component({
     selector: 'app-complete-profile',

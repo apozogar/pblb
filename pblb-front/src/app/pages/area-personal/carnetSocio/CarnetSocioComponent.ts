@@ -17,7 +17,7 @@ import {AppLogo} from "@/layout/component/app.logo";
 import {Carousel} from "primeng/carousel";
 import {CuotasSocioTableComponent} from "@/components/cuotas-socio-table/cuotas-socio-table.component";
 import {SocioFormComponent} from "@/components/socio-form/socio-form.component";
-import {environment} from "../../../enviroments/environment";
+import {environment} from "../../../../enviroments/environment";
 
 @Component({
     selector: 'app-carnet-socio',

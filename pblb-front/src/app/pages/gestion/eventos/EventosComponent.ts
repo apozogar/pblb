@@ -18,28 +18,31 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { IconFieldModule } from 'primeng/iconfield'; // Import IconFieldModule
 import { InputIconModule } from 'primeng/inputicon'; // Import InputIconModule
 import { EventoService } from '@/services/evento.service';
+import {Tooltip} from "primeng/tooltip";
 
 
 @Component({
   selector: 'app-eventos',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    TableModule,
-    ButtonModule,
-    InputTextModule,
-    InputNumberModule,
-    ToastModule,
-    ToolbarModule,
-    DialogModule,
-    ConfirmDialogModule,
-    CardModule,
-    TextareaModule,
-    DatePickerModule,
-    IconFieldModule, // Add IconFieldModule
-    InputIconModule // Add InputIconModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TableModule,
+        ButtonModule,
+        InputTextModule,
+        InputNumberModule,
+        ToastModule,
+        ToolbarModule,
+        DialogModule,
+        ConfirmDialogModule,
+        CardModule,
+        TextareaModule,
+        DatePickerModule,
+        IconFieldModule, // Add IconFieldModule
+        InputIconModule,
+        Tooltip,
+        // Add InputIconModule
+    ],
   templateUrl: './EventosComponent.html',
   styleUrls: ['./EventosComponent.scss'],
   providers: [MessageService, ConfirmationService]

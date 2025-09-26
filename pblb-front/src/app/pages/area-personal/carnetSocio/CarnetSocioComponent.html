@@ -69,7 +69,7 @@
                       styleClass="p-button-text"></p-button>
             <!-- El botón de guardar ahora está dentro del componente del formulario para que el (ngSubmit) funcione -->
             <button pButton icon="pi pi-check" type="submit" label="Guardar"
-                    [disabled]="socioFormComponent?.isFormInvalid()"></button>
+                    [disabled]="socioFormComponent.isFormInvalid()"></button>
         </div>
     </app-socio-form>
 </p-dialog>

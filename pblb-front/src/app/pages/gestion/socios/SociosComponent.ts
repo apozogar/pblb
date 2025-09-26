@@ -10,7 +10,7 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {DialogModule} from 'primeng/dialog';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {TagModule} from 'primeng/tag';
-import {SocioService} from '../service/SocioService';
+import {SocioService} from '../../../services/SocioService';
 import {Ripple} from 'primeng/ripple';
 import {CheckboxModule} from 'primeng/checkbox';
 import {DatePickerModule} from 'primeng/datepicker';

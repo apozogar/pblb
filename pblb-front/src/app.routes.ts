@@ -1,13 +1,12 @@
 import {Routes} from '@angular/router';
 import {AppLayout} from '@//layout/component/app.layout';
-import {Landing} from '@//pages/landing/landing';
 import {Notfound} from '@//pages/notfound/notfound';
-import {CarnetSocioComponent} from "@/pages/carnetSocio/CarnetSocioComponent";
+import {CarnetSocioComponent} from "@/pages/area-personal/carnetSocio/CarnetSocioComponent";
 import {adminGuard} from '@/guards/admin.guard';
 import {authGuard} from '@/guards/auth.guard';
 import {
     InscripcionEventosComponent
-} from "@/pages/inscripcion-eventos/inscripcion-eventos.component";
+} from "@/pages/area-personal/inscripcion-eventos/inscripcion-eventos.component";
 
 export const appRoutes: Routes = [
     {
@@ -19,13 +18,13 @@ export const appRoutes: Routes = [
             {
                 path: 'socios',
                 loadComponent: () =>
-                    import('@/pages/socios/SociosComponent').then(m => m.SociosComponent),
+                    import('@/pages/gestion/socios/SociosComponent').then(m => m.SociosComponent),
                 canActivate: [adminGuard]
             },
             {
                 path: 'eventos',
                 loadComponent: () =>
-                    import('@/pages/eventos/EventosComponent').then(m => m.EventosComponent)
+                    import('@/pages/gestion/eventos/EventosComponent').then(m => m.EventosComponent)
             },
             // {
             //     path: 'cuotas',
@@ -47,11 +46,6 @@ export const appRoutes: Routes = [
             },
         ]
     },
-    {
-        path: 'landing', component:
-        Landing
-    }
-    ,
     {
         path: 'notfound', component:
         Notfound
