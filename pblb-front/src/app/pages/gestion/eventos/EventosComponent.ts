@@ -70,7 +70,7 @@ export class EventosComponent implements OnInit { // Implement OnInit
 
   cargarEventos() {
     this.loading = true;
-    this.eventoService.getEventos().subscribe({
+    this.eventoService.getEventosParaGestion().subscribe({
       next: (response) => {
         if (response.success && response.data) {
           this.eventos = response.data;

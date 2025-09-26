@@ -1,11 +1,14 @@
 package com.softwells.pblb.service;
 
+import com.softwells.pblb.controller.dto.EventoInscripcionDTO;
+import com.softwells.pblb.mapper.EventoMapper;
 import com.softwells.pblb.model.EventoEntity;
 import com.softwells.pblb.model.SocioEntity;
 import com.softwells.pblb.model.UsuarioEntity;
 import com.softwells.pblb.repository.EventoRepository;
 import com.softwells.pblb.repository.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,7 +26,14 @@ public class EventoService {
   private final EventoRepository eventoRepository;
   private final UsuarioRepository usuarioRepository;
 
-  public List<EventoEntity> findAll() {
+  public List<EventoEntity> findAllForAdmin() {
+    return eventoRepository.findAll().stream()
+        .sorted(Comparator.comparing(EventoEntity::getFechaEvento).reversed())
+        .collect(Collectors.toList());
+  }
+
+
+  public List<EventoInscripcionDTO> findAllForInscripcion() {
     String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
     UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(userEmail)
         .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
@@ -40,7 +51,11 @@ public class EventoService {
       evento.setCurrentUserInscrito(inscrito);
     });
 
-    return eventos;
+    // Mapear a DTO y ordenar por fecha
+    return eventos.stream()
+        .map(EventoMapper::toInscripcionDTO)
+        .sorted(Comparator.comparing(EventoInscripcionDTO::getFechaEvento))
+        .collect(Collectors.toList());
   }
 
   public EventoEntity save(EventoEntity evento) {

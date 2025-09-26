@@ -1,5 +1,6 @@
 package com.softwells.pblb.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class EventoEntity {
   private Set<SocioEntity> participantes = new HashSet<>();
 
   @Transient // No se persiste en la base de datos
+  @JsonProperty("isCurrentUserInscrito") // Forza este nombre en el JSON
   private boolean isCurrentUserInscrito;
 
 }

@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { EventoInscripcionDTO } from '@/interfaces/evento-inscripcion.dto';
 import { Evento } from '@/interfaces/evento.interface';
 import { environment } from '../../enviroments/environment';
 import { ApiResponse } from '@/interfaces/api-response.interface';
@@ -12,8 +13,18 @@ export class EventoService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/api/eventos`;
 
-  getEventos(): Observable<ApiResponse<Evento[]>> {
-    return this.http.get<ApiResponse<Evento[]>>(this.apiUrl);
+  /**
+   * Obtiene la lista de eventos simplificada para la vista de inscripción de usuarios.
+   */
+  getEventosParaInscripcion(): Observable<ApiResponse<EventoInscripcionDTO[]>> {
+    return this.http.get<ApiResponse<EventoInscripcionDTO[]>>(this.apiUrl);
+  }
+
+  /**
+   * Obtiene la lista completa de eventos para el panel de administración.
+   */
+  getEventosParaGestion(): Observable<ApiResponse<Evento[]>> {
+    return this.http.get<ApiResponse<Evento[]>>(`${this.apiUrl}/gestion`);
   }
 
   guardarEvento(evento: Partial<Evento>): Observable<ApiResponse<Evento>> {

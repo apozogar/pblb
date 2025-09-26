@@ -1,6 +1,7 @@
 package com.softwells.pblb.controller;
 
 import com.softwells.pblb.controller.dto.ApiResponse;
+import com.softwells.pblb.controller.dto.EventoInscripcionDTO;
 import com.softwells.pblb.model.EventoEntity;
 import com.softwells.pblb.service.EventoService;
 import java.util.List;
@@ -27,9 +28,16 @@ public class EventoController {
 
   @GetMapping
   @PreAuthorize("isAuthenticated()") // Permitir a cualquier usuario autenticado ver los eventos
-  public ResponseEntity<ApiResponse<List<EventoEntity>>> getAllEventos() {
-    List<EventoEntity> eventos = eventoService.findAll();
+  public ResponseEntity<ApiResponse<List<EventoInscripcionDTO>>> getAllEventos() {
+    List<EventoInscripcionDTO> eventos = eventoService.findAllForInscripcion();
     return ResponseEntity.ok(new ApiResponse<>(true, "Eventos recuperados", eventos));
+  }
+
+  @GetMapping("/gestion")
+  @PreAuthorize("hasRole('ADMIN')") // Solo para administradores
+  public ResponseEntity<ApiResponse<List<EventoEntity>>> getAllEventosForAdmin() {
+    List<EventoEntity> eventos = eventoService.findAllForAdmin();
+    return ResponseEntity.ok(new ApiResponse<>(true, "Eventos para gestión recuperados", eventos));
   }
 
   @PostMapping
