@@ -62,7 +62,7 @@
 <p-dialog header="Añadir Nuevo Socio" [(visible)]="displayNuevoSocioDialog" [modal]="true"
           [style]="{width: '50vw', 'min-width': '450px', 'max-width': '700px'}"
           (onHide)="cerrarDialogoNuevoSocio()">
-    <app-socio-form [socio]="nuevoSocio" (save)="guardarNuevoSocio($event)">
+    <app-socio-form [socio]="nuevoSocio" (save)="guardarNuevoSocio($event)" *ngIf="socioFormComponent">
         <!-- Proyectamos los botones de acción en el footer del formulario -->
         <div footer class="flex justify-end gap-2">
             <p-button icon="pi pi-times" (click)="cerrarDialogoNuevoSocio()" label="Cancelar"
