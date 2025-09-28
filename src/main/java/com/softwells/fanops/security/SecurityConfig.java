@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -28,11 +29,21 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests(auth -> auth
+        .csrf(AbstractHttpConfigurer::disable)
+        .authenticationProvider(authenticationProvider)
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        // Definir las reglas de autorización para las peticiones HTTP
+        .authorizeHttpRequests(authz -> authz
+
+            // Permitir el acceso sin autenticación a estas rutas
             .requestMatchers(
+                "/",                  // Permitir acceso a la raíz
+                "/index.html",        // Archivos estáticos
+                "/assets/**",         // Carpeta de assets del frontend
                 "/auth/**",
                 "/v2/api-docs",
+                "/browser",
+                "/management/**",     // Permitir acceso a los endpoints de Actuator
                 "/v3/api-docs",
                 "/v3/api-docs/**",
                 "/swagger-resources",
@@ -46,17 +57,18 @@ public class SecurityConfig {
             // Ahora, cualquier otra petición solo necesita estar autenticada. La lógica de roles la movemos al controlador.
             .anyRequest().authenticated()
         )
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationProvider(authenticationProvider)
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        // Configurar la gestión de sesiones como STATELESS (una sola vez)
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
     return http.build();
   }
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
+    // Nota: Para producción, es mejor restringir los orígenes.
+    // Ejemplo: List.of("https://tu-dominio.com")
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("*")); // Permitir todos los orígenes
+    configuration.setAllowedOriginPatterns(List.of("*")); // Usar patterns en lugar de origins con credenciales
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
     configuration.setAllowCredentials(true);

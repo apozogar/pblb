@@ -41,6 +41,14 @@ logging:
     root: INFO
     com.softwells.fanops: DEBUG
 
+# Configuraciones de Actuator
+management:
+  endpoints:
+    web:
+      base-path: /management # Mueve todos los endpoints a /management (ej: /management/health)
+      exposure:
+        include: health, info, prometheus # Exponemos explícitamente los endpoints que queremos
+
 # Configuraciones específicas de la aplicación
 app:
   security:
@@ -52,4 +60,3 @@ app:
 mail:
   from:
     address: ${spring.mail.username}
-

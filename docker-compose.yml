@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Servicio del Backend (API Java)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile_backend
+    ports:
+      - "8080:8080" # Mapea el puerto 8080 del host al 8080 del contenedor
+    environment:
+      # Aquí puedes poner variables de entorno para la base de datos, etc.
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/fanops
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      - db
+
+  # Servicio del Frontend (UI Angular)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile_frontend
+    ports:
+      - "80:80" # Mapea el puerto 80 del host al 80 del contenedor (puedes usar 4200:80 si prefieres)
+
+  # Servicio de Base de Datos (Ejemplo con PostgreSQL)
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=fanops
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
