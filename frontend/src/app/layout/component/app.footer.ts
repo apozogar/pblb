@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
     selector: 'app-footer',
     template: `
         <div class="layout-footer">
-            Peña Bética Luis Bellver by
+            FanOps by
             <a href="" target="_blank" rel="noopener noreferrer"
                class="text-primary font-bold hover:underline">Softwells</a>
         </div>`

@@ -25,6 +25,8 @@ import {AuthService} from "../../pages/auth/auth.service";
                     <i class="pi pi-bars"></i>
                 </button>
                 <a class="layout-topbar-logo" routerLink="/">
+                    <!--                    <img src="./assets/logo-fanops.png" alt="FanOps Logo" class="logo-pequeño" />-->
+
                     <svg xmlns="http://www.w3.org/2000/svg"
                          xmlns:xlink="http://www.w3.org/1999/xlink"
                          width="200px" height="200px" viewBox="0 0 200 200">
