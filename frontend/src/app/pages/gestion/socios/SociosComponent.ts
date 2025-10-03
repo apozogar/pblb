@@ -22,6 +22,7 @@ import {Tooltip} from "primeng/tooltip";
 import {
     CuotasSocioTableComponent
 } from "@/components/cuotas-socio-table/cuotas-socio-table.component";
+import {Role} from "@/interfaces/role.interface";
 
 @Component({
     selector: 'app-socios',
@@ -57,6 +58,11 @@ export class SociosComponent implements OnInit {
 
     estadistica?: EstadisticasSocio;
 
+    // Para manejar el checkbox de admin
+    isAdmin: boolean = false;
+    private adminRole?: Role;
+    private userRole?: Role;
+
     constructor(
         private readonly socioService: SocioService,
         private readonly messageService: MessageService,
@@ -66,6 +72,7 @@ export class SociosComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarSocios();
+        this.cargarRoles();
     }
 
     cargarSocios(): void {
@@ -87,18 +94,41 @@ export class SociosComponent implements OnInit {
         });
     }
 
+    cargarRoles(): void {
+        this.socioService.getRoles().subscribe(response => {
+            this.adminRole = response.data.find(r => r.name === 'ROLE_ADMIN');
+            this.userRole = response.data.find(r => r.name === 'ROLE_USER');
+        });
+    }
+
     abrirNuevo(): void {
         this.socio = {};
+        this.isAdmin = false; // Por defecto, un nuevo usuario no es admin
         this.socioDialog = true;
     }
 
     editarSocio(socio: any): void {
         this.socio = {...socio};
+        // Comprobamos si el socio tiene el rol de admin para marcar el checkbox
+        if (this.adminRole && this.socio.usuario?.roles) {
+            this.isAdmin = this.socio.usuario.roles.some((role: Role) => role.id === this.adminRole!.id);
+        } else {
+            this.isAdmin = false;
+        }
         this.socioDialog = true;
     }
 
     guardarSocio(): void {
         this.submitted = true;
+
+        // Preparamos los roles basados en el checkbox
+        const rolesParaGuardar: Role[] = [];
+        if (this.isAdmin && this.adminRole) {
+            rolesParaGuardar.push(this.adminRole);
+        } else if (this.userRole) {
+            rolesParaGuardar.push(this.userRole);
+        }
+        this.socio.usuario = { ...this.socio.usuario, roles: rolesParaGuardar };
 
         if (this.socio.uid) {
             this.socioService.actualizarSocio(this.socio.uid, this.socio).subscribe({

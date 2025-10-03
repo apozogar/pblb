@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {ApiResponse} from '@/interfaces/api-response.interface';
 import {EstadisticasSocio, Socio} from '@/interfaces/socio.interface';
 import {environment} from "../../enviroments/environment";
+import {Role} from "@/interfaces/role.interface";
 
 
 @Injectable({
@@ -75,6 +76,10 @@ export class SocioService {
 
     generarRemesaMensual(): Observable<ApiResponse<string>> {
         return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/generar-remesa`, {});
+    }
+
+    getRoles(): Observable<ApiResponse<Role[]>> {
+        return this.http.get<ApiResponse<Role[]>>(`${environment.apiUrl}/api/roles`);
     }
 
 }

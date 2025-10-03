@@ -24,7 +24,7 @@
                            class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Contraseña</label>
                     <p-password id="password" [(ngModel)]="password" placeholder="Contraseña"
                                 [toggleMask]="true"
-                                styleClass="mb-4" [fluid]="true" [feedback]="false"
+                                class="mb-4" [fluid]="true" [feedback]="false"
                                 [ngClass]="{'ng-invalid ng-dirty' : error}"
                                 (keyup.enter)="login()"></p-password>
                     @if (error) {
@@ -43,8 +43,8 @@
                                 registrarte?</a>
                         </div>
                     </div>
-                    <p-button label="Iniciar Sesión" styleClass="w-full"
-                              (click)="login()"></p-button>
+                    <p-button label="Iniciar Sesión" styleClass="w-full" (click)="login()"
+                              (keyup.enter)="login()"></p-button>
                 </div>
             </div>
         </div>

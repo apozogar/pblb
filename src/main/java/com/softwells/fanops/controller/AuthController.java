@@ -22,6 +22,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,12 +49,17 @@ public class AuthController {
   private String fromAddress;
 
   @PostMapping("/login")
-  public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-    final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-    final String jwt = jwtService.generateToken(userDetails);
-    return ResponseEntity.ok(new AuthResponse(jwt));
+  public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+    try {
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+      final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+      final String jwt = jwtService.generateToken(userDetails);
+      return ResponseEntity.ok(new AuthResponse(jwt));
+    } catch (AuthenticationException e) {
+      // Si las credenciales son incorrectas, devolvemos un 401 Unauthorized
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(false, "Email o contraseña incorrectos", null));
+    }
   }
 
   @PostMapping("/register")

@@ -262,6 +262,11 @@
                                             inputId="exentoPago"></p-checkbox>
                                 <label for="exentoPago" class="font-semibold">Exento Pago</label>
                             </div>
+                            <div class="flex items-center gap-2">
+                                <p-checkbox [(ngModel)]="isAdmin" [binary]="true"
+                                            inputId="isAdmin"></p-checkbox>
+                                <label for="isAdmin" class="font-semibold">Es Administrador</label>
+                            </div>
                         </div>
                     </div>
                     <div class="flex-auto">
