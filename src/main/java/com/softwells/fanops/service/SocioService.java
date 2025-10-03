@@ -49,6 +49,20 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class SocioService {
 
+  // Constantes para los índices de las columnas del Excel
+  private static final int COL_NOMBRE_COMPLETO = 0;
+  private static final int COL_DNI = 1;
+  private static final int COL_FECHA_NACIMIENTO = 2;
+  private static final int COL_DIRECCION = 3;
+  private static final int COL_POBLACION = 4;
+  private static final int COL_PROVINCIA = 5;
+  private static final int COL_CODIGO_POSTAL = 6;
+  private static final int COL_TELEFONO = 7;
+  private static final int COL_EMAIL = 8;
+  private static final int COL_ABONADO_BETIS = 9;
+  private static final int COL_ACCIONISTA_BETIS = 10;
+  private static final int COL_DOMICILIACION = 12;
+
   private final SocioRepository socioRepository;
   private final CuotaRepository cuotaRepository;
   private final PasswordEncoder passwordEncoder;
@@ -77,7 +91,7 @@ public class SocioService {
 
     // Asignamos el rol directamente al Usuario
     RoleEntity userRole = roleRepository.findByName("ROLE_USER")
-        .orElseThrow(() -> new RuntimeException("Error: Rol ROLE_USER no encontrado."));
+        .orElseGet(() -> roleRepository.save(new RoleEntity("ROLE_USER")));
     nuevoUsuario.setRoles(Set.of(userRole));
 
     UsuarioEntity usuario = usuarioRepository.save(nuevoUsuario);
@@ -225,11 +239,19 @@ public class SocioService {
           continue;
         }
 
+        // Verificamos si la fila está vacía comprobando la columna del nombre.
+        String nombreCompleto = getCellValueAsString(row.getCell(COL_NOMBRE_COMPLETO));
+        if (nombreCompleto == null || nombreCompleto.isBlank()) {
+          log.warn("Saltando fila {} porque el nombre está vacío.", row.getRowNum() + 1);
+          continue; // Si el nombre está vacío, ignoramos la fila completa.
+        }
+
         SocioEntity socio = new SocioEntity();
-        String email = getCellValueAsString(row.getCell(9));
+        String email = getCellValueAsString(row.getCell(COL_EMAIL));
 
         // --- Lógica para crear o encontrar el Usuario ---
         UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(email)
+            // Si el email está vacío, se creará un usuario con email nulo, lo que dará error.
             .orElseGet(() -> {
               UsuarioEntity nuevoUsuario = new UsuarioEntity();
               nuevoUsuario.setEmail(email);
@@ -241,14 +263,12 @@ public class SocioService {
             });
         // --- Fin de la lógica de Usuario ---
 
-        // Asignamos los valores de las celdas al objeto SocioEntity
-        // Ojo: los índices de las celdas empiezan en 0
-        String nombreCompleto = getCellValueAsString(row.getCell(1));
+        // Asignamos los valores de las celdas al objeto SocioEntity usando los índices 0-based
         socio.setNombre(WordUtils.capitalizeFully(nombreCompleto));
-        socio.setDni(getCellValueAsString(row.getCell(2)));
+        socio.setDni(getCellValueAsString(row.getCell(COL_DNI)));
         socio.setEmail(email);
 
-        String fechaNacimientoStr = getCellValueAsString(row.getCell(3));
+        String fechaNacimientoStr = getCellValueAsString(row.getCell(COL_FECHA_NACIMIENTO));
         if (fechaNacimientoStr != null && !fechaNacimientoStr.isEmpty()) {
           try {
             socio.setFechaNacimiento(LocalDate.parse(fechaNacimientoStr, dateFormatter));
@@ -258,15 +278,21 @@ public class SocioService {
           }
         }
 
-        socio.setDireccion(getCellValueAsString(row.getCell(4)));
-        socio.setPoblacion(getCellValueAsString(row.getCell(5)));
-        socio.setProvincia(getCellValueAsString(row.getCell(6)));
-        socio.setCodigoPostal(getCellValueAsString(row.getCell(7)));
-        socio.setTelefono(getCellValueAsString(row.getCell(8)));
+        socio.setDireccion(getCellValueAsString(row.getCell(COL_DIRECCION)));
+        socio.setPoblacion(getCellValueAsString(row.getCell(COL_POBLACION)));
+        socio.setProvincia(getCellValueAsString(row.getCell(COL_PROVINCIA)));
+        socio.setCodigoPostal(getCellValueAsString(row.getCell(COL_CODIGO_POSTAL)));
+        socio.setTelefono(getCellValueAsString(row.getCell(COL_TELEFONO)));
 
         // Extraemos el IBAN del campo de domiciliación
-        String domiciliacion = getCellValueAsString(row.getCell(13));
+        String domiciliacion = getCellValueAsString(row.getCell(COL_DOMICILIACION));
         socio.setNumeroCuenta(domiciliacion);
+
+        String esAbonado = getCellValueAsString(row.getCell(COL_ABONADO_BETIS));
+        socio.setAbonadoBetis("si".equalsIgnoreCase(esAbonado) || "sí".equalsIgnoreCase(esAbonado));
+
+        String esAccionista = getCellValueAsString(row.getCell(COL_ACCIONISTA_BETIS));
+        socio.setAccionistaBetis("si".equalsIgnoreCase(esAccionista) || "sí".equalsIgnoreCase(esAccionista));
 
         socio.setActivo(true); // Por defecto, los nuevos socios están activos
         socio.setNumeroSocio(numSocio++);
