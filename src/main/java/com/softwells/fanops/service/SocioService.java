@@ -110,10 +110,33 @@ public class SocioService {
     return socioRepository.save(nuevoSocio);
   }
 
-  public SocioEntity actualizar(UUID id, SocioEntity socio) {
+  @Transactional
+  public SocioEntity actualizar(UUID id, SocioEntity socioData) {
     SocioEntity existente = obtenerPorId(id);
-    socio.setUid(existente.getUid());
-    return socioRepository.save(socio);
+
+    // Actualizamos los datos del socio
+    existente.setNumeroSocio(socioData.getNumeroSocio());
+    existente.setNombre(socioData.getNombre());
+    existente.setDni(socioData.getDni());
+    existente.setFechaNacimiento(socioData.getFechaNacimiento());
+    existente.setEmail(socioData.getEmail());
+    existente.setTelefono(socioData.getTelefono());
+    existente.setDireccion(socioData.getDireccion());
+    existente.setPoblacion(socioData.getPoblacion());
+    existente.setProvincia(socioData.getProvincia());
+    existente.setCodigoPostal(socioData.getCodigoPostal());
+    existente.setActivo(socioData.isActivo());
+    existente.setAbonadoBetis(socioData.isAbonadoBetis());
+    existente.setAccionistaBetis(socioData.isAccionistaBetis());
+    existente.setExentoPago(socioData.isExentoPago());
+    existente.setNumeroCuenta(socioData.getNumeroCuenta());
+    existente.setFechaAlta(socioData.getFechaAlta());
+    existente.setObservaciones(socioData.getObservaciones());
+
+    // Actualizamos los roles del usuario asociado
+    existente.getUsuario().setRoles(socioData.getUsuario().getRoles());
+
+    return socioRepository.save(existente);
   }
 
 
