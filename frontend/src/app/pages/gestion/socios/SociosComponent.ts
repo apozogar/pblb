@@ -54,6 +54,7 @@ export class SociosComponent implements OnInit {
     loading: boolean = false;
     submitted: boolean = false;
 
+    filtroActivo: string | null = null;
     cobrosDialog: boolean = false;
     cuotasDialog: boolean = false;
     cuotasSocio: any[] = [];
@@ -74,15 +75,16 @@ export class SociosComponent implements OnInit {
 
     ngOnInit(): void {
         this.cargarSocios();
+        this.obtenerEstatidicas();
         this.cargarRoles();
     }
 
-    cargarSocios(): void {
+    cargarSocios(filtro?: string): void {
         this.loading = true;
-        this.obtenerEstatidicas();
-        this.socioService.getSocios().subscribe({
-            next: (response: any) => {
-                this.socios = response.data;
+        this.socioService.getSocios(filtro).subscribe({
+            next: (response) => {
+                this.filtroActivo = filtro || null;
+                this.socios = response.data; // Asumiendo que la respuesta ya viene procesada
                 this.loading = false;
             },
             error: () => {
@@ -94,6 +96,11 @@ export class SociosComponent implements OnInit {
                 this.loading = false;
             }
         });
+    }
+
+    limpiarFiltros(): void {
+        this.filtroActivo = null;
+        this.cargarSocios();
     }
 
     cargarRoles(): void {

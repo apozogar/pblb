@@ -416,4 +416,9 @@ public class SocioService {
     // 5. Guardar el nuevo socio en la base de datos
     return socioRepository.save(nuevoSocio);
   }
+
+  public List<SocioEntity> obtenerSociosConImpagos() {
+    List<EstadoCuota> estadosImpagados = List.of(EstadoCuota.RECHAZADA, EstadoCuota.VENCIDA);
+    return socioRepository.findSociosConCuotasEnEstados(estadosImpagados);
+  }
 }

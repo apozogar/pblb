@@ -1,9 +1,11 @@
 package com.softwells.fanops.repository;
 
+import com.softwells.fanops.enums.EstadoCuota;
 import com.softwells.fanops.model.SocioEntity;
 import java.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.UUID;
 import java.util.Optional;
@@ -29,4 +31,7 @@ public interface SocioRepository extends JpaRepository<SocioEntity, UUID> {
 
   @Query("SELECT MAX(CAST(s.numeroSocio as INTEGER)) FROM SocioEntity s")
   Optional<Integer> findMaxNumeroSocio();
+
+  @Query("SELECT DISTINCT s FROM SocioEntity s JOIN s.cuotas c WHERE c.estado IN :estados")
+  List<SocioEntity> findSociosConCuotasEnEstados(@Param("estados") List<EstadoCuota> estados);
 }

@@ -31,7 +31,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class SocioController {
 
   private final SocioService socioService;
-  private final SepaService sepaService;
 
   @PostMapping
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -68,9 +67,15 @@ public class SocioController {
   @GetMapping
   @PreAuthorize("hasAuthority('ROLE_ADMIN')")
   @Transactional(readOnly = true)
-  public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerTodos() {
-    return ResponseEntity.ok(new ApiResponse<>(true, "Lista de socios",
-        socioService.obtenerTodos()));
+  public ResponseEntity<ApiResponse<List<SocioEntity>>> obtenerTodos(
+      @RequestParam(required = false) String filtro) {
+    List<SocioEntity> socios;
+    if ("impagados".equals(filtro)) {
+      socios = socioService.obtenerSociosConImpagos();
+    } else {
+      socios = socioService.obtenerTodos();
+    }
+    return ResponseEntity.ok(new ApiResponse<>(true, "Socios obtenidos con éxito", socios));
   }
 
   @GetMapping("/{id}/cuotas")
@@ -130,7 +135,8 @@ public class SocioController {
   @PreAuthorize("isAuthenticated()")
   public ResponseEntity<ApiResponse<CarnetDto>> obtenerMiInformacion() {
     CarnetDto carnetData = socioService.obtenerDatosCarnetUsuarioAutenticado();
-    return ResponseEntity.ok(new ApiResponse<>(true, "Información del carnet recuperada", carnetData));
+    return ResponseEntity.ok(
+        new ApiResponse<>(true, "Información del carnet recuperada", carnetData));
   }
 
   /**
@@ -138,9 +144,11 @@ public class SocioController {
    */
   @PostMapping("/me/asociado")
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<ApiResponse<SocioEntity>> crearSocioAsociado(@RequestBody SocioEntity nuevoSocioData) {
+  public ResponseEntity<ApiResponse<SocioEntity>> crearSocioAsociado(
+      @RequestBody SocioEntity nuevoSocioData) {
     // El servicio se encargará de obtener el usuario autenticado y asociarlo.
     SocioEntity nuevoSocio = socioService.crearSocioAsociado(nuevoSocioData);
-    return ResponseEntity.ok(new ApiResponse<>(true, "Nuevo socio asociado creado correctamente.", nuevoSocio));
+    return ResponseEntity.ok(
+        new ApiResponse<>(true, "Nuevo socio asociado creado correctamente.", nuevoSocio));
   }
 }

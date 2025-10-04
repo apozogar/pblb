@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ApiResponse} from '@/interfaces/api-response.interface';
 import {EstadisticasSocio, Socio} from '@/interfaces/socio.interface';
@@ -11,13 +11,17 @@ import {Role} from "@/interfaces/role.interface";
     providedIn: 'root'
 })
 export class SocioService {
-    private apiUrl = `${environment.apiUrl}/api/socios`;
+    private apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) {
     }
 
-    getSocios(): Observable<ApiResponse<Socio[]>> {
-        return this.http.get<ApiResponse<Socio[]>>(this.apiUrl);
+    getSocios(filtro?: string): Observable<ApiResponse<Socio[]>> {
+        let params = new HttpParams();
+        if (filtro) {
+            params = params.append('filtro', filtro);
+        }
+        return this.http.get<ApiResponse<Socio[]>>(`${this.apiUrl}/api/socios`, {params});
     }
 
     getSociosActivos(): Observable<ApiResponse<Socio[]>> {
@@ -25,32 +29,32 @@ export class SocioService {
     }
 
     getSocio(uid: string): Observable<ApiResponse<Socio>> {
-        return this.http.get<ApiResponse<Socio>>(`${this.apiUrl}/${uid}`);
+        return this.http.get<ApiResponse<Socio>>(`${this.apiUrl}/api/socios/${uid}`);
     }
 
     crearSocio(socio: Socio): Observable<ApiResponse<Socio>> {
-        return this.http.post<ApiResponse<Socio>>(this.apiUrl, socio);
+        return this.http.post<ApiResponse<Socio>>(`${this.apiUrl}/api/socios`, socio);
     }
 
     actualizarSocio(uid: string, socio: Socio): Observable<ApiResponse<Socio>> {
-        return this.http.put<ApiResponse<Socio>>(`${this.apiUrl}/${uid}`, socio);
+        return this.http.put<ApiResponse<Socio>>(`${this.apiUrl}/api/socios/${uid}`, socio);
     }
 
     eliminarSocio(uid: string): Observable<ApiResponse<void>> {
-        return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${uid}`);
+        return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/api/socios/${uid}`);
     }
 
     getCuotasSocio(uid: string): Observable<ApiResponse<any[]>> {
-        return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/${uid}/cuotas`);
+        return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/api/socios/${uid}/cuotas`);
     }
 
     // Métodos adicionales para validación
     verificarDniExistente(dni: string): Observable<boolean> {
-        return this.http.get<boolean>(`${this.apiUrl}/verificar/dni/${dni}`);
+        return this.http.get<boolean>(`${this.apiUrl}/api/socios/verificar/dni/${dni}`);
     }
 
     verificarEmailExistente(email: string): Observable<boolean> {
-        return this.http.get<boolean>(`${this.apiUrl}/verificar/email/${email}`);
+        return this.http.get<boolean>(`${this.apiUrl}/api/socios/verificar/email/${email}`);
     }
 
     verificarNumeroSocioExistente(numeroSocio: string): Observable<boolean> {
@@ -58,11 +62,11 @@ export class SocioService {
     }
 
     obtenerEstadisticas(): Observable<ApiResponse<EstadisticasSocio>> {
-        return this.http.get<ApiResponse<EstadisticasSocio>>(`${this.apiUrl}/estadisticas`);
+        return this.http.get<ApiResponse<EstadisticasSocio>>(`${this.apiUrl}/api/socios/estadisticas`);
     }
 
     generarSepa(): Observable<Blob> { // Debe devolver un Observable<Blob>
-        return this.http.get(`${this.apiUrl}/generar-sepa`, {
+        return this.http.get(`${this.apiUrl}/api/socios/generar-sepa`, {
             responseType: 'blob' // ¡Esta es la clave!
         });
     }
@@ -71,7 +75,7 @@ export class SocioService {
         const formData = new FormData();
         formData.append('file', file, file.name);
 
-        return this.http.post<ApiResponse<string>>(`${this.apiUrl}/importar`, formData);
+        return this.http.post<ApiResponse<string>>(`${this.apiUrl}/api/socios/importar`, formData);
     }
 
     generarRemesaMensual(): Observable<ApiResponse<string>> {

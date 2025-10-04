@@ -86,7 +86,18 @@
     <ng-template #start>
         <button pButton pRipple label="Nuevo Socio" icon="pi pi-plus"
                 class="p-button-success mr-2" (click)="abrirNuevo()"></button>
+        <button pButton pRipple label="Ver Impagados" icon="pi pi-filter-fill"
+                class="p-button-warning mr-2" (click)="cargarSocios('impagados')"></button>
 
+        <!-- Indicador de filtro activo -->
+        <div *ngIf="filtroActivo" class="flex items-center gap-2 ml-4">
+            <i class="pi pi-info-circle text-blue-500"></i>
+            <span class="font-medium text-blue-700 dark:text-blue-300">
+                Filtrando por: <b>{{ filtroActivo | titlecase }}</b>
+            </span>
+            <button pButton pRipple label="Ver Todos" icon="pi pi-times"
+                    class="p-button-text p-button-secondary" (click)="limpiarFiltros()"></button>
+        </div>
     </ng-template>
 
     <ng-template #center>
