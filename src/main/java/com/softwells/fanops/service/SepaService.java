@@ -4,6 +4,7 @@ import com.softwells.fanops.model.PenaEntity;
 import com.softwells.fanops.model.SocioEntity;
 import com.softwells.fanops.repository.SocioRepository;
 import com.softwells.fanops.repository.PenaRepository;
+import io.micrometer.common.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -21,14 +22,7 @@ public class SepaService {
   private final SocioRepository socioRepository;
   private final PenaRepository penaRepository;
 
-  public void generarFicheroSepa(LocalDateTime fechaPago) {
-    List<SocioEntity> sociosActivos = socioRepository.findByActivo(true);
-    String xmlContent = generarXml(sociosActivos, fechaPago);
-    // Aquí puedes guardar el 'xmlContent' en un fichero, enviarlo, etc.
-    // Por ejemplo: Files.writeString(Paths.get("sepa.xml"), xmlContent);
-  }
-
-  public String generarXml(List<SocioEntity> socios, LocalDateTime fechaPago) {
+  public String generarFicheroSepa(List<SocioEntity> socios, LocalDateTime fechaPago) {
     double montoTotal = 0.0;
     int numeroTransacciones = socios.size();
     StringBuilder transaccionesXml = new StringBuilder();
@@ -45,6 +39,9 @@ public class SepaService {
     for (SocioEntity socio : socios) {
       double montoCuota;
       int edad = 30;
+      if (StringUtils.isEmpty(socio.getNumeroCuenta())) {
+        continue;
+      }
       if (socio.getFechaNacimiento() != null) {
         edad = Period.between(socio.getFechaNacimiento(), LocalDate.now()).getYears();
       }

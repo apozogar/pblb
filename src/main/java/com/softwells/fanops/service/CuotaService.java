@@ -7,17 +7,20 @@ import com.softwells.fanops.model.SocioEntity;
 import com.softwells.fanops.repository.CuotaRepository;
 import com.softwells.fanops.repository.PenaRepository;
 import com.softwells.fanops.repository.SocioRepository;
+import io.micrometer.common.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CuotaService {
 
   private final SocioRepository socioRepository;
@@ -42,6 +45,9 @@ public class CuotaService {
           (edad > pena.getEdadMayoria()) ? pena.getCuotaAdulto() : pena.getCuotaMenor();
 
       CuotaEntity cuota = new CuotaEntity();
+      if (StringUtils.isEmpty(socio.getNumeroCuenta())) {
+        continue;
+      }
       cuota.setSocio(socio);
       cuota.setImporte(importe);
       cuota.setMes(hoy.getMonthValue());
@@ -54,7 +60,9 @@ public class CuotaService {
     cuotaRepository.saveAll(nuevasCuotas);
 
     // Ahora que las cuotas están generadas, creamos el fichero SEPA
-    sepaService.generarFicheroSepa(LocalDateTime.now());
+    String sepa = sepaService.generarFicheroSepa(sociosActivos, LocalDateTime.now());
+
+    log.info("Fichero SEPA generado: {}", sepa);
 
     return "Se generaron " + nuevasCuotas.size()
         + " cuotas y se creó la remesa SEPA correctamente.";
