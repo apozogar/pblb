@@ -1,5 +1,6 @@
 package com.softwells.fanops.service;
 
+import com.softwells.fanops.model.CuotaEntity;
 import com.softwells.fanops.model.PenaEntity;
 import com.softwells.fanops.model.SocioEntity;
 import com.softwells.fanops.repository.SocioRepository;
@@ -19,12 +20,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SepaService {
 
-  private final SocioRepository socioRepository;
   private final PenaRepository penaRepository;
 
-  public String generarFicheroSepa(List<SocioEntity> socios, LocalDateTime fechaPago) {
+  public String generarFicheroSepa(List<CuotaEntity> cuotas, LocalDateTime fechaPago) {
     double montoTotal = 0.0;
-    int numeroTransacciones = socios.size();
+    int numeroTransacciones = cuotas.size();
     StringBuilder transaccionesXml = new StringBuilder();
 
     // Recuperamos los datos de la peña desde la base de datos
@@ -36,22 +36,13 @@ public class SepaService {
     final String FECHA_COBRO = fechaPago.toLocalDate().toString();
 
     // Asume que la lista de socios incluye los datos de mandato y dirección
-    for (SocioEntity socio : socios) {
-      double montoCuota;
-      int edad = 30;
+    for (CuotaEntity cuota : cuotas) {
+      SocioEntity socio = cuota.getSocio();
       if (StringUtils.isEmpty(socio.getNumeroCuenta())) {
         continue;
       }
-      if (socio.getFechaNacimiento() != null) {
-        edad = Period.between(socio.getFechaNacimiento(), LocalDate.now()).getYears();
-      }
-      if (edad > pena.getEdadMayoria()) {
-        montoCuota = pena.getCuotaAdulto();
-      } else {
-        montoCuota = pena.getCuotaMenor();
-      }
 
-      montoTotal += montoCuota;
+      montoTotal += cuota.getImporte();
 
       // Aquí se asume que SocioEntity tiene los nuevos campos necesarios
       transaccionesXml.append(
@@ -89,8 +80,8 @@ public class SepaService {
                       </RmtInf>
                     </DrctDbtTxInf>
                   """,
-              socio.getUid(), // Asume que SocioEntity tiene un ID
-              montoCuota,
+              cuota.getUid(), // Usamos el UID de la cuota como EndToEndId para identificarla en la devolución
+              cuota.getImporte(),
               socio.getMandateId(), // Asume un nuevo campo para el ID del mandato
               socio.getMandateSignatureDate(), // Asume un nuevo campo para la fecha de firma
               socio.getNombre(),

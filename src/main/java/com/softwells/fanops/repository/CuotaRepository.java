@@ -1,7 +1,11 @@
 package com.softwells.fanops.repository;
 
+import com.softwells.fanops.enums.EstadoCuota;
 import com.softwells.fanops.model.CuotaEntity;
+import com.softwells.fanops.model.SocioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
@@ -10,4 +14,10 @@ import java.util.UUID;
 public interface CuotaRepository extends JpaRepository<CuotaEntity, UUID> {
 
   List<CuotaEntity> findBySocioUid(UUID uid);
+
+  boolean existsBySocioAndEstado(SocioEntity socio, EstadoCuota estado);
+
+  @Modifying
+  @Query("UPDATE CuotaEntity c SET c.estado = 'PAGADA' WHERE c.estado = 'PENDIENTE'")
+  int actualizarPendientesAPagadas();
 }

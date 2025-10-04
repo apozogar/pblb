@@ -10,7 +10,7 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {DialogModule} from 'primeng/dialog';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {TagModule} from 'primeng/tag';
-import {SocioService} from '../../../services/SocioService';
+import {SocioService} from '@/services/SocioService';
 import {Ripple} from 'primeng/ripple';
 import {CheckboxModule} from 'primeng/checkbox';
 import {DatePickerModule} from 'primeng/datepicker';
@@ -23,6 +23,7 @@ import {
     CuotasSocioTableComponent
 } from "@/components/cuotas-socio-table/cuotas-socio-table.component";
 import {Role} from "@/interfaces/role.interface";
+import {GestionCobrosComponent} from "@/components/gestion-cobros/gestion-cobros.component";
 
 @Component({
     selector: 'app-socios',
@@ -41,7 +42,7 @@ import {Role} from "@/interfaces/role.interface";
         Ripple,
         CheckboxModule,
         DatePickerModule,
-        Textarea, IconField, InputIcon, Tooltip, CuotasSocioTableComponent
+        Textarea, IconField, InputIcon, Tooltip, CuotasSocioTableComponent, GestionCobrosComponent
 
     ],
     templateUrl: './SociosComponent.html'
@@ -53,6 +54,7 @@ export class SociosComponent implements OnInit {
     loading: boolean = false;
     submitted: boolean = false;
 
+    cobrosDialog: boolean = false;
     cuotasDialog: boolean = false;
     cuotasSocio: any[] = [];
 
@@ -128,7 +130,7 @@ export class SociosComponent implements OnInit {
         } else if (this.userRole) {
             rolesParaGuardar.push(this.userRole);
         }
-        this.socio.usuario = { ...this.socio.usuario, roles: rolesParaGuardar };
+        this.socio.usuario = {...this.socio.usuario, roles: rolesParaGuardar};
 
         if (this.socio.uid) {
             this.socioService.actualizarSocio(this.socio.uid, this.socio).subscribe({
@@ -171,31 +173,6 @@ export class SociosComponent implements OnInit {
                             summary: 'Éxito',
                             detail: 'Socio eliminado'
                         });
-                    }
-                });
-            }
-        });
-    }
-
-    cobrarCuota(): void {
-        this.confirmationService.confirm({
-            message: '¿Estás seguro de que quieres generar la remesa de cuotas para el mes actual? Esta acción no se puede deshacer.',
-            header: 'Confirmación de Cobro',
-            icon: 'pi pi-exclamation-triangle',
-            acceptLabel: 'Sí, generar',
-            rejectLabel: 'Cancelar',
-            accept: () => {
-                this.loading = true;
-                // Asumo que tienes un método en tu servicio que llama a /api/cobros/generar-remesa
-                // Si no, habría que añadirlo. Por ahora, lo hago directamente con http.
-                this.socioService.generarRemesaMensual().subscribe({
-                    next: (response) => {
-                        this.messageService.add({ severity: 'success', summary: 'Éxito', detail: response.message });
-                        this.loading = false;
-                    },
-                    error: (err) => {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo generar la remesa.' });
-                        this.loading = false;
                     }
                 });
             }
@@ -249,7 +226,7 @@ export class SociosComponent implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: 'Hubo un error al importar el fichero.'
+                    detail: 'Hubo un error al importar el fichero.' + err.message
                 });
             }
         });

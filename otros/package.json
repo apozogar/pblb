@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "formeteador-excel": "node formateador-excel.js",
+    "generar-retorno": "node generar-retorno.js --input \"C:/remesa-sepa-2025-10-04.xml\" "
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "xml2js": "^0.6.2",
+    "xmlbuilder2": "^3.1.1",
+    "yargs": "^18.0.0"
   }
 }

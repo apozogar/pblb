@@ -82,4 +82,14 @@ export class SocioService {
         return this.http.get<ApiResponse<Role[]>>(`${environment.apiUrl}/api/roles`);
     }
 
+    procesarRetorno(file: File): Observable<ApiResponse<string>> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/procesar-retorno`, formData);
+    }
+
+    confirmarPagos(): Observable<ApiResponse<string>> {
+        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/confirmar-pagos`, {});
+    }
+
 }

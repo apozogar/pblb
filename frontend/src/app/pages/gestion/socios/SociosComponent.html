@@ -82,8 +82,8 @@
 
     <ng-template #end>
         <div class="flex gap-2">
-            <button pButton pRipple label="Cobrar cuota" icon="pi pi-credit-card" severity="info"
-                    (click)="cobrarCuota()"></button>
+            <button pButton pRipple label="Gestión de Cobros" icon="pi pi-credit-card" severity="info"
+                    (click)="cobrosDialog = true"></button>
 
             <!-- El input de fichero está oculto y se activa con el botón -->
             <input type="file" #fileUpload style="display: none" (change)="onFileSelect($event)"
@@ -301,9 +301,6 @@
     </ng-template>
 </p-dialog>
 
-
-<p-confirmDialog [style]="{width: '450px'}"/>
-
 <!-- Modal para mostrar las cuotas -->
 <p-dialog [(visible)]="cuotasDialog" [style]="{ width: '750px' }" header="Historial de Cuotas"
           [modal]="true">
@@ -311,3 +308,6 @@
         <app-cuotas-socio-table [cuotas]="cuotasSocio"></app-cuotas-socio-table>
     </ng-template>
 </p-dialog>
+
+<!-- Modal de Gestión de Cobros -->
+<app-gestion-cobros [(visible)]="cobrosDialog"></app-gestion-cobros>

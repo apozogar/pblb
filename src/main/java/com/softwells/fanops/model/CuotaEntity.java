@@ -25,6 +25,7 @@ public class CuotaEntity {
   private LocalDate fechaPago;
 
   @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
   private EstadoCuota estado; // Ej: PAGADA, PENDIENTE, VENCIDA
 
   @Column(nullable = false)

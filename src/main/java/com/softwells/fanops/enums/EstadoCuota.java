@@ -1,5 +1,5 @@
 package com.softwells.fanops.enums;
 
 public enum EstadoCuota {
-  PAGADA, PENDIENTE, VENCIDA
+  PAGADA, PENDIENTE, VENCIDA, RECHAZADA;
 }

@@ -16,9 +16,9 @@ export class CuotasSocioTableComponent {
 
   getSeverity(estado: string): 'success' | 'danger' | 'warn' {
     switch (estado) {
-      case 'Pagado':
+      case 'PAGADA':
         return 'success';
-      case 'Pendiente':
+      case 'PENDIENTE':
         return 'warn';
       default:
         return 'danger';
