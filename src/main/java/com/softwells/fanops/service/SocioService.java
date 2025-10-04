@@ -4,6 +4,7 @@ import com.softwells.fanops.controller.dto.CarnetDto;
 import com.softwells.fanops.controller.dto.RegisterRequest;
 import com.softwells.fanops.controller.dto.SocioDto;
 import com.softwells.fanops.controller.dto.SocioStatsDto;
+import com.softwells.fanops.enums.EstadoCuota;
 import com.softwells.fanops.exception.EmailAlreadyExistsException;
 import com.softwells.fanops.model.CuotaEntity;
 import com.softwells.fanops.model.PenaEntity;
@@ -223,8 +224,11 @@ public class SocioService {
     long totalSociosJubilados = socioRepository.countByFechaNacimientoBeforeOrFechaNacimientoEquals(
         fechaCorteJubilados, fechaCorteJubilados);
 
+    List<EstadoCuota> estadosImpagados = List.of(EstadoCuota.RECHAZADA, EstadoCuota.VENCIDA);
+    int totalImpagados = cuotaRepository.countDistinctSociosByEstadoIn(estadosImpagados);
+
     return new SocioStatsDto(totalSocios, nuevosSocios, totalSociosJovenes, pena.getEdadMayoria(),
-        totalSociosJubilados, pena.getEdadJubilacion());
+        totalSociosJubilados, pena.getEdadJubilacion(), totalImpagados);
   }
 
   private Integer generarNumeroSocio() {

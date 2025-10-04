@@ -14,4 +14,5 @@ public class SocioStatsDto {
   private long edadMayoria;
   private long totalSociosJubilados;
   private int edadJubilacion;
+  private long totalImpagados;
 }

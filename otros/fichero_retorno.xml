@@ -6,11 +6,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>72a1bfbc-e47e-4855-b668-d36775a44a28</EndToEndId>
+              <EndToEndId>91686d32-ef9a-4c08-84fb-5b2cd99bc682</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Jose Carlos Montaño Pozo</Ustrd>
+              <Ustrd>Devolución de recibo para Juan De Dios Pérez Joya</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -19,11 +19,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>8ade0609-4e77-41ca-993c-74a41d6fe278</EndToEndId>
+              <EndToEndId>0d73c9ed-661c-4419-a949-dd9d5f9fdcf4</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Manuel Montaño Rodríguez</Ustrd>
+              <Ustrd>Devolución de recibo para Josué Gutiérrez Amador</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -32,11 +32,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>2718409d-014e-4f57-a574-b9082030ce00</EndToEndId>
+              <EndToEndId>3f3bd277-2fc1-4ee5-8407-edac57c748e6</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Honorato Nogales Vallejo</Ustrd>
+              <Ustrd>Devolución de recibo para Inmaculada Pozo Gálvez</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -45,11 +45,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>2016b6bf-c882-4db2-a304-83d200cd1f83</EndToEndId>
+              <EndToEndId>53563dc9-06de-45da-ae3e-9b0b0b77b1ec</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Francisco Jose Romero Carmona</Ustrd>
+              <Ustrd>Devolución de recibo para José Nogales Gómez</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -58,33 +58,7 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>097e6286-8c51-4627-abc8-6ab8fd9a942e</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para Saray Morillas Gomez</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>ca4b1fda-3453-439d-b1d5-d2f9ae3f4d1f</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Manuel Ángel Sánchez</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>52db1a5a-8ddc-4225-8f93-8a6c858f1687</EndToEndId>
+              <EndToEndId>b4843814-f626-4ba1-88eb-9372c9b6b40f</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -97,11 +71,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>c9104fe5-9479-4ad5-8a86-8be67570bd5a</EndToEndId>
+              <EndToEndId>71cf6b5f-deab-4618-b0ad-c10cf8b3084d</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Felipe Gómez Rodríguez</Ustrd>
+              <Ustrd>Devolución de recibo para Felipe Antonio Gómez Rodríguez</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -110,11 +84,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>c3920784-6266-4a25-9276-ea5c34698164</EndToEndId>
+              <EndToEndId>9c24e4e0-41e7-4ac9-90bd-451e36959b91</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Alberto Pozo García</Ustrd>
+              <Ustrd>Devolución de recibo para Isaac Lucena Jurado</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -123,11 +97,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>64d01380-bbfd-4822-a971-0776e6b6ffab</EndToEndId>
+              <EndToEndId>3b8de1fa-966f-4448-b60a-42e25d62ec18</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Fabián Fernández Naranjo</Ustrd>
+              <Ustrd>Devolución de recibo para Moisés Carmona Sanchez</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -136,7 +110,20 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>e1f26756-8d8c-4c5b-8cb0-1e4ccdd846c1</EndToEndId>
+              <EndToEndId>008c355d-6fd5-4027-baec-49822da72cf5</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Noelia Gutiérrez Chía</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>3cb176a9-4e1b-4b4d-ac44-92243117c5ff</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -149,11 +136,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>0db7d79d-3a4a-4f27-8716-b24241de7f52</EndToEndId>
+              <EndToEndId>62d6e657-064a-4934-bbca-0ffec172b66a</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Isabel Joya Montaño</Ustrd>
+              <Ustrd>Devolución de recibo para Antonio Manuel Joya Carrasquilla</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -162,11 +149,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>58741932-fbd2-45d0-ad9e-5fb8145ad1af</EndToEndId>
+              <EndToEndId>1e606403-2947-4fd0-8a39-d771d2f1b1d0</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Ruiz Ponce</Ustrd>
+              <Ustrd>Devolución de recibo para Daniel Reina Gordillo</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -175,7 +162,46 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>b6f9a076-c4d1-4d53-9c3e-a0273cd4062e</EndToEndId>
+              <EndToEndId>08e49ebe-4fee-4d6e-a346-19b74877cc5c</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Francisco Herrera Ramírez</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>2fba6ede-dd04-429a-9b4e-b67fa3a32dbc</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Marina Herrera Ramírez</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>c03fc407-d920-4a6a-8902-cff005a84f8b</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Javier Rodríguez Gordillo</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>dce2e4ff-c4b5-4127-a6d4-0ba1ae4f501e</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -188,11 +214,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>fefec067-9cd6-497d-a804-eef45ec0ae92</EndToEndId>
+              <EndToEndId>2e9f522b-fb3b-4110-8a9e-aa227577060c</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Gonzalo Pozo Pariente</Ustrd>
+              <Ustrd>Devolución de recibo para Marta Pozo Pariente</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -201,11 +227,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>754a7c25-933e-46ed-8234-d45c332ebc86</EndToEndId>
+              <EndToEndId>d83d7beb-158e-411b-8eb6-08029319db4f</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Jesús Pozo García</Ustrd>
+              <Ustrd>Devolución de recibo para Izan Franco Ponce</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -214,11 +240,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>813e1302-17bb-45de-be40-4858b35b9784</EndToEndId>
+              <EndToEndId>7e34cb6b-76eb-47a9-ae40-11852f78f53a</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Jesus María Rodriguez Díaz</Ustrd>
+              <Ustrd>Devolución de recibo para Alejandro Vallejo González</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -227,11 +253,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>17de2c3e-6415-4ee0-b819-b1782fd969c5</EndToEndId>
+              <EndToEndId>2058ce7e-3be0-4e7c-bc90-3fdd67bfe2a4</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Manuel Diaz Borrego</Ustrd>
+              <Ustrd>Devolución de recibo para Daniel Montaño Vargas</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -240,7 +266,33 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>088b09d8-d59a-49d3-b71c-c222efd651d1</EndToEndId>
+              <EndToEndId>8f2b3010-9c9a-4e51-9492-63f14fb6758b</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Juan Jose Pruna Moreno</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>908c0625-c83d-4c72-b7ed-06d833269054</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Rafa Rodriguez Giraldez</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>ed28c878-e4e7-4b2a-9758-2c800809dfa5</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -253,7 +305,7 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>af82c516-78e0-441f-bb95-f18c34edf818</EndToEndId>
+              <EndToEndId>46825c5a-3504-4ebc-a82c-835154e0b6ee</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -266,11 +318,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>6beeab74-3841-4a97-b946-4ed124a0d115</EndToEndId>
+              <EndToEndId>9dbc004f-6514-4c5f-8356-9ed5c3b22d41</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Marcos Corona Blanco</Ustrd>
+              <Ustrd>Devolución de recibo para Alejandro Segura Pozas</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -279,11 +331,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>45f5de57-74ce-47fd-8e76-4bf028cc4bbc</EndToEndId>
+              <EndToEndId>a8038d11-e409-4b01-a6b4-b82a4063cf60</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Ezequiel Muñoz Sojo</Ustrd>
+              <Ustrd>Devolución de recibo para Alejandro Vallejo González</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -292,11 +344,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>21ebee94-46d5-47c6-a243-2591edb83512</EndToEndId>
+              <EndToEndId>4f48dd53-3421-491a-9282-9e2609a56ba6</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Felipe Romero Reina</Ustrd>
+              <Ustrd>Devolución de recibo para Marcos Segura Sánchez</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -305,7 +357,72 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>f29f949d-e2c5-479a-8aef-f519106b3fb5</EndToEndId>
+              <EndToEndId>3877970e-d83b-4302-b2a4-f204e48f2d63</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Saul Jurado Romero</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>5c2e4ec3-2300-4413-b64a-5cf73c9fbc14</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para José Antonio Ponce Ruiz</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>ccababc3-205f-40cc-93d3-5b93400b1303</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Manuel Jiménez Saavedra</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>f9b0a954-56b1-4deb-80be-b8080646cd0d</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Marina González Haro</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>47a22e9e-6b9b-4562-ae5c-818da68d7bc7</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Pedro Díaz Chía</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>522a0c8e-8bc4-434e-9e5d-74d6f6aa1db2</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -318,11 +435,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>d6359886-c454-43d9-be58-085814ceef76</EndToEndId>
+              <EndToEndId>43635145-cab2-40f3-8f5f-60b9bc3c5c62</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Jose Pozo Gutiérrez</Ustrd>
+              <Ustrd>Devolución de recibo para Juan Paez Guerrero</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -331,7 +448,33 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>3722b046-76df-4365-9b36-2fa495ba400e</EndToEndId>
+              <EndToEndId>68bc16cf-8c68-46c9-a332-ef298c66a27c</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Francisco Romero García</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>944af6ac-dafb-4c76-9590-3f98924eda06</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Javier Acuña Pozo</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>0521850b-3f48-4321-a90c-02bc0ca40758</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -344,11 +487,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>195e18f7-55eb-468d-b145-9b27bca1c4e3</EndToEndId>
+              <EndToEndId>11b1012f-11f2-4b96-8aef-109ae01f2b9d</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Manuel Jesus Gordillo Maireles</Ustrd>
+              <Ustrd>Devolución de recibo para María Jesús Haro Guillen</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -357,20 +500,7 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>167226c8-3816-4c3d-963d-901bd1e62b69</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para Ismael Cansino Pozo</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>62b6192f-805d-4690-9192-f99df64dd426</EndToEndId>
+              <EndToEndId>78de07b5-79f3-4d50-bba9-9357c5b163ee</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -383,20 +513,7 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>1ea42f51-3cdd-4eb8-8e60-d378cb6aca1c</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para José Páez Ponce</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>acfee80f-d673-43c2-ab0e-31f49a747eda</EndToEndId>
+              <EndToEndId>3e8eef3d-4c37-4a46-9145-522e591e2609</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -409,33 +526,7 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>e5f08a49-dced-445e-8a0c-03a5129fe3ab</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para Ángela Chia Gutiérrez</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>aad7fb9a-f889-4d0a-8345-9b6ce3a4499c</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Luis Gómez Caballero</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>4d17c258-8dc1-4849-b8a0-a9c5bdd3a766</EndToEndId>
+              <EndToEndId>978f270c-2e23-42ee-a51f-996e0d788081</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -448,7 +539,7 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>e1507443-c70d-482a-a208-f8eb3af3c2e6</EndToEndId>
+              <EndToEndId>424e602a-be24-4a74-80a7-4477f166ffb8</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -461,7 +552,46 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>cb527b77-a61e-49c9-b56f-64613219d760</EndToEndId>
+              <EndToEndId>e7b1092b-ffd0-4824-b3c2-ddf77d1fe11d</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Antonio Manuel Reina Castillo</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>73afc4fd-6533-4743-9ce4-e831db6afcfe</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Martina Reina Reina</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>1e703c54-8be6-435a-94e5-a358d2e0041f</EndToEndId>
+            </Refs>
+            <Amt>18,00</Amt>
+            <RmtInf>
+              <Ustrd>Devolución de recibo para Claudia Joya Gómez</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <EndToEndId>0d68b0b1-0caf-45cd-9d65-16a9195cd36e</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
@@ -474,11 +604,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>8c999e66-a4b9-480e-99ba-e6de01cc8386</EndToEndId>
+              <EndToEndId>e813eb5f-7458-4940-8553-cc115a70282b</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para José Antonio Páez Ponce</Ustrd>
+              <Ustrd>Devolución de recibo para Vitoriano Montaño Gomez</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -487,11 +617,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>b04b4977-5223-4186-bbb7-55aa0b6468e2</EndToEndId>
+              <EndToEndId>80a2e34d-547b-45fe-b99b-61019b198e16</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Francisco Calzado Garcia</Ustrd>
+              <Ustrd>Devolución de recibo para Marian Dudiuc</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -500,11 +630,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>a1078bbd-caa8-45b1-bcf9-b99798b4c089</EndToEndId>
+              <EndToEndId>5329eb06-829d-4ed9-beff-b4e88cbe6904</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Damian Leiva Reina</Ustrd>
+              <Ustrd>Devolución de recibo para Rafael Montaño Garcia</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
@@ -513,24 +643,11 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <EndToEndId>60b333b9-8314-4d7d-be0b-98dd4c7877d7</EndToEndId>
+              <EndToEndId>f9da7513-8879-438d-ad8a-45eef735ad68</EndToEndId>
             </Refs>
             <Amt>18,00</Amt>
             <RmtInf>
-              <Ustrd>Devolución de recibo para Antonio Leiva Caballero</Ustrd>
-            </RmtInf>
-          </TxDtls>
-        </NtryDtls>
-      </Ntry>
-      <Ntry>
-        <NtryDtls>
-          <TxDtls>
-            <Refs>
-              <EndToEndId>8a0054b3-e88e-47fb-9bd3-5213cc49fd45</EndToEndId>
-            </Refs>
-            <Amt>18,00</Amt>
-            <RmtInf>
-              <Ustrd>Devolución de recibo para Asunción Luna Ruiz</Ustrd>
+              <Ustrd>Devolución de recibo para Susana Bazán Arjona</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>

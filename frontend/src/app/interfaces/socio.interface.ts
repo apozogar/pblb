@@ -35,6 +35,7 @@ export interface EstadisticasSocio {
     edadMayoria: number;
     totalSociosJubilados: number;
     edadJubilacion: number;
+    totalImpagados: number;
 }
 
 export interface CarnetDto {
