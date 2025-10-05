@@ -82,51 +82,51 @@
 
 <br/>
 
-<p-toolbar class="mb-6">
-    <ng-template #start>
-        <button pButton pRipple label="Nuevo Socio" icon="pi pi-plus"
-                class="p-button-success mr-2" (click)="abrirNuevo()"></button>
-        <button pButton pRipple label="Ver Impagados" icon="pi pi-filter-fill"
-                class="p-button-warning mr-2" (click)="cargarSocios('impagados')"></button>
-
-        <!-- Indicador de filtro activo -->
-        <div *ngIf="filtroActivo" class="flex items-center gap-2 ml-4">
-            <i class="pi pi-info-circle text-blue-500"></i>
-            <span class="font-medium text-blue-700 dark:text-blue-300">
-                Filtrando por: <b>{{ filtroActivo | titlecase }}</b>
-            </span>
-            <button pButton pRipple label="Ver Todos" icon="pi pi-times"
-                    class="p-button-text p-button-secondary" (click)="limpiarFiltros()"></button>
-        </div>
-    </ng-template>
-
-    <ng-template #center>
-        <p-iconfield iconPosition="left" class="ml-auto">
-            <p-inputicon>
-                <i class="pi pi-search"></i>
-            </p-inputicon>
-            <input pInputText type="text"
-                   (input)="dt.filterGlobal($event.target.value, 'contains')"
-                   placeholder="Búsqueda por palabra"/>
-        </p-iconfield>
-    </ng-template>
-
-    <ng-template #end>
-        <div class="flex gap-2">
-            <button pButton pRipple label="Gestión de Cobros" icon="pi pi-credit-card" severity="info"
-                    (click)="cobrosDialog = true"></button>
-
-            <!-- El input de fichero está oculto y se activa con el botón -->
-            <input type="file" #fileUpload style="display: none" (change)="onFileSelect($event)"
-                   accept=".xlsx, .xls"/>
-            <button pButton pRipple label="Importar" icon="pi pi-upload" severity="secondary"
-                    (click)="fileUpload.click()"></button>
-        </div>
-    </ng-template>
-</p-toolbar>
-
 <div class="card">
     <p-toast/>
+    <p-toolbar styleClass="mb-6">
+        <ng-template #start>
+            <div class="flex flex-wrap gap-2">
+                <button pButton pRipple icon="pi pi-plus" class="p-button-success" (click)="abrirNuevo()">
+                    <span class="hidden md:inline ml-2">Nuevo Socio</span>
+                </button>
+                <button pButton pRipple icon="pi pi-filter-fill" class="p-button-warning"
+                        (click)="cargarSocios('impagados')">
+                    <span class="hidden md:inline ml-2">Ver Impagados</span>
+                </button>
+                <!-- Indicador de filtro activo -->
+                <div *ngIf="filtroActivo" class="flex items-center gap-2">
+                    <i class="pi pi-info-circle text-blue-500"></i>
+                    <span class="font-medium text-blue-700 dark:text-blue-300">
+                        Filtrando: <b>{{ filtroActivo | titlecase }}</b>
+                    </span>
+                    <button pButton pRipple icon="pi pi-times"
+                            class="p-button-text p-button-secondary" (click)="limpiarFiltros()"
+                            pTooltip="Limpiar filtro"></button>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template #end>
+            <div class="flex flex-wrap gap-2 justify-end">
+                <p-iconfield iconPosition="left">
+                    <p-inputicon>
+                        <i class="pi pi-search"></i>
+                    </p-inputicon>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                           placeholder="Buscar..."/>
+                </p-iconfield>
+                <button pButton pRipple icon="pi pi-credit-card" severity="info" (click)="cobrosDialog = true">
+                    <span class="hidden md:inline ml-2">Gestión de Cobros</span>
+                </button>
+                <input type="file" #fileUpload style="display: none" (change)="onFileSelect($event)"
+                       accept=".xlsx, .xls"/>
+                <button pButton pRipple icon="pi pi-upload" severity="secondary" (click)="fileUpload.click()">
+                    <span class="hidden md:inline ml-2">Importar</span>
+                </button>
+            </div>
+        </ng-template>
+    </p-toolbar>
 
     <p-table #dt [value]="socios" [rows]="10" [paginator]="true" [loading]="loading"
              [rowHover]="true" dataKey="uid"
@@ -170,7 +170,7 @@
             </tr>
         </ng-template>
     </p-table>
-</div>
+        </div>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
