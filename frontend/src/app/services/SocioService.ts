@@ -3,8 +3,8 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ApiResponse} from '@/interfaces/api-response.interface';
 import {EstadisticasSocio, Socio} from '@/interfaces/socio.interface';
-import {environment} from "../../enviroments/environment";
 import {Role} from "@/interfaces/role.interface";
+import {environment} from "../../enviroments/environment";
 
 
 @Injectable({

@@ -6,12 +6,11 @@ import {FileUploadModule} from 'primeng/fileupload';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
 import {SocioService} from '@/services/SocioService';
-import {Ripple} from "primeng/ripple";
 
 @Component({
     selector: 'app-gestion-cobros',
     standalone: true,
-    imports: [CommonModule, DialogModule, ButtonModule, FileUploadModule, ToastModule, Ripple],
+    imports: [CommonModule, DialogModule, ButtonModule, FileUploadModule, ToastModule],
     templateUrl: './gestion-cobros.component.html',
     providers: [MessageService] // Proveedor local para no interferir con otros toasts
 })
