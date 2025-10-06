@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ApiResponse} from '@/interfaces/api-response.interface';
 import {Socio} from '@/interfaces/socio.interface';
-import {environment} from "../../enviroments/environment";
+import {environment} from "../../environments/environment";
 
 
 @Injectable({

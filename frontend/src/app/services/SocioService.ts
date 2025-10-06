@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {ApiResponse} from '@/interfaces/api-response.interface';
 import {EstadisticasSocio, Socio} from '@/interfaces/socio.interface';
 import {Role} from "@/interfaces/role.interface";
-import {environment} from "../../enviroments/environment";
+import {environment} from "../../environments/environment";
 
 
 @Injectable({

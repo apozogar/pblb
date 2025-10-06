@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable, switchMap, tap} from 'rxjs';
 import {RegisterRequest} from '@/models/register-request.model';
 import {Router} from '@angular/router';
-import {environment} from "../../../enviroments/environment";
+import {environment} from "../../../environments/environment";
 import { jwtDecode } from "jwt-decode";
 import {User} from "@/interfaces/user";
 

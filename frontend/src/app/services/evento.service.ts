@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EventoInscripcionDTO } from '@/interfaces/evento-inscripcion.dto';
 import { Evento } from '@/interfaces/evento.interface';
-import { environment } from '../../enviroments/environment';
+import { environment } from '../../environments/environment';
 import { ApiResponse } from '@/interfaces/api-response.interface';
 
 @Injectable({
