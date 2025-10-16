@@ -24,4 +24,6 @@ public interface CuotaRepository extends JpaRepository<CuotaEntity, UUID> {
 
   @Query("SELECT COUNT(DISTINCT c.socio.id) FROM CuotaEntity c WHERE c.estado IN :estados")
   int countDistinctSociosByEstadoIn(@Param("estados") List<EstadoCuota> estados);
+
+  List<CuotaEntity> findByEstado(EstadoCuota estado);
 }

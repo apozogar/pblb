@@ -1,14 +1,16 @@
 package com.softwells.fanops.security;
 
+import com.softwells.fanops.model.SocioEntity;
+import com.softwells.fanops.model.UsuarioEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
@@ -44,6 +46,16 @@ public class JwtService {
         .map(authority -> Map.of("authority", authority.getAuthority()))
         .collect(Collectors.toList());
     extraClaims.put("authorities", authorities);
+
+    // Añadimos el nombre de la peña al token
+    if (userDetails instanceof UsuarioEntity) {
+      UsuarioEntity usuario = (UsuarioEntity) userDetails;
+      Optional<String> nombrePena = usuario.getSocios().stream()
+          .map(SocioEntity::getPena)
+          .findFirst()
+          .map(pena -> pena.getNombre());
+      nombrePena.ifPresent(nombre -> extraClaims.put("nombrePena", nombre));
+    }
 
     return Jwts.builder()
         .setClaims(extraClaims)

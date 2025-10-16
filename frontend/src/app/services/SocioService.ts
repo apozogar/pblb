@@ -78,8 +78,16 @@ export class SocioService {
         return this.http.post<ApiResponse<string>>(`${this.apiUrl}/api/socios/importar`, formData);
     }
 
-    generarRemesaMensual(): Observable<ApiResponse<string>> {
-        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/generar-remesa`, {});
+    generarRemesaMensual(concepto: string, fechaCobro: string): Observable<any> {
+        const body = { concepto: concepto, fechaCobro: fechaCobro };
+        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/generar-remesa`, body);
+    }
+
+    generarRemesaExcel(concepto: string, fechaCobro: string): Observable<any> {
+        let params = new HttpParams().set('concepto', concepto).set('fechaCobro', fechaCobro);
+        return this.http.get(`${environment.apiUrl}/api/cobros/generar-remesa-excel`, {
+            responseType: 'blob', params: params
+        });
     }
 
     getRoles(): Observable<ApiResponse<Role[]>> {

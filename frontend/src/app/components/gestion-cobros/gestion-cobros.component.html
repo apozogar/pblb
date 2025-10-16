@@ -1,8 +1,29 @@
 <p-dialog header="Gestión de Cobros" [(visible)]="visible" [modal]="true"
-          [style]="{ width: '50vw' }"
+          [style]="{ width: '70vw', 'max-width': '950px' }"
           (onHide)="cerrarDialogo()">
     <p-toast></p-toast>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
+    <div class="grid">
+        <!-- Columna Izquierda: Selectores -->
+        <div
+            class="flex flex-col gap-4 p-6 border rounded-lg border-surface-200 dark:border-surface-700">
+            <div class="field">
+                <label for="tipoProceso">Tipo de Operación</label>
+                <p-select id="tipoProceso" [options]="tiposProceso"
+                          [(ngModel)]="tipoProceso" optionLabel="label"
+                          optionValue="value" class="w-full"></p-select>
+            </div>
+            <div class="field">
+                <label for="conceptoRemesa">Concepto de la Remesa</label>
+                <input id="conceptoRemesa" type="text" pInputText [(ngModel)]="concepto"
+                       class="w-full"
+                       placeholder="Ej: Cuota Semestre 1 2024">
+            </div>
+            <div class="field">
+                <label for="fechaCobro">Fecha de Cobro</label>
+                <p-datepicker id="fechaCobro" [(ngModel)]="fechaCobro" dateFormat="dd/mm/yy"
+                              [showIcon]="true" inputId="icondate" class="w-full"></p-datepicker>
+            </div>
+        </div>
 
         <!-- Sección para Generar Remesa -->
         <div
@@ -22,8 +43,8 @@
         </div>
 
         <!-- Sección para Procesar Retorno -->
-        <div
-            class="flex flex-col gap-4 p-6 border rounded-lg border-surface-200 dark:border-surface-700">
+        <div *ngIf="tipoProceso === 'sepa'" class="grid"
+             class="flex flex-col gap-4 p-6 border rounded-lg border-surface-200 dark:border-surface-700">
             <div class="flex items-center gap-3">
                 <i class="pi pi-upload text-2xl text-primary"></i>
                 <span class="font-bold text-lg">2. Procesar Fichero de Retorno</span>
@@ -40,8 +61,8 @@
         </div>
 
         <!-- Sección para Confirmar Pagos -->
-        <div
-            class="flex flex-col gap-4 p-6 border rounded-lg border-surface-200 dark:border-surface-700">
+        <div *ngIf="tipoProceso === 'sepa'" class="grid"
+             class="flex flex-col gap-4 p-6 border rounded-lg border-surface-200 dark:border-surface-700">
             <div class="flex items-center gap-3">
                 <i class="pi pi-check-circle text-2xl text-primary"></i>
                 <span class="font-bold text-lg">3. Confirmar Pagos</span>

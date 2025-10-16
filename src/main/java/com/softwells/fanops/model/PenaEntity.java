@@ -1,10 +1,14 @@
 package com.softwells.fanops.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +33,7 @@ public class PenaEntity {
   private Double cuotaMenor;
   private Integer edadMayoria;
   private Integer edadJubilacion;
+
+  @OneToMany(mappedBy = "pena", cascade = CascadeType.ALL)
+  private Set<SocioEntity> socios = new HashSet<>();
 }

@@ -30,6 +30,60 @@ public class CuotaService {
   private final SepaService sepaService;
 
   @Transactional
+  public List<CuotaEntity> generarCuotas() {
+    List<SocioEntity> sociosActivos = socioRepository.findByActivo(true);
+    PenaEntity pena = penaRepository.findById(1L)
+        .orElseThrow(() -> new IllegalStateException("Datos de la peña no encontrados."));
+
+    List<CuotaEntity> nuevasCuotas = new ArrayList<>();
+    List<SocioEntity> sociosParaCobrar = new ArrayList<>();
+    LocalDate hoy = LocalDate.now();
+
+    for (SocioEntity socio : sociosActivos) {
+      // 1. Omitir si el socio está exento de pago
+      if (socio.isExentoPago()) {
+        log.info("Omitiendo socio '{}' por estar exento de pago.", socio.getNombre());
+        continue;
+      }
+
+      // 2. Omitir si no tiene número de cuenta
+      if (StringUtils.isEmpty(socio.getNumeroCuenta())) {
+        log.info("Omitiendo socio '{}' por no tener número de cuenta.", socio.getNombre());
+        continue;
+      }
+
+      // 3. Omitir si ya tiene una cuota pendiente de pago
+      if (cuotaRepository.existsBySocioAndEstado(socio, EstadoCuota.PENDIENTE)) {
+        log.info("Omitiendo socio '{}' porque ya tiene una cuota pendiente.", socio.getNombre());
+        continue;
+      }
+
+      // Lógica para determinar el importe de la cuota mensual
+      int edad =
+          (socio.getFechaNacimiento() != null) ? Period.between(socio.getFechaNacimiento(), hoy)
+              .getYears() : 30;
+      double importeMensual =
+          (edad > pena.getEdadMayoria()) ? pena.getCuotaAdulto() : pena.getCuotaMenor();
+
+      // 4. Calcular el importe semestral
+      double importeSemestral = importeMensual * 6;
+
+      CuotaEntity cuota = new CuotaEntity();
+      cuota.setSocio(socio);
+      cuota.setImporte(importeSemestral);
+      cuota.setMes(hoy.getMonthValue());
+      cuota.setAnio(hoy.getYear());
+      cuota.setEstado(EstadoCuota.PENDIENTE); // Estado inicial
+      cuota.setFechaEmision(hoy);
+
+      nuevasCuotas.add(cuota);
+      sociosParaCobrar.add(socio); // Añadir a la lista para generar el fichero SEPA
+    }
+
+    return cuotaRepository.saveAll(nuevasCuotas);
+  }
+
+  @Transactional
   public RemesaResponse generarCuotasYRemesaSemestral() {
     List<SocioEntity> sociosActivos = socioRepository.findByActivo(true);
     PenaEntity pena = penaRepository.findById(1L)

@@ -82,4 +82,9 @@ public class SocioEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "usuario_uid")
   private UsuarioEntity usuario;
+
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "pena_id")
+  private PenaEntity pena;
 }
