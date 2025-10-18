@@ -71,12 +71,12 @@ export class GestionCobrosComponent {
 
         peticion.subscribe({
             next: (response) => {
-                if (formatoFinal === 'xml' && 'data' in response && response.data) {
-                    this.descargarFichero(response.data, `remesa-sepa-${this.getFormattedDate()}.xml`, 'application/xml');
+                if (formatoFinal === 'xml' && response) {
+                    this.descargarFichero(response, `remesa-sepa-${this.getFormattedDate()}.xml`, 'application/xml');
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
-                        detail: response.message
+                        detail: 'Remesa Excel generada correctamente.'
                     });
                 } else if (formatoFinal === 'excel' && response instanceof Blob && response.size > 0) {
                     this.descargarFichero(response, `remesa-excel-${this.getFormattedDate()}.xlsx`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

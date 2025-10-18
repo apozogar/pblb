@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "formeteador-excel": "node formateador-excel.js",
-    "generar-retorno": "node generar-retorno.js --input \"C:/remesa-sepa-2025-10-04.xml\" "
+    "generar-retorno": "node generar-retorno.js --input \"C:/remesa.xml\" "
   },
   "keywords": [],
   "author": "",

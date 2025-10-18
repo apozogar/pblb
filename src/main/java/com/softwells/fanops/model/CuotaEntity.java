@@ -16,22 +16,19 @@ public class CuotaEntity {
   @GeneratedValue
   private UUID uid;
 
-  @Column(nullable = false)
+  private String concepto;
+
   private Double importe;
 
-  @Column(nullable = false)
   private LocalDate fechaEmision;
 
   private LocalDate fechaPago;
 
-  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private EstadoCuota estado; // Ej: PAGADA, PENDIENTE, VENCIDA
 
-  @Column(nullable = false)
   private Integer mes; // 1-12
 
-  @Column(nullable = false)
   private Integer anio;
 
   @JsonIgnore

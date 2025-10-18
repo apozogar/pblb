@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -38,11 +39,20 @@ public class CobroService {
   private final CuotaService cuotaService;
   private final SepaService sepaService;
   private final BicLookupService bicLookupService;
+  private final RetornoSepaService retornoService;
 
-  //  public String generarRemesaMensual(String concepto, LocalDate fechaCobro) {
-//    List<CuotaEntity> cuotasPendientes = cuotaRepository.findByEstado(EstadoCuota.PENDIENTE);
-//    return sepaService.generarFicheroSepa(cuotasPendientes, fechaCobro.atStartOfDay(), concepto);
-//  }
+  public String generarRemesaMensual(String concepto, LocalDate fechaCobro) {
+    // 2. Obtener las cuotas pendientes de pago
+    List<CuotaEntity> cuotasPendientes = cuotaRepository.findByEstado(EstadoCuota.PENDIENTE);
+
+    if (cuotasPendientes.isEmpty()) {
+      cuotasPendientes = cuotaService.generarCuotas(concepto);
+    }
+
+    return sepaService.generarFicheroSepa(cuotasPendientes, fechaCobro.atStartOfDay());
+  }
+
+
   public ByteArrayInputStream generarRemesaExcel(String concepto, LocalDate fechaCobro) {
     // 1. Obtener la información de la peña (para el BIC, etc.)
     PenaEntity pena = penaRepository.findById(1L)
@@ -53,7 +63,7 @@ public class CobroService {
     List<CuotaEntity> cuotasPendientes = cuotaRepository.findByEstado(EstadoCuota.PENDIENTE);
 
     if (cuotasPendientes.isEmpty()) {
-      cuotasPendientes = cuotaService.generarCuotas();
+      cuotasPendientes = cuotaService.generarCuotas(concepto);
     }
 
     if (cuotasPendientes.isEmpty()) {
@@ -82,7 +92,7 @@ public class CobroService {
               .fechaFirmaMandato(DateTimeFormatter.ofPattern("dd/MM/yyyy")
                   .format(LocalDate.now()))
               .importe(cuota.getImporte())
-              .concepto(concepto)
+              .concepto(cuota.getConcepto())
               .tipoAdeudo("RCUR") // Asumimos Recurrente, podrías tenerlo en la cuota
               .fechaCobro(DateTimeFormatter.ofPattern("dd/MM/yyyy")
                   .format(fechaCobro)) // O una fecha de cobro específica
@@ -138,33 +148,25 @@ public class CobroService {
     }
   }
 
-//  public String procesarFicheroRetorno(MultipartFile file) {
-//    if (file.isEmpty()) {
-//      throw new IllegalArgumentException("El fichero de retorno está vacío.");
-//    }
-//    try {
-//      return retornoService.procesarFichero(file.getInputStream());
-//    } catch (IOException e) {
-//      log.error("Error al leer el fichero de retorno", e);
-//      throw new RuntimeException("Error al leer el fichero de retorno: " + e.getMessage());
-//    }
-//  }
-//
-//  public String confirmarPagosPendientes() {
-//    List<CuotaEntity> cuotasPendientes = cuotaRepository.findByEstado(EstadoCuota.PENDIENTE);
-//
-//    if (cuotasPendientes.isEmpty()) {
-//      return "No hay cuotas pendientes de pago para confirmar.";
-//    }
-//
-//    for (CuotaEntity cuota : cuotasPendientes) {
-//      cuota.setEstado(EstadoCuota.PAGADA);
-//      cuota.setFechaPago(LocalDate.now());
-//    }
-//
-//    cuotaRepository.saveAll(cuotasPendientes);
-//
-//    log.info("Confirmados {} pagos. Las cuotas pendientes han sido marcadas como PAGADAS.", cuotasPendientes.size());
-//    return String.format("%d cuotas han sido marcadas como pagadas correctamente.", cuotasPendientes.size());
-//  }
+  public String procesarFicheroRetorno(MultipartFile file) {
+    if (file.isEmpty()) {
+      throw new IllegalArgumentException("El fichero de retorno está vacío.");
+    }
+    try {
+      return retornoService.procesarFicheroRetorno(file);
+    } catch (Exception e) {
+      log.error("Error al leer el fichero de retorno", e);
+      throw new RuntimeException("Error al leer el fichero de retorno: " + e.getMessage());
+    }
+  }
+
+  public String confirmarPagosPendientes() {
+
+    int actualizadas = cuotaRepository.actualizarPendientesAPagadas();
+
+    log.info("Confirmados {} pagos. Las cuotas pendientes han sido marcadas como PAGADAS.",
+        actualizadas);
+    return String.format("%d cuotas han sido marcadas como pagadas correctamente.",
+        actualizadas);
+  }
 }

@@ -79,8 +79,10 @@ export class SocioService {
     }
 
     generarRemesaMensual(concepto: string, fechaCobro: string): Observable<any> {
-        const body = { concepto: concepto, fechaCobro: fechaCobro };
-        return this.http.post<ApiResponse<string>>(`${environment.apiUrl}/api/cobros/generar-remesa`, body);
+        let params = new HttpParams().set('concepto', concepto).set('fechaCobro', fechaCobro);
+        return this.http.get(`${environment.apiUrl}/api/cobros/generar-remesa`, {
+            responseType: 'blob', params: params
+        });
     }
 
     generarRemesaExcel(concepto: string, fechaCobro: string): Observable<any> {

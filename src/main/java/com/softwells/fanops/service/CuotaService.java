@@ -30,7 +30,7 @@ public class CuotaService {
   private final SepaService sepaService;
 
   @Transactional
-  public List<CuotaEntity> generarCuotas() {
+  public List<CuotaEntity> generarCuotas(String concepto) {
     List<SocioEntity> sociosActivos = socioRepository.findByActivo(true);
     PenaEntity pena = penaRepository.findById(1L)
         .orElseThrow(() -> new IllegalStateException("Datos de la peña no encontrados."));
@@ -75,6 +75,7 @@ public class CuotaService {
       cuota.setAnio(hoy.getYear());
       cuota.setEstado(EstadoCuota.PENDIENTE); // Estado inicial
       cuota.setFechaEmision(hoy);
+      cuota.setConcepto(concepto);
 
       nuevasCuotas.add(cuota);
       sociosParaCobrar.add(socio); // Añadir a la lista para generar el fichero SEPA
@@ -84,57 +85,9 @@ public class CuotaService {
   }
 
   @Transactional
-  public RemesaResponse generarCuotasYRemesaSemestral() {
-    List<SocioEntity> sociosActivos = socioRepository.findByActivo(true);
-    PenaEntity pena = penaRepository.findById(1L)
-        .orElseThrow(() -> new IllegalStateException("Datos de la peña no encontrados."));
+  public RemesaResponse generarCuotasYRemesaSemestral(String concepto) {
 
-    List<CuotaEntity> nuevasCuotas = new ArrayList<>();
-    List<SocioEntity> sociosParaCobrar = new ArrayList<>();
-    LocalDate hoy = LocalDate.now();
-
-    for (SocioEntity socio : sociosActivos) {
-      // 1. Omitir si el socio está exento de pago
-      if (socio.isExentoPago()) {
-        log.info("Omitiendo socio '{}' por estar exento de pago.", socio.getNombre());
-        continue;
-      }
-
-      // 2. Omitir si no tiene número de cuenta
-      if (StringUtils.isEmpty(socio.getNumeroCuenta())) {
-        log.info("Omitiendo socio '{}' por no tener número de cuenta.", socio.getNombre());
-        continue;
-      }
-
-      // 3. Omitir si ya tiene una cuota pendiente de pago
-      if (cuotaRepository.existsBySocioAndEstado(socio, EstadoCuota.PENDIENTE)) {
-        log.info("Omitiendo socio '{}' porque ya tiene una cuota pendiente.", socio.getNombre());
-        continue;
-      }
-
-      // Lógica para determinar el importe de la cuota mensual
-      int edad =
-          (socio.getFechaNacimiento() != null) ? Period.between(socio.getFechaNacimiento(), hoy)
-              .getYears() : 30;
-      double importeMensual =
-          (edad > pena.getEdadMayoria()) ? pena.getCuotaAdulto() : pena.getCuotaMenor();
-
-      // 4. Calcular el importe semestral
-      double importeSemestral = importeMensual * 6;
-
-      CuotaEntity cuota = new CuotaEntity();
-      cuota.setSocio(socio);
-      cuota.setImporte(importeSemestral);
-      cuota.setMes(hoy.getMonthValue());
-      cuota.setAnio(hoy.getYear());
-      cuota.setEstado(EstadoCuota.PENDIENTE); // Estado inicial
-      cuota.setFechaEmision(hoy);
-
-      nuevasCuotas.add(cuota);
-      sociosParaCobrar.add(socio); // Añadir a la lista para generar el fichero SEPA
-    }
-
-    cuotaRepository.saveAll(nuevasCuotas);
+    List<CuotaEntity> nuevasCuotas = generarCuotas(concepto);
 
     if (nuevasCuotas.isEmpty()) {
       return new RemesaResponse("No se generaron nuevas cuotas para la remesa.", null);
@@ -142,9 +95,9 @@ public class CuotaService {
 
     // Ahora que las cuotas están generadas, creamos el fichero SEPA solo con los socios a cobrar
     String sepaXml = sepaService.generarFicheroSepa(nuevasCuotas, LocalDateTime.now());
-    log.info("Fichero SEPA generado con {} transacciones.", sociosParaCobrar.size());
 
-    String mensaje = "Se generaron " + nuevasCuotas.size() + " cuotas semestrales y se creó la remesa SEPA.";
+    String mensaje =
+        "Se generaron " + nuevasCuotas.size() + " cuotas semestrales y se creó la remesa SEPA.";
     return new RemesaResponse(mensaje, sepaXml);
   }
 
