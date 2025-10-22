@@ -105,8 +105,8 @@ export class SociosComponent implements OnInit {
 
     cargarRoles(): void {
         this.socioService.getRoles().subscribe(response => {
-            this.adminRole = response.data.find(r => r.name === 'ROLE_ADMIN');
-            this.userRole = response.data.find(r => r.name === 'ROLE_USER');
+            this.adminRole = response?.data?.find(r => r.name === 'ROLE_ADMIN');
+            this.userRole = response?.data?.find(r => r.name === 'ROLE_USER');
         });
     }
 

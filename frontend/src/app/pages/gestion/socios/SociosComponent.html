@@ -140,10 +140,11 @@
              [rowHover]="true" dataKey="uid"
              [globalFilterFields]="['numeroSocio', 'nombre', 'telefono', 'email']"
              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} socios"
-             [showCurrentPageReport]="true">
+             [showCurrentPageReport]="true" class="mt-4">
         <ng-template pTemplate="header">
             <tr>
-                <th scope="col" class="hidden md:table-cell">Número Socio</th>
+                <th scope="col" class="hidden md:table-cell" style="width: 100px;">Núm. Socio
+                </th>
                 <th scope="col">Nombre</th>
                 <th scope="col" class="hidden md:table-cell">Teléfono</th>
                 <th scope="col" class="hidden md:table-cell">Email</th>

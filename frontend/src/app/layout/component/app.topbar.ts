@@ -14,15 +14,16 @@ import {Subscription} from "rxjs";
     standalone: true,
     imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
     styles: `
-    /* topbar.component.css */
-    .layout-topbar {
-        //background: #008835;
-        //color: white;
-    }
-    .layout-topbar-logo-container .layout-topbar-logo .logo-pequeno {
-        height: 2.5rem; /* Ajusta el tamaño según sea necesario */
-        margin-right: 0.5rem;
-    }
+        /* topbar.component.css */
+        .layout-topbar {
+            //background: #008835;
+            //color: white;
+        }
+
+        .layout-topbar-logo-container .layout-topbar-logo .logo-pequeno {
+            height: 2.5rem; /* Ajusta el tamaño según sea necesario */
+            margin-right: 0.5rem;
+        }
     `,
     template: `
         <div class="layout-topbar">
@@ -88,8 +89,8 @@ export class AppTopbar implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.penaSubscription = this.authService.currentPena.subscribe((pena: Pena | null) => {
             if (pena) {
-                this.nombre = pena.nombre ?? 'Peña Bética Luis Bellver - Gilena'; // Usa el nombre de la peña o el valor por defecto
-                this.imageUrl = pena.logo; // Asigna la URL de la imagen
+                this.nombre = pena.nombre;
+                this.imageUrl = pena.logo;
             } else {
                 // Restablecer a valores por defecto si no hay peña (ej. después de cerrar sesión)
                 this.nombre = 'FanOperations App';

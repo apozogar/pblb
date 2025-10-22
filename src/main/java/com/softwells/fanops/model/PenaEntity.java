@@ -36,6 +36,8 @@ public class PenaEntity {
   private Integer edadJubilacion;
   @Column(columnDefinition = "TEXT")
   private String logo;
+  private String lema;
+  private String color;
 
   @OneToMany(mappedBy = "pena", cascade = CascadeType.ALL)
   private Set<SocioEntity> socios = new HashSet<>();

@@ -2,6 +2,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
+    // Definimos la variable CSS con un valor por defecto
+    --primary-pena-color: #000000;
 }
 
 .carnet-container {
@@ -9,16 +12,18 @@
     max-width: 600px;
 }
 
-.betis-card {
-    border: 2px solid #00a859;
+
+
+.carnet-card {
+    border: 2px solid var(--primary-pena-color);;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     font-family: 'Arial', sans-serif;
 }
 
-.betis-header {
-    background-color: #00a859;
+.carnet-header {
+    background-color: var(--primary-pena-color);;
     color: white;
     padding: 1rem;
     display: flex;
@@ -42,22 +47,22 @@
     }
 }
 
-.betis-title h2, .betis-title h3 {
+.carnet-title h2, .carnet-title h3 {
     margin: 0;
     line-height: 1.2;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.betis-title h2 {
+.carnet-title h2 {
     font-size: 1.2rem;
 }
 
-.betis-title h3 {
+.carnet-title h3 {
     font-size: 0.9rem;
     font-weight: normal;
 }
 
-.betis-body {
+.carnet-body {
     background-color: #ffffff;
     color: #333;
     padding: 1.5rem;
@@ -71,7 +76,7 @@
     height: 150px;
     border-radius: 8px;
     object-fit: cover;
-    border: 2px solid #00a859;
+    border: 2px solid var(--primary-pena-color);;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
     @media (max-width: 768px) {
@@ -93,7 +98,7 @@
 .info-row .label {
     font-weight: bold;
     font-size: 0.8rem;
-    color: #00a859;
+    color: var(--primary-pena-color);;
     margin-bottom: 2px;
 }
 
@@ -102,8 +107,8 @@
     color: #333;
 }
 
-.betis-footer {
-    background-color: #00a859;
+.carnet-footer {
+    background-color: var(--primary-pena-color);;
     color: white;
     text-align: center;
     padding: 0.75rem;
@@ -116,7 +121,7 @@
 }
 
 .p-card.p-component.p-card-header {
-    background-color: #00a859;
+    background-color: var(--primary-pena-color);;
 }
 
 /* En el fichero de estilos de tu CarnetSocioComponent (e.g., carnet-socio.component.scss) */
@@ -151,7 +156,7 @@
     }
 }
 
-.betis-card {
+.carnet-card {
     width: 100%;
     margin-bottom: 1rem;
 }

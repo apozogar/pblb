@@ -4,6 +4,8 @@ export interface Pena {
     id: number;
     nombre: string;
     logo: string;
+    lema: string;
+    color: string;
 }
 
 export interface Socio {
