@@ -3,7 +3,7 @@ import {Cuota} from "@/interfaces/cuota.interface";
 export interface Pena {
     id: number;
     nombre: string;
-    // Añade aquí otros campos de la peña que necesites
+    logo: string;
 }
 
 export interface Socio {

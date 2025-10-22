@@ -1,6 +1,7 @@
 package com.softwells.fanops.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +34,8 @@ public class PenaEntity {
   private Double cuotaMenor;
   private Integer edadMayoria;
   private Integer edadJubilacion;
+  @Column(columnDefinition = "TEXT")
+  private String logo;
 
   @OneToMany(mappedBy = "pena", cascade = CascadeType.ALL)
   private Set<SocioEntity> socios = new HashSet<>();

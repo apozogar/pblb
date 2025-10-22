@@ -43,7 +43,8 @@
                                 registrarte?</a>
                         </div>
                     </div>
-                    <p-button label="Iniciar Sesión" styleClass="w-full" (click)="login()"
+                    <p-button label="Iniciar Sesión" styleClass="w-full" [loading]="loading"
+                              (click)="login()"
                               (keyup.enter)="login()"></p-button>
                 </div>
             </div>

@@ -87,7 +87,12 @@
     <p-toolbar styleClass="mb-6">
         <ng-template #start>
             <div class="flex flex-wrap gap-2">
-                <button pButton pRipple icon="pi pi-plus" class="p-button-success" (click)="abrirNuevo()">
+                <button pButton pRipple icon="pi pi-refresh" class="p-button-secondary"
+                        (click)="cargarSocios()"
+                        pTooltip="Refrescar" tooltipPosition="top">
+                </button>
+                <button pButton pRipple icon="pi pi-plus" class="p-button-success"
+                        (click)="abrirNuevo()">
                     <span class="hidden md:inline ml-2">Nuevo Socio</span>
                 </button>
                 <button pButton pRipple icon="pi pi-filter-fill" class="p-button-warning"
@@ -113,15 +118,18 @@
                     <p-inputicon>
                         <i class="pi pi-search"></i>
                     </p-inputicon>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                    <input pInputText type="text"
+                           (input)="dt.filterGlobal($event.target.value, 'contains')"
                            placeholder="Buscar..."/>
                 </p-iconfield>
-                <button pButton pRipple icon="pi pi-credit-card" severity="info" (click)="cobrosDialog = true">
+                <button pButton pRipple icon="pi pi-credit-card" severity="info"
+                        (click)="cobrosDialog = true">
                     <span class="hidden md:inline ml-2">Gestión de Cobros</span>
                 </button>
                 <input type="file" #fileUpload style="display: none" (change)="onFileSelect($event)"
                        accept=".xlsx, .xls"/>
-                <button pButton pRipple icon="pi pi-upload" severity="secondary" (click)="fileUpload.click()">
+                <button pButton pRipple icon="pi pi-upload" severity="secondary"
+                        (click)="fileUpload.click()">
                     <span class="hidden md:inline ml-2">Importar</span>
                 </button>
             </div>
@@ -170,7 +178,7 @@
             </tr>
         </ng-template>
     </p-table>
-        </div>
+</div>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 

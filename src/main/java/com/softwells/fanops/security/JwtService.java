@@ -1,5 +1,6 @@
 package com.softwells.fanops.security;
 
+import com.softwells.fanops.model.PenaEntity;
 import com.softwells.fanops.model.SocioEntity;
 import com.softwells.fanops.model.UsuarioEntity;
 import io.jsonwebtoken.Claims;
@@ -50,11 +51,11 @@ public class JwtService {
     // Añadimos el nombre de la peña al token
     if (userDetails instanceof UsuarioEntity) {
       UsuarioEntity usuario = (UsuarioEntity) userDetails;
-      Optional<String> nombrePena = usuario.getSocios().stream()
+      Optional<Long> clubId = usuario.getSocios().stream()
           .map(SocioEntity::getPena)
           .findFirst()
-          .map(pena -> pena.getNombre());
-      nombrePena.ifPresent(nombre -> extraClaims.put("nombrePena", nombre));
+          .map(PenaEntity::getId);
+      clubId.ifPresent(id -> extraClaims.put("clubId", id));
     }
 
     return Jwts.builder()

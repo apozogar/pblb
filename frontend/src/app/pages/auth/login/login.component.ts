@@ -23,6 +23,7 @@ export class LoginComponent {
     password: string = '';
     checked: boolean = false;
     error: string | null = null;
+    loading: boolean = false;
 
     private authService = inject(AuthService);
     private router = inject(Router);
@@ -30,15 +31,17 @@ export class LoginComponent {
     login(): void {
         this.error = null;
         if (this.email && this.password) {
+            this.loading = true;
             this.authService.login({email: this.email, password: this.password})
             .subscribe({
                 next: () => {
                     this.router.navigate(['/']);
                 },
                 error: (error) => {
+                    this.loading = false;
                     console.error('Login error:', error);
                     this.error = 'Email o contraseña incorrectos. Por favor, inténtalo de nuevo.';
-                }
+                },
             });
         } else {
             this.error = 'El email y la contraseña son obligatorios.';

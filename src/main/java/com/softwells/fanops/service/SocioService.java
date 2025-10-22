@@ -29,6 +29,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.commons.text.WordUtils;
 import org.apache.poi.ss.usermodel.Row;
@@ -240,95 +241,105 @@ public class SocioService {
   public void importarSocios(MultipartFile file) {
     try (InputStream inputStream = file.getInputStream()) {
       Workbook workbook = new XSSFWorkbook(inputStream);
-      Sheet sheet = workbook.getSheetAt(0);
-      List<SocioEntity> socios = new ArrayList<>();
-      // Creamos un formateador que acepta múltiples patrones de fecha
-      DateTimeFormatter dateFormatter = new DateTimeFormatterBuilder()
-          .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-          .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yy"))
-          .appendOptional(DateTimeFormatter.ofPattern("dd MM yyyy"))
-          .appendOptional(DateTimeFormatter.ofPattern("dd - MM - yyyy"))
-          .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-          .appendOptional(DateTimeFormatter.ofPattern("dd /MM /yyyy"))
-          .appendOptional(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-          .toFormatter();
+      int sheetNum = workbook.getNumberOfSheets();
 
-      // Obtenemos el rol de usuario una sola vez para reutilizarlo
-      RoleEntity userRole = roleRepository.findByName("ROLE_USER")
-          .orElseThrow(() -> new RuntimeException("Error: Rol ROLE_USER no encontrado."));
+      List<SocioEntity> socios = new ArrayList<>();
 
       // Obtenemos el número de socio máximo actual para empezar a incrementar desde ahí
-      Integer numSocio = socioRepository.findMaxNumeroSocio().orElse(0) + 1;
-      // Saltamos la primera fila (cabecera)
-      for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-        Row row = sheet.getRow(i);
-        if (row == null) {
-          continue;
-        }
+      int numSocio = socioRepository.findMaxNumeroSocio().orElse(0) + 1;
 
-        // Verificamos si la fila está vacía comprobando la columna del nombre.
-        String nombreCompleto = getCellValueAsString(row.getCell(COL_NOMBRE_COMPLETO));
-        if (nombreCompleto == null || nombreCompleto.isBlank()) {
-          log.warn("Saltando fila {} porque el nombre está vacío.", row.getRowNum() + 1);
-          continue; // Si el nombre está vacío, ignoramos la fila completa.
-        }
 
-        SocioEntity socio = new SocioEntity();
-        String email = getCellValueAsString(row.getCell(COL_EMAIL));
+      for (int sheetIndex = 0; sheetIndex < sheetNum; sheetIndex++) {
+        Sheet sheet = workbook.getSheetAt(sheetIndex);
+        // Creamos un formateador que acepta múltiples patrones de fecha
+        DateTimeFormatter dateFormatter = new DateTimeFormatterBuilder()
+            .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd MM yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd - MM - yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd /MM /yyyy"))
+            .appendOptional(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            .toFormatter();
 
-        // --- Lógica para crear o encontrar el Usuario ---
-        UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(email)
-            // Si el email está vacío, se creará un usuario con email nulo, lo que dará error.
-            .orElseGet(() -> {
-              UsuarioEntity nuevoUsuario = new UsuarioEntity();
-              nuevoUsuario.setEmail(email);
-              // Asignamos una contraseña temporal. El usuario deberá usar "olvidé mi contraseña".
-              nuevoUsuario.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-              nuevoUsuario.setActivo(true);
-              nuevoUsuario.setRoles(Set.of(userRole));
-              return usuarioRepository.save(nuevoUsuario);
-            });
-        // --- Fin de la lógica de Usuario ---
+        // Obtenemos el rol de usuario una sola vez para reutilizarlo
+        RoleEntity userRole = roleRepository.findByName("ROLE_USER")
+            .orElseThrow(() -> new RuntimeException("Error: Rol ROLE_USER no encontrado."));
 
-        // Asignamos los valores de las celdas al objeto SocioEntity usando los índices 0-based
-        socio.setNombre(WordUtils.capitalizeFully(nombreCompleto));
-        socio.setDni(getCellValueAsString(row.getCell(COL_DNI)));
-        socio.setEmail(email);
-
-        String fechaNacimientoStr = getCellValueAsString(row.getCell(COL_FECHA_NACIMIENTO));
-        if (fechaNacimientoStr != null && !fechaNacimientoStr.isEmpty()) {
-          try {
-            socio.setFechaNacimiento(LocalDate.parse(fechaNacimientoStr, dateFormatter));
-          } catch (Exception e) {
-            log.warn("Error al formatear la fecha '{}' para el socio '{}'", fechaNacimientoStr,
-                socio.getNombre());
+        // Saltamos la primera fila (cabecera)
+        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+          Row row = sheet.getRow(i);
+          if (row == null) {
+            continue;
           }
+
+          // Verificamos si la fila está vacía comprobando la columna del nombre.
+          String nombreCompleto = getCellValueAsString(row.getCell(COL_NOMBRE_COMPLETO));
+          if (nombreCompleto == null || nombreCompleto.isBlank()) {
+            log.warn("Saltando fila {} porque el nombre está vacío.", row.getRowNum() + 1);
+            continue; // Si el nombre está vacío, ignoramos la fila completa.
+          }
+
+          SocioEntity socio = new SocioEntity();
+          String email = getCellValueAsString(row.getCell(COL_EMAIL));
+
+          if (StringUtils.isBlank(email)) {
+            // --- Lógica para crear o encontrar el Usuario ---
+            UsuarioEntity usuario = usuarioRepository.findByEmailIgnoreCase(email)
+                // Si el email está vacío, se creará un usuario con email nulo, lo que dará error.
+                .orElseGet(() -> {
+                  UsuarioEntity nuevoUsuario = new UsuarioEntity();
+                  nuevoUsuario.setEmail(email);
+                  // Asignamos una contraseña temporal. El usuario deberá usar "olvidé mi contraseña".
+                  nuevoUsuario.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+                  nuevoUsuario.setActivo(true);
+                  nuevoUsuario.setRoles(Set.of(userRole));
+                  return usuarioRepository.save(nuevoUsuario);
+                });
+            socio.setUsuario(usuario); // Asociamos el socio al usuario
+          }
+          // --- Fin de la lógica de Usuario ---
+
+          // Asignamos los valores de las celdas al objeto SocioEntity usando los índices 0-based
+          socio.setNombre(WordUtils.capitalizeFully(nombreCompleto));
+          socio.setDni(getCellValueAsString(row.getCell(COL_DNI)));
+          socio.setEmail(email);
+
+          String fechaNacimientoStr = getCellValueAsString(row.getCell(COL_FECHA_NACIMIENTO));
+          if (fechaNacimientoStr != null && !fechaNacimientoStr.isEmpty()) {
+            try {
+              socio.setFechaNacimiento(LocalDate.parse(fechaNacimientoStr, dateFormatter));
+            } catch (Exception e) {
+              log.warn("Error al formatear la fecha '{}' para el socio '{}'", fechaNacimientoStr,
+                  socio.getNombre());
+            }
+          }
+
+          socio.setDireccion(getCellValueAsString(row.getCell(COL_DIRECCION)));
+          socio.setPoblacion(getCellValueAsString(row.getCell(COL_POBLACION)));
+          socio.setProvincia(getCellValueAsString(row.getCell(COL_PROVINCIA)));
+          socio.setCodigoPostal(getCellValueAsString(row.getCell(COL_CODIGO_POSTAL)));
+          socio.setTelefono(getCellValueAsString(row.getCell(COL_TELEFONO)));
+
+          // Extraemos el IBAN del campo de domiciliación
+          String domiciliacion = getCellValueAsString(row.getCell(COL_DOMICILIACION));
+          socio.setNumeroCuenta(domiciliacion);
+
+          String esAbonado = getCellValueAsString(row.getCell(COL_ABONADO_BETIS));
+          socio.setAbonadoBetis(
+              "si".equalsIgnoreCase(esAbonado) || "sí".equalsIgnoreCase(esAbonado));
+
+          String esAccionista = getCellValueAsString(row.getCell(COL_ACCIONISTA_BETIS));
+          socio.setAccionistaBetis(
+              "si".equalsIgnoreCase(esAccionista) || "sí".equalsIgnoreCase(esAccionista));
+
+          socio.setActivo(true); // Por defecto, los nuevos socios están activos
+          socio.setNumeroSocio(numSocio++);
+          socio.setFechaAlta(LocalDate.now());
+
+          socios.add(socio);
         }
-
-        socio.setDireccion(getCellValueAsString(row.getCell(COL_DIRECCION)));
-        socio.setPoblacion(getCellValueAsString(row.getCell(COL_POBLACION)));
-        socio.setProvincia(getCellValueAsString(row.getCell(COL_PROVINCIA)));
-        socio.setCodigoPostal(getCellValueAsString(row.getCell(COL_CODIGO_POSTAL)));
-        socio.setTelefono(getCellValueAsString(row.getCell(COL_TELEFONO)));
-
-        // Extraemos el IBAN del campo de domiciliación
-        String domiciliacion = getCellValueAsString(row.getCell(COL_DOMICILIACION));
-        socio.setNumeroCuenta(domiciliacion);
-
-        String esAbonado = getCellValueAsString(row.getCell(COL_ABONADO_BETIS));
-        socio.setAbonadoBetis("si".equalsIgnoreCase(esAbonado) || "sí".equalsIgnoreCase(esAbonado));
-
-        String esAccionista = getCellValueAsString(row.getCell(COL_ACCIONISTA_BETIS));
-        socio.setAccionistaBetis("si".equalsIgnoreCase(esAccionista) || "sí".equalsIgnoreCase(esAccionista));
-
-        socio.setActivo(true); // Por defecto, los nuevos socios están activos
-        socio.setNumeroSocio(numSocio++);
-        socio.setFechaAlta(LocalDate.now());
-        socio.setUsuario(usuario); // Asociamos el socio al usuario
-
-        socios.add(socio);
       }
-
       socioRepository.saveAll(socios);
     } catch (Exception e) {
       log.error("Error al procesar el fichero Excel: {}", e.getMessage());
