@@ -8,7 +8,8 @@ import {provideAnimationsAsync} from '@angular/platform-browser/animations/async
 import {
     provideRouter,
     withEnabledBlockingInitialNavigation,
-    withInMemoryScrolling
+    withInMemoryScrolling,
+    withHashLocation
 } from '@angular/router';
 import Aura from '@primeuix/themes/aura';
 import {providePrimeNG} from 'primeng/config';
@@ -18,7 +19,7 @@ import {AuthInterceptor} from "@/config/HttpInterceptors";
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideRouter(appRoutes, withInMemoryScrolling({
+        provideRouter(appRoutes, withHashLocation(), withInMemoryScrolling({
             anchorScrolling: 'enabled',
             scrollPositionRestoration: 'enabled'
         }), withEnabledBlockingInitialNavigation()),

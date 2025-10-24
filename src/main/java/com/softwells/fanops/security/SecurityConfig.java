@@ -39,10 +39,10 @@ public class SecurityConfig {
             .requestMatchers(
                 "/",                  // Permitir acceso a la raíz
                 "/index.html",        // Archivos estáticos
+                "/media/**",          // Permitir acceso a la carpeta de media (fuentes, etc.)
                 "/assets/**",         // Carpeta de assets del frontend
                 "/auth/**",
                 "/v2/api-docs",
-                "/browser",
                 "/management/**",     // Permitir acceso a los endpoints de Actuator
                 "/v3/api-docs",
                 "/v3/api-docs/**",
@@ -52,7 +52,8 @@ public class SecurityConfig {
                 "/configuration/security",
                 "/swagger-ui/**",
                 "/webjars/**",
-                "/swagger-ui.html"
+                "/swagger-ui.html",
+                "/*.*"
             ).permitAll()
             // Ahora, cualquier otra petición solo necesita estar autenticada. La lógica de roles la movemos al controlador.
             .anyRequest().authenticated()
